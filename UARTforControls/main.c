@@ -82,6 +82,11 @@ void UART0IntHandler(void)
 			}
 		}
 	}
+	/*
+	if(ui32Status ==UART_INT_TX){
+		PutString("tx interrupt");
+	}
+	*/
 }
 
 //For UART 7 connecting to the other device
@@ -142,15 +147,11 @@ int main(void) {
 	Init();
 
 
-	char* mes = "Enter Words: ";
+	char* mes = "Enter Commands (w, s, e, d, r, f, x, i, k, or l): ";
     uint8_t i;
     uint8_t localdata;
     PutString(mes);
-    /*
-    for (i = 0; i<13; i++){
-    	UARTCharPut(UART0_BASE, mes[i]);
-    }
-*/
+
     SysCtlDelay(SysCtlClockGet() / (1000 * 3)); //delay ~1 msec
     i = 0;
     while (1) //let interrupt handler do the UART echo function
@@ -230,8 +231,8 @@ void Init(){
 
 	ROM_GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3); //enable pin for LED PF2
 
-	ROM_UARTConfigSetExpClk(UART0_BASE, SysCtlClockGet(), 115200, (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
-	ROM_UARTConfigSetExpClk(UART7_BASE, SysCtlClockGet(), 115200, (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
+	ROM_UARTConfigSetExpClk(UART0_BASE, SysCtlClockGet(), 115200, (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_EVEN));
+	ROM_UARTConfigSetExpClk(UART7_BASE, SysCtlClockGet(), 115200, (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_EVEN));
 
     //UARTFIFOLevelSet(UART0_BASE, UART_FIFO_TX1_8, UART_FIFO_RX1_8); //set up FIFO to trigger interrupt on 14/16 full
     //UARTTxIntModeSet(UART0_BASE, UART_TXINT_MODE_FIFO);
@@ -253,9 +254,9 @@ void Init(){
 }
 
 void PutString(char* string){
-	uint8_t i;
+	uint16_t i;
 	for (i=0; i < strlen(string); i++){
-		UARTCharPutNonBlocking(UART0_BASE, string[i]);
+		UARTCharPut(UART0_BASE, string[i]);
 	}
 }
 
