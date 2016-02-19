@@ -13,7 +13,7 @@
 #include "driverlib/rom.h"
 #include "driverlib/pwm.h"
 
-//#define TARGET_IS_BLIZZARD_RB1 defined in properties
+//#define TARGET_IS_BLIZZARD_RB1 //defined in properties
 
 //base frequency to control servo
 #define PWM_FREQUENCY 50 //will need to check specs. the parallax needs a pulse about every 2ms
@@ -109,8 +109,8 @@ uint8_t servoSetMin();
 uint8_t servoSetCenter();
 
 
-void UART_Init(void);
-void PutString(char* string);
+//void UART_Init(void);
+//void PutString(char* string);
 
 
 

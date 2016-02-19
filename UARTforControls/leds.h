@@ -100,7 +100,7 @@ uint8_t ledsBright();
  * @author Luis Gonzalez, 2/16
  *
  *****************************************************/
-uint8_t ledsDim();
+//uint8_t ledsDim();
 
 
 /*****************************************************
@@ -119,8 +119,8 @@ uint8_t ledsOff();
 
 
 // used in test harness
-void UART_Init(void);
-void PutString(char* string);
+//void UART_Init(void);
+//void PutString(char* string);
 
 
 #endif /* LEDS_H_ */

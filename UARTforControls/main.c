@@ -1,57 +1,27 @@
 
-#include <stdint.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
-#include "inc/hw_ints.h"
-#include "inc/hw_memmap.h"
-#include "inc/hw_types.h"
-#include "driverlib/gpio.h"
-#include "driverlib/interrupt.h"
-#include "driverlib/pin_map.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/uart.h"
-#define TARGET_IS_BLIZZARD_RB1
-#include "driverlib/rom.h"
+//#include <stdint.h>
+//#include <stdio.h>
+//#include <stdbool.h>
+//#include <string.h>
+//#include "inc/hw_ints.h"
+//#include "inc/hw_memmap.h"
+//#include "inc/hw_types.h"
+//#include "driverlib/gpio.h"
+//#include "driverlib/interrupt.h"
+//#include "driverlib/pin_map.h"
+//#include "driverlib/sysctl.h"
+//#include "driverlib/uart.h"
+//#define TARGET_IS_BLIZZARD_RB1
+//#include "driverlib/rom.h"
+#include "leds.h"
+#include "servoControl.h"
+#include "controlScheme.h"
+#include "uart.h"
 
 
-//control scheme
-#define LMSU				 		'w'	//left motor speed up
-#define RMSU 						'r' //right motor speed up
-#define LMSD 						's' //left motor speed down
-#define RMSD 						'f' //right motor speed down
-#define STOP 						'x'
-#define CU 							'i' //Camera up
-#define CD			 				'k' //Camera down
-#define DIVE 						'd'
-#define SURFACE 					'e'
-#define LIGHTS						'l'
+//Header for controls not needed since only one byte of data
+//#define HEADER						0xAA
 
-//Bit Mask to filter controls
-#define LMOTOR_2BITS				0xC0
-#define RMOTOR_2BITS				0x30
-#define ZMOTOR_2BITS				0x0C
-#define CAMERA_2BITS				0x03
-
-//Bit Mask to set individual controls
-#define CAMERA_UP					0x01
-#define CAMERA_DOWN					0x02
-#define ZMOTOR_UP					0x04
-#define ZMOTOR_DOWN					0x08
-#define RMOTOR_UP					0x10
-#define RMOTOR_DOWN					0x20
-#define LMOTOR_UP					0x40
-#define LMOTOR_DOWN					0x80
-#define STOP_ALL					0xFF
-#define LIGHTS_TOGGLE				0x30
-
-
-//Header for controls
-#define HEADER						0xAA
-
-
-void Init(void);
-void PutString(char* string);
 uint8_t SetBitCount(uint8_t);
 
 //Store incoming data to be processed and packeted
@@ -114,14 +84,17 @@ void UART7IntHandler(void)
 						PutString("Stop\n\r");
 					}else if((temp & RMOTOR_2BITS) == LIGHTS_TOGGLE){
 						PutString("Lights\n\r");
+						ledsBright();
 					} else {
 						PutString("Bad Command\n\r");
 					}
 				} else {
 					if ((temp & CAMERA_2BITS) == CAMERA_UP){
 						PutString("Camera up\n\r");
+						servoSetPulseWidth(1);
 					}else if((temp & CAMERA_2BITS) == CAMERA_DOWN){
 						PutString("Camera Down\n\r");
+						servoSetPulseWidth(0);
 					}else if((temp & LMOTOR_2BITS) == LMOTOR_UP){
 						PutString("Left motor up\n\r");
 					}else if((temp & LMOTOR_2BITS) == LMOTOR_DOWN){
@@ -144,8 +117,9 @@ void UART7IntHandler(void)
 }
 
 int main(void) {
-	Init();
-
+	uartInit();
+	servoInit();
+	ledsInit();
 
 	char* mes = "Enter Commands (w, s, e, d, r, f, x, i, k, or l): ";
     uint8_t i;
@@ -208,64 +182,12 @@ int main(void) {
 
 }
 
-void Init(){
-	ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
-
-	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
-	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-
-	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART7);
-	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
-
-	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF); //enable GPIO port for LED
-
-
-	ROM_GPIOPinConfigure(GPIO_PA0_U0RX);
-	ROM_GPIOPinConfigure(GPIO_PA1_U0TX);
-
-	ROM_GPIOPinConfigure(GPIO_PE0_U7RX);
-	ROM_GPIOPinConfigure(GPIO_PE1_U7TX);
-
-	ROM_GPIOPinTypeUART(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-	ROM_GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-
-	ROM_GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3); //enable pin for LED PF2
-
-	ROM_UARTConfigSetExpClk(UART0_BASE, SysCtlClockGet(), 115200, (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_EVEN));
-	ROM_UARTConfigSetExpClk(UART7_BASE, SysCtlClockGet(), 115200, (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_EVEN));
-
-    //UARTFIFOLevelSet(UART0_BASE, UART_FIFO_TX1_8, UART_FIFO_RX1_8); //set up FIFO to trigger interrupt on 14/16 full
-    //UARTTxIntModeSet(UART0_BASE, UART_TXINT_MODE_FIFO);
-    //UARTFIFOLevelSet(UART7_BASE, UART_FIFO_TX1_8, UART_FIFO_RX1_8); //set up FIFO to trigger interrupt on 14/16 full
-
-	ROM_UARTFIFOEnable(UART0_BASE);
-
-    //UARTTxIntModeSet(UART7_BASE, UART_TXINT_MODE_FIFO);
-
-	ROM_UARTFIFOEnable(UART7_BASE);
-
-	ROM_IntMasterEnable(); //enable processor interrupts
-	ROM_IntEnable(INT_UART0); //enable the UART interrupt
-	ROM_UARTIntEnable(UART0_BASE, UART_INT_RX|UART_INT_RT ); //only enable RX and TX interrupts
-	ROM_UARTEnable(UART0_BASE);
-	ROM_IntEnable(INT_UART7); //enable the UART interrupt
-	ROM_UARTIntEnable(UART7_BASE, UART_INT_RX|UART_INT_RT ); //only enable RX and TX interrupts
-	ROM_UARTEnable(UART7_BASE);
-}
-
-void PutString(char* string){
-	uint16_t i;
-	for (i=0; i < strlen(string); i++){
-		UARTCharPut(UART0_BASE, string[i]);
-	}
-}
 
 uint8_t SetBitCount(uint8_t i){
     uint8_t count;
     for (count = 0; i; count++){
     	i &= i-1;
     }
-    //printf("%d", count);
     return count;
 }
 

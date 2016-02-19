@@ -1,6 +1,7 @@
 # FIXED
 
 main.obj: ../main.c
+main.obj: ../leds.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdint.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdio.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/linkage.h
@@ -19,8 +20,15 @@ main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/pin_map.h
 main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/sysctl.h
 main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/uart.h
 main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/rom.h
+main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/pwm.h
+main.obj: ../servoControl.h
+main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdio.h
+main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/string.h
+main.obj: ../controlScheme.h
+main.obj: ../uart.h
 
 ../main.c: 
+../leds.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdint.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdio.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/linkage.h: 
@@ -39,3 +47,9 @@ C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/pin_map.h:
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/sysctl.h: 
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/uart.h: 
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/rom.h: 
+C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/pwm.h: 
+../servoControl.h: 
+C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdio.h: 
+C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/string.h: 
+../controlScheme.h: 
+../uart.h: 

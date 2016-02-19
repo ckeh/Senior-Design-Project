@@ -12,13 +12,31 @@
 #include "driverlib/pin_map.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/uart.h"
+#include "driverlib/timer.h"
 
+//Timer Stuff
+#include "inc/hw_nvic.h"
+#include "inc/hw_memmap.h"
+#define DWT_O_CYCCNT 0x00000004
 
 void Init(void);
 void PutString(char* string);
 uint8_t SetBitCount(uint8_t);
 
 static volatile uint64_t count=0; // keeps count of the number of packets
+
+static        uint32_t                  c_start, c_stop;
+
+void EnableTiming(void){
+static int enabled = 0;
+if (!enabled){
+   HWREG(NVIC_DBG_INT) |= 0x01000000;            /*enable TRCENA bit in NVIC_DBG_INT*/
+   HWREG(DWT_BASE + DWT_O_CYCCNT) = 0;   /* reset the counter */
+   HWREG(DWT_BASE) |= 0x01;                                 /* enable the counter */
+   enabled = 1;
+ }
+}
+
 
 
 //not needed for this test
@@ -29,6 +47,13 @@ void UART0IntHandler(void)
 	ui32Status = UARTIntStatus(UART0_BASE, true); //get interrupt status
 	UARTIntClear(UART0_BASE, ui32Status); //clear the asserted interrupts
 
+	if(ui32Status == UART_INT_RX || ui32Status == UART_INT_RT){
+		while(UARTCharsAvail(UART0_BASE)){
+		    c_start = HWREG(DWT_BASE + DWT_O_CYCCNT); // at the beginning of the code
+
+			UARTCharPut(UART7_BASE, UARTCharGet(UART0_BASE));
+		}
+	}
 
 }
 
@@ -43,7 +68,14 @@ void UART7IntHandler(void)
 	if(ui32Status == UART_INT_RX || ui32Status == UART_INT_RT){
 		while(UARTCharsAvail(UART7_BASE)) //loop while there are chars
 		{
+//			TimerEnable(TIMER0_BASE, TIMER_A);
+//		    c_start = HWREG(DWT_BASE + DWT_O_CYCCNT); // at the beginning of the code
+
 			temp = UARTCharGet(UART7_BASE);
+			c_stop = HWREG(DWT_BASE + DWT_O_CYCCNT); // at the end of the code
+
+			//TimerDisable(TIMER0_BASE, TIMER_A);
+			UARTCharPut(UART0_BASE, temp);
 			if(temp == 'F'){
 				count++;
 			}
@@ -55,33 +87,52 @@ void UART7IntHandler(void)
 
 int main(void) {
 	Init();
-
+	EnableTiming();
 	//char str[1000000];
 	char* mes = "Enter Words: ";
     uint64_t i;
     PutString(mes);
 
     //sends 2 minutes worth of packets
-	for (i=0; i<10473*60*2; i++){
-    		UARTCharPut(UART7_BASE,'F');
+//	for (i=0; i<10473*60*2; i++){
+//    		UARTCharPut(UART7_BASE,'F');
+//
+//    }
+	//GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3, 14);
+    //TimerEnable(TIMER0_BASE, TIMER_A);
+    //uint32_t time = TimerValueGet(TIMER0_BASE, TIMER_A);
+    //c_start = HWREG(DWT_BASE + DWT_O_CYCCNT); // at the beginning of the code
 
-    }
-	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3, 14);
 
-	SysCtlDelay(SysCtlClockGet() / (1000 * 3)); //delay ~1 msec
+	SysCtlDelay(16666666);//SysCtlClockGet() / (1000 * 3)); //delay ~1 msec
+	//c_stop = HWREG(DWT_BASE + DWT_O_CYCCNT); // at the end of the code
+
+
+	//TimerDisable(TIMER0_BASE, TIMER_A);
+
+	//uint32_t time = TimerValueGet(TIMER0_BASE, TIMER_A);
     i = 0;
+    //TimerDisable(WTIMER0_BASE, TIMER_A);
+    //uint64_t time = TimerValueGet(TIMER0_BASE, TIMER_A);
     while (1)
     {
+        //uint32_t time = TimerValueGet(TIMER0_BASE, TIMER_A);
+
+    	printf("start = %ld stop = %ld\n", c_start, c_stop);
     	//checks to see if the final packet was found (if we print count everytime it messes up
     	//You can also check count by using debug.
-    	if(count >=10473*60*2)
-    		printf("%lld\n", count);
+//    	if(count >=10473*60*2)
+//    		printf("%lld\n", count);
 
     }
 
 }
 
 void Init(){
+
+
+
+
 	SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
@@ -91,6 +142,12 @@ void Init(){
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF); //enable GPIO port for LED
+
+	//SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+	//TimerLoadSet(TIMER0_BASE, TIMER_A, 100000000);
+	//TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
+	//TimerRTCEnable(WTIMER0_BASE);
+	//TimerEnable(TIMER0_BASE, TIMER_A);
 
 
     GPIOPinConfigure(GPIO_PA0_U0RX);
@@ -140,4 +197,6 @@ uint8_t SetBitCount(uint8_t i){
     }
     return count;
 }
+
+
 

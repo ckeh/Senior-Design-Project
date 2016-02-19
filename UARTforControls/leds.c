@@ -28,7 +28,7 @@ uint8_t ledsInit(){
 	brightness = OFF;
 
 	//all the proper pin configurations
-	ROM_SysCtlClockSet(SYSCTL_SYSDIV_5|SYSCTL_USE_PLL|SYSCTL_OSC_MAIN|SYSCTL_XTAL_16MHZ); //sets System clock to 40 MHz
+	//ROM_SysCtlClockSet(SYSCTL_SYSDIV_5|SYSCTL_USE_PLL|SYSCTL_OSC_MAIN|SYSCTL_XTAL_16MHZ); //sets System clock to 40 MHz
 	ROM_SysCtlPWMClockSet(SYSCTL_PWMDIV_64); // sets pwm clock to 40Mhz / 64 = 625KHz
 
 	//sets the PWM module

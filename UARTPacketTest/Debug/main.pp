@@ -20,6 +20,8 @@ main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/interrupt.h
 main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/pin_map.h
 main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/sysctl.h
 main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/uart.h
+main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/timer.h
+main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/inc/hw_nvic.h
 
 ../main.c: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdint.h: 
@@ -41,3 +43,5 @@ C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/interrupt.h:
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/pin_map.h: 
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/sysctl.h: 
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/uart.h: 
+C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/timer.h: 
+C:/ti/TivaWare_C_Series-2.1.2.111/inc/hw_nvic.h: 
