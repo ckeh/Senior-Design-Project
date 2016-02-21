@@ -30,6 +30,11 @@ static volatile uint8_t count=0;
 static volatile uint8_t index=0;
 
 //For the USB UART connection to get controls from the pc
+
+
+
+
+#ifdef MAIN
 void UART0IntHandler(void)
 {
 	uint8_t d;
@@ -58,7 +63,6 @@ void UART0IntHandler(void)
 	}
 	*/
 }
-
 //For UART 7 connecting to the other device
 void UART7IntHandler(void)
 {
@@ -115,6 +119,8 @@ void UART7IntHandler(void)
 	}
 
 }
+
+
 
 int main(void) {
 	uartInit();
@@ -182,6 +188,7 @@ int main(void) {
 
 }
 
+#endif
 
 uint8_t SetBitCount(uint8_t i){
     uint8_t count;

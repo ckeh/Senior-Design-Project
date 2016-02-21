@@ -11,6 +11,7 @@
 
 
 
+
 /*****************************************************
  * @Function servoInit()
  * @param the pin want servo to be PWM to come from
@@ -95,7 +96,7 @@ uint8_t servoSetPulseWidth(uint8_t var){
 		returnVal = FAILURE; //if dont enter valid param, return Failer
 	}
 
-	ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_0, ui8Adjust * ui32Load / 1000); //set percent of pulse width
+	ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_0, ui8Adjust * ui32Load / 1000); //set percent to a pulse width
 	//set PWM to output, might not need every chagne of pulse width, (need to verfiy)
 	ROM_PWMOutputState(PWM1_BASE, PWM_OUT_0_BIT, true);
 	ROM_PWMGenEnable(PWM1_BASE, PWM_GEN_0);
@@ -280,12 +281,12 @@ void UART_Init(){
 	ROM_UARTEnable(UART0_BASE);
 }
 
-void PutString(char* string){
-	uint64_t i;
-	for (i=0; i < strlen(string); i++){
-		UARTCharPut(UART0_BASE, string[i]);
-	}
-}
+//void PutString(char* string){
+//	uint64_t i;
+//	for (i=0; i < strlen(string); i++){
+//		UARTCharPut(UART0_BASE, string[i]);
+//	}
+//}
 
 #endif
 

@@ -32,8 +32,8 @@
 #define FAILURE 0
 #define SUCCESS 1
 
-#define SERVO_MIN_PULSE 50//55-> for esc
-#define SERVO_MAX_PULSE 100//90-> for esc
+#define SERVO_MIN_PULSE 38// for the servo out min is .75 ms
+#define SERVO_MAX_PULSE 112//90-> for esc, for servo the max is 2.25 ms
 
 
 volatile uint32_t ui32Load;
@@ -109,7 +109,7 @@ uint8_t servoSetMin();
 uint8_t servoSetCenter();
 
 
-//void UART_Init(void);
+void UART_Init(void);
 //void PutString(char* string);
 
 

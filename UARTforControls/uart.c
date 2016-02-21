@@ -9,7 +9,7 @@
 #include "servoControl.h"
 
 
-void Init(){
+void uartInit(){
 	ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
 
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);

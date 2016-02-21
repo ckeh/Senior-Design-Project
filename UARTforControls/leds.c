@@ -6,6 +6,7 @@
  */
 
 #include "leds.h"
+#include "uart.h" //so can use putString()
 
 /*****************************************************
  * @Function ledsInit()
@@ -44,7 +45,7 @@ uint8_t ledsInit(){
 
 
 	ui32PWMClock = SysCtlClockGet() / 64;
-	ui32Load = (ui32PWMClock / PWM_FREQUENCY) - 1; //sets pwm period to 12500 ticks of PWM clock (which is at 625kHz)
+	ui32Load = (ui32PWMClock / LED_FREQUENCY) - 1; //sets pwm period to 12500 ticks of PWM clock (which is at 625kHz)
 	PWMGenConfigure(PWM1_BASE, PWM_GEN_0, PWM_GEN_MODE_DOWN);
 	PWMGenPeriodSet(PWM1_BASE, PWM_GEN_0, ui32Load);
 
@@ -143,7 +144,7 @@ uint8_t ledsMax(){
  * Test Harness
  *
  * ******************************************************************************************************/
-#ifdef LED_TEST
+#ifdef LEDS_TEST
 
 
 #include "leds.h"
@@ -239,12 +240,12 @@ void UART_Init(){
 	ROM_UARTEnable(UART0_BASE);
 }
 
-void PutString(char* string){
-	uint64_t i;
-	for (i=0; i < strlen(string); i++){
-		UARTCharPut(UART0_BASE, string[i]);
-	}
-}
+//void PutString(char* string){
+//	uint64_t i;
+//	for (i=0; i < strlen(string); i++){
+//		UARTCharPut(UART0_BASE, string[i]);
+//	}
+//}
 
 #endif
 
