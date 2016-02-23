@@ -25,7 +25,7 @@ static void IntDefaultHandler(void);
 //*****************************************************************************
 extern void _c_int00(void);
 extern void UART0IntHandler(void);
-extern void UART7IntHandler(void);
+//extern void UART7IntHandler(void);
 
 //*****************************************************************************
 //

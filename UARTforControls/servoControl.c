@@ -209,7 +209,7 @@ int main(void){
 	UART_Init();
 	servoInit(); //sets PD0 for pwm output
 
-	//PutString("Welcome! possible inputs w,s,z,m,c");
+	PutString("\nWelcome! Servo Test Harness\n");
 	uint8_t localdata;
 
 	while(1){
@@ -255,7 +255,7 @@ int main(void){
 
 
 void UART_Init(){
-	//ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
+	ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ); // 40MHz
 
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);

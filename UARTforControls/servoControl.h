@@ -13,6 +13,8 @@
 #include "driverlib/rom.h"
 #include "driverlib/pwm.h"
 
+#include "uart.h" //for use of PutStrin()
+
 //#define TARGET_IS_BLIZZARD_RB1 //defined in properties
 
 //base frequency to control servo

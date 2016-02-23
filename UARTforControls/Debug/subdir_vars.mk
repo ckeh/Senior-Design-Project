@@ -12,6 +12,7 @@ C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/ccs/Debug/driverlib.lib
 C_SRCS += \
 ../leds.c \
 ../main.c \
+../motors.c \
 ../servoControl.c \
 ../tm4c123gh6pm_startup_ccs.c \
 ../uart.c 
@@ -19,6 +20,7 @@ C_SRCS += \
 OBJS += \
 ./leds.obj \
 ./main.obj \
+./motors.obj \
 ./servoControl.obj \
 ./tm4c123gh6pm_startup_ccs.obj \
 ./uart.obj 
@@ -26,6 +28,7 @@ OBJS += \
 C_DEPS += \
 ./leds.pp \
 ./main.pp \
+./motors.pp \
 ./servoControl.pp \
 ./tm4c123gh6pm_startup_ccs.pp \
 ./uart.pp 
@@ -33,6 +36,7 @@ C_DEPS += \
 C_DEPS__QUOTED += \
 "leds.pp" \
 "main.pp" \
+"motors.pp" \
 "servoControl.pp" \
 "tm4c123gh6pm_startup_ccs.pp" \
 "uart.pp" 
@@ -40,6 +44,7 @@ C_DEPS__QUOTED += \
 OBJS__QUOTED += \
 "leds.obj" \
 "main.obj" \
+"motors.obj" \
 "servoControl.obj" \
 "tm4c123gh6pm_startup_ccs.obj" \
 "uart.obj" 
@@ -47,6 +52,7 @@ OBJS__QUOTED += \
 C_SRCS__QUOTED += \
 "../leds.c" \
 "../main.c" \
+"../motors.c" \
 "../servoControl.c" \
 "../tm4c123gh6pm_startup_ccs.c" \
 "../uart.c" 

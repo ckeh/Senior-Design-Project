@@ -24,8 +24,8 @@ main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/pwm.h
 main.obj: ../servoControl.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdio.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/string.h
-main.obj: ../controlScheme.h
 main.obj: ../uart.h
+main.obj: ../controlScheme.h
 
 ../main.c: 
 ../leds.h: 
@@ -51,5 +51,5 @@ C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/pwm.h:
 ../servoControl.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdio.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/string.h: 
-../controlScheme.h: 
 ../uart.h: 
+../controlScheme.h: 

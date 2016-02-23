@@ -181,7 +181,7 @@ int main(void){
 
 	//lightlevel = 1;// start it at 25% pulse width
 
-	PutString("Welcome! connect to PD1");
+	PutString("\nWelcome! LED test harness\n");
 	uint8_t localdata;
 
 	while(1){
@@ -214,7 +214,7 @@ int main(void){
 
 
 void UART_Init(){
-	//ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
+	ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
 
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
