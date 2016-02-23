@@ -25,8 +25,8 @@
 //#define TARGET_IS_BLIZZARD_RB1 defined in properties
 
 //base frequency to control servo
-#define PWM_FREQUENCY 50 //will need to check specs. the parallax needs a pulse about every 2ms
-
+#define PWM_FREQUENCY 50 //will need to check specs. the parallax needs a pulse about every 20ms
+#define LED_FREQUENCY 100// a pulse is 10ms long
 //from pin_map.h, that whole lib not being inclded need to fix
 #define GPIO_PA0_U0RX           0x00000001
 
@@ -43,11 +43,14 @@
 
 
 #define OFF 1 // since counter goes to 0
-#define MIN 3125 //25%
-#define MIDDLE_MIN 6250 //50%
-#define MIDDLE 9375 //75%
-#define MAX 11250 //100%
+//for testing using lesser units, to light is not as bright
+#define MIN 156// 1563 //25%
+#define MIDDLE_MIN 313 //3125 //50%
+#define MIDDLE 469 //4688 //75%
+#define MAX 625 //6250 //100%
 #define MAX_LIMIT 12499
+
+
 
 
 volatile uint32_t ui32Load;
@@ -119,7 +122,7 @@ uint8_t ledsOff();
 
 
 // used in test harness
-//void UART_Init(void);
+void UART_Init(void);
 //void PutString(char* string);
 
 

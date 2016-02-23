@@ -25,7 +25,7 @@ static void IntDefaultHandler(void);
 //*****************************************************************************
 extern void _c_int00(void);
 extern void UART0IntHandler(void);
-extern void UART7IntHandler(void);
+//extern void UART7IntHandler(void);
 
 //*****************************************************************************
 //
@@ -124,7 +124,8 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // UART4 Rx and Tx
     IntDefaultHandler,                      // UART5 Rx and Tx
     IntDefaultHandler,                      // UART6 Rx and Tx
-	UART7IntHandler,                      // UART7 Rx and Tx
+	//UART7IntHandler,                      // UART7 Rx and Tx
+	IntDefaultHandler,
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved
