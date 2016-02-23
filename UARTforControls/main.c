@@ -17,6 +17,8 @@
 #include "servoControl.h"
 #include "controlScheme.h"
 #include "uart.h"
+#include "i2c.h"
+#include "accelerometer.h"
 
 
 //Header for controls not needed since only one byte of data
@@ -28,13 +30,9 @@ uint8_t SetBitCount(uint8_t);
 static volatile uint8_t data[64];
 static volatile uint8_t count=0;
 static volatile uint8_t index=0;
+volatile accelerometer accel;
 
 //For the USB UART connection to get controls from the pc
-
-
-
-
-#ifdef MAIN
 void UART0IntHandler(void)
 {
 	uint8_t d;
@@ -57,12 +55,14 @@ void UART0IntHandler(void)
 			}
 		}
 	}
+
 	/*
 	if(ui32Status ==UART_INT_TX){
 		PutString("tx interrupt");
 	}
 	*/
 }
+
 //For UART 7 connecting to the other device
 void UART7IntHandler(void)
 {
@@ -120,12 +120,13 @@ void UART7IntHandler(void)
 
 }
 
-
-
 int main(void) {
 	uartInit();
 	servoInit();
 	ledsInit();
+	initialize_i2c();
+
+	initialize_accelerometer();
 
 	char* mes = "Enter Commands (w, s, e, d, r, f, x, i, k, or l): ";
     uint8_t i;
@@ -136,6 +137,7 @@ int main(void) {
     i = 0;
     while (1) //let interrupt handler do the UART echo function
     {
+
     	if (count > 0){
     		localdata = data[i];
     		count--;
@@ -176,6 +178,8 @@ int main(void) {
     			UARTCharPut(UART7_BASE, STOP_ALL);
     			i++;
     		}else if (localdata == LIGHTS){
+    			accelerometer_data_get(&accel);
+    			printf ("x = %d\n", accel.xg0);
     			//UARTCharPut(UART7_BASE, HEADER);
     			UARTCharPut(UART7_BASE, LIGHTS_TOGGLE);
     			i++;
@@ -188,7 +192,6 @@ int main(void) {
 
 }
 
-#endif
 
 uint8_t SetBitCount(uint8_t i){
     uint8_t count;
