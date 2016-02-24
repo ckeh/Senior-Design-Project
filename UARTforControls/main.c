@@ -5,11 +5,7 @@
 #include "uart.h"
 #include "i2c.h"
 #include "accelerometer.h"
-<<<<<<< HEAD
-
-=======
 #include "motors.h"
->>>>>>> refs/remotes/origin/LG_Testing
 
 //Header for controls not needed since only one byte of data
 //#define HEADER						0xAA
@@ -19,13 +15,9 @@ uint8_t SetBitCount(uint8_t);
 //Store incoming data to be processed and packeted
 static volatile uint8_t data[64];
 static volatile uint8_t count=0;
-<<<<<<< HEAD
+
 static volatile uint8_t index=0;
 volatile accelerometer accel;
-=======
-volatile accelerometer accel;
-//static volatile uint8_t index=0;
->>>>>>> refs/remotes/origin/LG_Testing
 
 //For the USB UART connection to get controls from the pc
 void UART0IntHandler(void)
