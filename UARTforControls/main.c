@@ -16,7 +16,6 @@ uint8_t SetBitCount(uint8_t);
 static volatile uint8_t data[64];
 static volatile uint8_t count=0;
 volatile accelerometer accel;
-//static volatile uint8_t index=0;
 
 //For the USB UART connection to get controls from the pc
 void UART0IntHandler(void)
@@ -169,8 +168,6 @@ int main(void) {
     		}else if (localdata == DIVE){
     			//UARTCharPut(UART7_BASE, HEADER);
     			UARTCharPut(UART7_BASE, ZMOTOR_DOWN);
-//    			accelerometer_data_get(&accel);
-//    			printf ("x = %d\n", accel.xg0);
     			i++;
     		}else if (localdata == SURFACE){
     			//UARTCharPut(UART7_BASE, HEADER);
