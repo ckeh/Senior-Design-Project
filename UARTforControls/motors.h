@@ -49,7 +49,7 @@ volatile uint16_t ui8PulseAdjust_3;
 
 static uint16_t motors_var; // for use in motors_var set pulse width
 
-static volatile uint8_t data = 0; // used in UART code
+//static volatile uint8_t data = 0; // used in UART code
 
 
 

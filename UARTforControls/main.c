@@ -1,23 +1,11 @@
 
-//#include <stdint.h>
-//#include <stdio.h>
-//#include <stdbool.h>
-//#include <string.h>
-//#include "inc/hw_ints.h"
-//#include "inc/hw_memmap.h"
-//#include "inc/hw_types.h"
-//#include "driverlib/gpio.h"
-//#include "driverlib/interrupt.h"
-//#include "driverlib/pin_map.h"
-//#include "driverlib/sysctl.h"
-//#include "driverlib/uart.h"
-//#define TARGET_IS_BLIZZARD_RB1
-//#include "driverlib/rom.h"
 #include "leds.h"
 #include "servoControl.h"
 #include "controlScheme.h"
 #include "uart.h"
-
+#include "i2c.h"
+#include "accelerometer.h"
+#include "motors.h"
 
 //Header for controls not needed since only one byte of data
 //#define HEADER						0xAA
@@ -27,16 +15,14 @@ uint8_t SetBitCount(uint8_t);
 //Store incoming data to be processed and packeted
 static volatile uint8_t data[64];
 static volatile uint8_t count=0;
-static volatile uint8_t index=0;
+volatile accelerometer accel;
+//static volatile uint8_t index=0;
 
 //For the USB UART connection to get controls from the pc
-
-
-
-
-#ifdef MAIN
 void UART0IntHandler(void)
 {
+	static uint8_t index = 0;
+
 	uint8_t d;
 	uint32_t ui32Status;
 	ui32Status = UARTIntStatus(UART0_BASE, true); //get interrupt status
@@ -63,6 +49,7 @@ void UART0IntHandler(void)
 	}
 	*/
 }
+
 //For UART 7 connecting to the other device
 void UART7IntHandler(void)
 {
@@ -86,6 +73,9 @@ void UART7IntHandler(void)
 				if (SetBitCount(temp)!=1){
 					if(temp  == STOP_ALL){
 						PutString("Stop\n\r");
+						servoSetCenter();
+						motorStop(MOTOR_1);
+						motorStop(MOTOR_2);
 					}else if((temp & RMOTOR_2BITS) == LIGHTS_TOGGLE){
 						PutString("Lights\n\r");
 						ledsBright();
@@ -101,13 +91,19 @@ void UART7IntHandler(void)
 						servoSetPulseWidth(0);
 					}else if((temp & LMOTOR_2BITS) == LMOTOR_UP){
 						PutString("Left motor up\n\r");
+						motorsSetPulseWidth(MOTOR_1,1);
 					}else if((temp & LMOTOR_2BITS) == LMOTOR_DOWN){
 						PutString("Left motor down\n\r");
+						motorsSetPulseWidth(MOTOR_1,-1);
 					}else if((temp & RMOTOR_2BITS) == RMOTOR_UP){
 						PutString("Right motor up\n\r");
+						motorsSetPulseWidth(MOTOR_2,1);
 					}else if((temp & RMOTOR_2BITS) == RMOTOR_DOWN){
 						PutString("Right motor down\n\r");
+						motorsSetPulseWidth(MOTOR_2,-1);
 					}else if((temp & ZMOTOR_2BITS) == ZMOTOR_UP){
+		    			accelerometer_data_get(&accel);
+		    			//printf ("x = %d\n", accel.xg0);
 						PutString("Z motor up\n\r");
 					}else if((temp & ZMOTOR_2BITS) == ZMOTOR_DOWN){
 						PutString("Z motor down\n\r");
@@ -120,12 +116,14 @@ void UART7IntHandler(void)
 
 }
 
-
-
 int main(void) {
 	uartInit();
 	servoInit();
 	ledsInit();
+	motorsInit();
+
+	initialize_i2c();
+	initialize_accelerometer();
 
 	char* mes = "Enter Commands (w, s, e, d, r, f, x, i, k, or l): ";
     uint8_t i;
@@ -133,9 +131,14 @@ int main(void) {
     PutString(mes);
 
     SysCtlDelay(SysCtlClockGet() / (1000 * 3)); //delay ~1 msec
+
+
+    //keeps an index of the data from uart
     i = 0;
     while (1) //let interrupt handler do the UART echo function
     {
+
+    	//takes data from UART0 (the computer) and puts them into UART7 (transfer uart)
     	if (count > 0){
     		localdata = data[i];
     		count--;
@@ -166,6 +169,8 @@ int main(void) {
     		}else if (localdata == DIVE){
     			//UARTCharPut(UART7_BASE, HEADER);
     			UARTCharPut(UART7_BASE, ZMOTOR_DOWN);
+//    			accelerometer_data_get(&accel);
+//    			printf ("x = %d\n", accel.xg0);
     			i++;
     		}else if (localdata == SURFACE){
     			//UARTCharPut(UART7_BASE, HEADER);
@@ -188,7 +193,6 @@ int main(void) {
 
 }
 
-#endif
 
 uint8_t SetBitCount(uint8_t i){
     uint8_t count;

@@ -129,7 +129,7 @@ uint8_t motorStop(uint8_t motor){
 	}
 
 
-	ROM_PWMPulseWidthSet(PWM1_BASE, bit_wise_id, ui8PulseAdjust_3 * ui32Load / 1000); //set percent to a pulse width
+	ROM_PWMPulseWidthSet(PWM1_BASE, bit_wise_id, 75 * ui32Load / 1000); //set percent to a pulse width
 	//set PWM to output, might not need every chagne of pulse width, (need to verfiy)
 	ROM_PWMOutputState(PWM1_BASE, encoded_offset_addr, true);
 
