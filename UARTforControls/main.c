@@ -5,11 +5,7 @@
 #include "uart.h"
 #include "i2c.h"
 #include "accelerometer.h"
-<<<<<<< HEAD
-
-=======
 #include "motors.h"
->>>>>>> refs/remotes/origin/LG_Testing
 
 //Header for controls not needed since only one byte of data
 //#define HEADER						0xAA
@@ -19,13 +15,8 @@ uint8_t SetBitCount(uint8_t);
 //Store incoming data to be processed and packeted
 static volatile uint8_t data[64];
 static volatile uint8_t count=0;
-<<<<<<< HEAD
-static volatile uint8_t index=0;
-volatile accelerometer accel;
-=======
 volatile accelerometer accel;
 //static volatile uint8_t index=0;
->>>>>>> refs/remotes/origin/LG_Testing
 
 //For the USB UART connection to get controls from the pc
 void UART0IntHandler(void)
@@ -52,7 +43,6 @@ void UART0IntHandler(void)
 			}
 		}
 	}
-
 	/*
 	if(ui32Status ==UART_INT_TX){
 		PutString("tx interrupt");
@@ -130,14 +120,9 @@ int main(void) {
 	uartInit();
 	servoInit();
 	ledsInit();
-<<<<<<< HEAD
-	initialize_i2c();
-
-=======
 	motorsInit();
 
 	initialize_i2c();
->>>>>>> refs/remotes/origin/LG_Testing
 	initialize_accelerometer();
 
 	char* mes = "Enter Commands (w, s, e, d, r, f, x, i, k, or l): ";
@@ -153,10 +138,7 @@ int main(void) {
     while (1) //let interrupt handler do the UART echo function
     {
 
-<<<<<<< HEAD
-=======
     	//takes data from UART0 (the computer) and puts them into UART7 (transfer uart)
->>>>>>> refs/remotes/origin/LG_Testing
     	if (count > 0){
     		localdata = data[i];
     		count--;
@@ -199,8 +181,6 @@ int main(void) {
     			UARTCharPut(UART7_BASE, STOP_ALL);
     			i++;
     		}else if (localdata == LIGHTS){
-    			accelerometer_data_get(&accel);
-    			printf ("x = %d\n", accel.xg0);
     			//UARTCharPut(UART7_BASE, HEADER);
     			UARTCharPut(UART7_BASE, LIGHTS_TOGGLE);
     			i++;

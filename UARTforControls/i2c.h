@@ -41,11 +41,7 @@
 #define	FIFO_CTL		0x38	//FIFO control
 #define	FIFO_STATUS		0x39	//FIFO status
 
-<<<<<<< HEAD
-#define STOP	(1<<2)
-=======
 #define STOPI2C	(1<<2)
->>>>>>> refs/remotes/origin/LG_Testing
 #define START	(1<<1)
 #define RUN		(1<<0)
 #define M_ACK 	(1<<3)

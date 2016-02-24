@@ -13,11 +13,7 @@
  * Description - gets acceleromter data on all axis and puts them in the accel struct fields
  * Return - none
  */
-<<<<<<< HEAD
-void accelerometer_data_get (accelerometer *accel) {
-=======
 void accelerometer_data_get (volatile accelerometer *accel) {
->>>>>>> refs/remotes/origin/LG_Testing
 	set_slave_address (0x1D);
 	write_byte(DATAX0, RUN|START);
 	// Get X, Y, Z data from accelerometer
@@ -28,11 +24,7 @@ void accelerometer_data_get (volatile accelerometer *accel) {
 	accel->yg1 = read_byte(M_ACK|RUN);
 
 	accel->zg0 = read_byte(M_ACK|RUN);
-<<<<<<< HEAD
-	accel->zg1 = read_byte(RUN|STOP);
-=======
 	accel->zg1 = read_byte(RUN|STOPI2C);
->>>>>>> refs/remotes/origin/LG_Testing
 
 }
 
@@ -71,10 +63,6 @@ void initialize_accelerometer (void) {
  */
 void write_accelerometer (uint8_t reg, uint8_t data) {
 	write_byte(reg, RUN|START);
-<<<<<<< HEAD
-	write_byte(data, RUN|STOP);
-=======
 	write_byte(data, RUN|STOPI2C);
->>>>>>> refs/remotes/origin/LG_Testing
 }
 
