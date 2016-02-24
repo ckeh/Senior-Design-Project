@@ -15,14 +15,8 @@ uint8_t SetBitCount(uint8_t);
 //Store incoming data to be processed and packeted
 static volatile uint8_t data[64];
 static volatile uint8_t count=0;
-<<<<<<< HEAD
 volatile accelerometer accel;
 //static volatile uint8_t index=0;
-=======
-
-static volatile uint8_t index=0;
-volatile accelerometer accel;
->>>>>>> e73e05cb5d4d272422e9b087683240931a007530
 
 //For the USB UART connection to get controls from the pc
 void UART0IntHandler(void)
