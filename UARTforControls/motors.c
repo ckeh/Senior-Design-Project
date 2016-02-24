@@ -13,10 +13,11 @@ uint8_t motorsInit(){
 	 * 83 give 1.5ms
 	 *
 	 * */
-	ui8Adjust = 75; // so that starts in centervolatile uint16_t ui8PulseAdjust_1=75;
-	ui8PulseAdjust_1=75;
-	ui8PulseAdjust_2=75;
-	ui8PulseAdjust_3=75;
+	ui8Adjust = PULSE_CENTER;
+	//init these for calls in setpulsewidth
+	ui8PulseAdjust_1 = PULSE_CENTER;
+	ui8PulseAdjust_2 = PULSE_CENTER;
+	ui8PulseAdjust_3 = PULSE_CENTER;
 
 	//all the proper pin configurations
 	//ROM_SysCtlClockSet(SYSCTL_SYSDIV_5|SYSCTL_USE_PLL|SYSCTL_OSC_MAIN|SYSCTL_XTAL_16MHZ); //sets System clock to 40 MHz
@@ -24,30 +25,45 @@ uint8_t motorsInit(){
 
 	//sets the PWM module
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM0);
+	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM1);
+
 	//for pwn pins
-	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
+	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE); // motors 1,2
+	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF); // motor z
 
 	//pin config as PWM output
 	ROM_GPIOPinTypePWM(GPIO_PORTE_BASE, GPIO_PIN_4);
 	ROM_GPIOPinTypePWM(GPIO_PORTE_BASE, GPIO_PIN_5);
+	ROM_GPIOPinTypePWM(GPIO_PORTF_BASE, GPIO_PIN_2);
+
 	// PWM generator 1 pwm0 set
 	ROM_GPIOPinConfigure(GPIO_PE4_M0PWM4);
 	ROM_GPIOPinConfigure(GPIO_PE5_M0PWM5);
+	ROM_GPIOPinConfigure(GPIO_PF2_M1PWM6);
 
 	ui32PWMClock = SysCtlClockGet() / 64;
 	ui32Load = (ui32PWMClock / PWM_FREQUENCY) - 1; //sets pwm period to 12500 ticks of PWM clock (which is at 625kHz)
 	PWMGenConfigure(PWM0_BASE, PWM_GEN_2, PWM_GEN_MODE_DOWN);
 	PWMGenPeriodSet(PWM0_BASE, PWM_GEN_2, ui32Load);
 
+	//for motor "Z"
+	PWMGenConfigure(PWM1_BASE, PWM_GEN_3, PWM_GEN_MODE_DOWN);
+	PWMGenPeriodSet(PWM1_BASE, PWM_GEN_3, ui32Load);
+
 	//initial pulse width operations
 	ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_4,ui8Adjust * ui32Load / 1000); // calc this 938 in notebook
 	ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_5,ui8Adjust * ui32Load / 1000); // calc this 938 in notebook
+	ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6,ui8Adjust * ui32Load / 1000); // calc this 938 in notebook
+
 
 	ROM_PWMOutputState(PWM0_BASE, PWM_OUT_4_BIT, true);
 	ROM_PWMOutputState(PWM0_BASE, PWM_OUT_5_BIT, true);
+	ROM_PWMOutputState(PWM1_BASE, PWM_OUT_6_BIT, true);
+
 	//do we need to enable everytime? -- dont think so
 	ROM_PWMGenEnable(PWM0_BASE, PWM_GEN_2);
-
+	// motor 'Z'
+	ROM_PWMGenEnable(PWM1_BASE, PWM_GEN_3);
 
 	return SUCCESS;
 }
@@ -58,51 +74,60 @@ uint8_t motorsSetPulseWidth(uint8_t motor, int speedChange){
 
 
 	uint8_t returnVal = SUCCESS; // will SUCCED unless in wrong bounds
-	int bit_wise_id=0;
-	int encoded_offset_addr=0;
-	uint16_t ui8PulseAdjust_temp=0;
 
 	//will check that speedchange is within bounds and does not exceed MAX and MIN
+	if(speedChange < 0){
+
+	}
+	else if(speedChange >= 0){
+
+	}
+
 	if(speedChange >= -5 && speedChange <= 5){
 		//set var's for pulse width adjustment
 		if(motor == MOTOR_1 ){
-			bit_wise_id = PWM_OUT_4;
-			encoded_offset_addr = PWM_OUT_4_BIT;
+			if(ui8PulseAdjust_1 <= PULSE_MIN && speedChange < 0) ui8PulseAdjust_1 = PULSE_MIN;
+			else if(ui8PulseAdjust_1 <= PULSE_MIN && speedChange >= 0) ui8PulseAdjust_1 += speedChange;
 
-			ui8PulseAdjust_temp = ui8PulseAdjust_1 + speedChange;
-			ui8PulseAdjust_1 += speedChange;
+			else if(ui8PulseAdjust_1 >= PULSE_MAX && speedChange >= 0) ui8PulseAdjust_1 = PULSE_MAX;
+			else if(ui8PulseAdjust_1 >= PULSE_MAX && speedChange < 0) ui8PulseAdjust_1 +=speedChange;
+			//deafulat case to catch a change
+			else ui8PulseAdjust_1 += speedChange;
+			// set pulse width adjustments here
+			ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_4, ui8PulseAdjust_1 * ui32Load / 1000); //set percent to a pulse width
+			ROM_PWMOutputState(PWM0_BASE, PWM_OUT_4_BIT, true);
 
 		}
 
-		else if(motor == MOTOR_2 && ((ui8PulseAdjust_2 > (PULSE_MIN + speedChange)) && (ui8PulseAdjust_2 < (PULSE_MAX + speedChange))) ){
-			bit_wise_id = PWM_OUT_5;
-			encoded_offset_addr = PWM_OUT_5_BIT;
+		else if(motor == MOTOR_2 ){
+			if(ui8PulseAdjust_2 <= PULSE_MIN && speedChange < 0) ui8PulseAdjust_2 = PULSE_MIN;
+			else if(ui8PulseAdjust_2 <= PULSE_MIN && speedChange >= 0) ui8PulseAdjust_2 += speedChange;
 
-			ui8PulseAdjust_2 += speedChange;
-			ui8PulseAdjust_temp = ui8PulseAdjust_2 + speedChange;
+			else if(ui8PulseAdjust_2 >= PULSE_MAX && speedChange >= 0) ui8PulseAdjust_2 = PULSE_MAX;
+			else if(ui8PulseAdjust_2 >= PULSE_MAX && speedChange < 0) ui8PulseAdjust_2 +=speedChange;
+			//deafulat case to catch a change
+			else ui8PulseAdjust_2 += speedChange;
+			ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_5, ui8PulseAdjust_2 * ui32Load / 1000); //set percent to a pulse width
+			ROM_PWMOutputState(PWM0_BASE, PWM_OUT_5_BIT, true);
 		}
 
-		else if(motor == MOTOR_Y && ((ui8PulseAdjust_3 > (PULSE_MIN + speedChange)) && (ui8PulseAdjust_3 < (PULSE_MAX + speedChange))) ){
-			bit_wise_id = PWM_OUT_4;
-			encoded_offset_addr = PWM_OUT_4_BIT;
-			ui8PulseAdjust_temp = ui8PulseAdjust_3 + speedChange;
+		else if(motor == MOTOR_Z  ){
+			if(ui8PulseAdjust_3 <= PULSE_MIN && speedChange < 0) ui8PulseAdjust_3 = PULSE_MIN;
+			else if(ui8PulseAdjust_3 <= PULSE_MIN && speedChange >= 0) ui8PulseAdjust_3 += speedChange;
 
-			ui8PulseAdjust_3 = speedChange;
-			ui8PulseAdjust_temp = ui8PulseAdjust_3 + speedChange;
+			else if(ui8PulseAdjust_3 >= PULSE_MAX && speedChange >= 0) ui8PulseAdjust_3 = PULSE_MAX;
+			else if(ui8PulseAdjust_3 >= PULSE_MAX && speedChange < 0) ui8PulseAdjust_3 +=speedChange;
+			//deafulat case to catch a change
+			else ui8PulseAdjust_3 += speedChange;
+
+			ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui8PulseAdjust_3 * ui32Load / 1000); //set percent to a pulse width
+			ROM_PWMOutputState(PWM1_BASE, PWM_OUT_6_BIT, true);
 		}
 
-
-
-		// set pulse width adjustments here
-		ROM_PWMPulseWidthSet(PWM0_BASE, bit_wise_id, ui8PulseAdjust_temp * ui32Load / 1000); //set percent to a pulse width
-		ROM_PWMOutputState(PWM0_BASE, encoded_offset_addr, true);
 	}
 
 	else{
 		returnVal = FAILURE;
-
-
-
 	}
 
 	return returnVal;
@@ -113,27 +138,24 @@ uint8_t motorsSetPulseWidth(uint8_t motor, int speedChange){
 
 uint8_t motorStop(uint8_t motor){
 
-	int bit_wise_id=0;
-	int encoded_offset_addr=0;
-
 	if(motor==MOTOR_1){
-		bit_wise_id = PWM_OUT_4;
-		encoded_offset_addr = PWM_OUT_4_BIT;
+		ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_4, PULSE_CENTER * ui32Load / 1000); //set percent to a pulse width
+		//set PWM to output, might not need every chagne of pulse width, (need to verfiy)
+		ROM_PWMOutputState(PWM0_BASE, PWM_OUT_4_BIT, true);
 	}
 	else if(MOTOR_2){
-		bit_wise_id = PWM_OUT_5;
-		encoded_offset_addr = PWM_OUT_5_BIT;
+		ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_5, PULSE_CENTER * ui32Load / 1000); //set percent to a pulse width
+		//set PWM to output, might not need every chagne of pulse width, (need to verfiy)
+		ROM_PWMOutputState(PWM0_BASE, PWM_OUT_5_BIT, true);
 	}
-	else if(MOTOR_Y){
-
+	else if(MOTOR_Z){
+		ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, PULSE_CENTER * ui32Load / 1000); //set percent to a pulse width
+		//set PWM to output, might not need every chagne of pulse width, (need to verfiy)
+		ROM_PWMOutputState(PWM1_BASE, PWM_OUT_6_BIT, true);
 	}
 
 
-	ROM_PWMPulseWidthSet(PWM1_BASE, bit_wise_id, 75 * ui32Load / 1000); //set percent to a pulse width
-	//set PWM to output, might not need every chagne of pulse width, (need to verfiy)
-	ROM_PWMOutputState(PWM1_BASE, encoded_offset_addr, true);
-
-	return 1;
+	return 1; // might want to add failur when not valid call
 }
 
 
@@ -147,6 +169,9 @@ uint8_t motorStop(uint8_t motor){
 
 
 #include "motors.h"
+#include "uart.h" // so can use PutString
+
+static volatile uint8_t data = 0;
 
 
 //For the USB UART connection to get controls from the pc
@@ -173,45 +198,58 @@ void UART0IntHandler(void)
 int main(void){
 
 
-	motorsInit();
 	UART_Init();
+	motorsInit();
+
 	PutString("\nWelcome! Motors Test Harness\n");
 	uint8_t localdata;
-
-
 
 	while(1){
 		localdata = data;
 		if(localdata =='w'){
-			PutString("motor_1 up");
+			PutString("1 up\n");
 			motorsSetPulseWidth(MOTOR_1,1);
 			//resets data to empty
 			localdata=' ';
 			data = ' ';
 		}
 		else if(data=='s'){
-			PutString("motor_1 down");
+			PutString("1 down\n");
 			motorsSetPulseWidth(MOTOR_1,-1);
 			//resets data to empty
 			localdata = ' ';
 			data = ' ';
 		}
 		else if(data=='i'){
-			PutString("reset MIN");
+			PutString("2 up\n");
 			motorsSetPulseWidth(MOTOR_2,1);
 			//resets data to empty
 			localdata = ' ';
 			data = ' ';
 		}
 		else if(data=='k'){
-			PutString("reset to MAX");
+			PutString("2 down\n");
 			motorsSetPulseWidth(MOTOR_2,-1);
 			//resets data to empty
 			localdata = ' ';
 			data = ' ';
 		}
+		else if(data=='t'){
+			PutString("3 up\n");
+			motorsSetPulseWidth(MOTOR_Z,1);
+			//resets data to empty
+			localdata = ' ';
+			data = ' ';
+		}
+		else if(data=='g'){
+			PutString("3 down\n");
+			motorsSetPulseWidth(MOTOR_Z,-1);
+			//resets data to empty
+			localdata = ' ';
+			data = ' ';
+		}
 		else if(data=='c'){
-			PutString("re-center both");
+			PutString("re-center motor 1");
 			motorStop(MOTOR_1);
 			//resets data to empty
 			localdata = ' ';
@@ -223,7 +261,7 @@ int main(void){
 
 
 void UART_Init(){
-	//ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);//to 40 MHz
+	ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);//to 40 MHz
 
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
