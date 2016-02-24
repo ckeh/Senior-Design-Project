@@ -49,7 +49,7 @@ void UART0IntHandler(void)
 
 	if(ui32Status == UART_INT_RX || ui32Status == UART_INT_RT){
 		while(UARTCharsAvail(UART0_BASE)){
-		    c_start = HWREG(DWT_BASE + DWT_O_CYCCNT); // at the beginning of the code
+		    //c_start = HWREG(DWT_BASE + DWT_O_CYCCNT);
 
 			UARTCharPut(UART7_BASE, UARTCharGet(UART0_BASE));
 		}
@@ -68,14 +68,12 @@ void UART7IntHandler(void)
 	if(ui32Status == UART_INT_RX || ui32Status == UART_INT_RT){
 		while(UARTCharsAvail(UART7_BASE)) //loop while there are chars
 		{
-//			TimerEnable(TIMER0_BASE, TIMER_A);
-//		    c_start = HWREG(DWT_BASE + DWT_O_CYCCNT); // at the beginning of the code
+		   // c_start = HWREG(DWT_BASE + DWT_O_CYCCNT);
 
 			temp = UARTCharGet(UART7_BASE);
-			c_stop = HWREG(DWT_BASE + DWT_O_CYCCNT); // at the end of the code
+			//c_stop = HWREG(DWT_BASE + DWT_O_CYCCNT);
 
-			//TimerDisable(TIMER0_BASE, TIMER_A);
-			UARTCharPut(UART0_BASE, temp);
+			//UARTCharPut(UART0_BASE, temp);
 			if(temp == 'F'){
 				count++;
 			}
@@ -98,31 +96,24 @@ int main(void) {
 //    		UARTCharPut(UART7_BASE,'F');
 //
 //    }
-	//GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3, 14);
-    //TimerEnable(TIMER0_BASE, TIMER_A);
-    //uint32_t time = TimerValueGet(TIMER0_BASE, TIMER_A);
+	GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3, 14);
     //c_start = HWREG(DWT_BASE + DWT_O_CYCCNT); // at the beginning of the code
 
 
-	SysCtlDelay(16666666);//SysCtlClockGet() / (1000 * 3)); //delay ~1 msec
+	//SysCtlDelay(16666666);//SysCtlClockGet() / (1000 * 3)); //delay ~1 msec
 	//c_stop = HWREG(DWT_BASE + DWT_O_CYCCNT); // at the end of the code
 
 
-	//TimerDisable(TIMER0_BASE, TIMER_A);
 
-	//uint32_t time = TimerValueGet(TIMER0_BASE, TIMER_A);
     i = 0;
-    //TimerDisable(WTIMER0_BASE, TIMER_A);
-    //uint64_t time = TimerValueGet(TIMER0_BASE, TIMER_A);
     while (1)
     {
-        //uint32_t time = TimerValueGet(TIMER0_BASE, TIMER_A);
 
-    	printf("start = %ld stop = %ld\n", c_start, c_stop);
+    	//printf("start = %ld stop = %ld\n", c_start, c_stop);
     	//checks to see if the final packet was found (if we print count everytime it messes up
     	//You can also check count by using debug.
-//    	if(count >=10473*60*2)
-//    		printf("%lld\n", count);
+    	if(count >=10473*60*2)
+    		printf("%lld\n", count);
 
     }
 
@@ -142,13 +133,6 @@ void Init(){
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF); //enable GPIO port for LED
-
-	//SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
-	//TimerLoadSet(TIMER0_BASE, TIMER_A, 100000000);
-	//TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
-	//TimerRTCEnable(WTIMER0_BASE);
-	//TimerEnable(TIMER0_BASE, TIMER_A);
-
 
     GPIOPinConfigure(GPIO_PA0_U0RX);
     GPIOPinConfigure(GPIO_PA1_U0TX);
