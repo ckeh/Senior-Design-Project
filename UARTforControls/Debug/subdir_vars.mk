@@ -10,6 +10,8 @@ LIB_SRCS += \
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/ccs/Debug/driverlib.lib 
 
 C_SRCS += \
+../accelerometer.c \
+../i2c.c \
 ../leds.c \
 ../main.c \
 ../motors.c \
@@ -18,6 +20,8 @@ C_SRCS += \
 ../uart.c 
 
 OBJS += \
+./accelerometer.obj \
+./i2c.obj \
 ./leds.obj \
 ./main.obj \
 ./motors.obj \
@@ -26,6 +30,8 @@ OBJS += \
 ./uart.obj 
 
 C_DEPS += \
+./accelerometer.pp \
+./i2c.pp \
 ./leds.pp \
 ./main.pp \
 ./motors.pp \
@@ -34,6 +40,8 @@ C_DEPS += \
 ./uart.pp 
 
 C_DEPS__QUOTED += \
+"accelerometer.pp" \
+"i2c.pp" \
 "leds.pp" \
 "main.pp" \
 "motors.pp" \
@@ -42,6 +50,8 @@ C_DEPS__QUOTED += \
 "uart.pp" 
 
 OBJS__QUOTED += \
+"accelerometer.obj" \
+"i2c.obj" \
 "leds.obj" \
 "main.obj" \
 "motors.obj" \
@@ -50,6 +60,8 @@ OBJS__QUOTED += \
 "uart.obj" 
 
 C_SRCS__QUOTED += \
+"../accelerometer.c" \
+"../i2c.c" \
 "../leds.c" \
 "../main.c" \
 "../motors.c" \

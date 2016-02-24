@@ -13,8 +13,6 @@
 #include "driverlib/rom.h"
 #include "driverlib/pwm.h"
 
-#include "uart.h" //for use of PutStrin()
-
 //#define TARGET_IS_BLIZZARD_RB1 //defined in properties
 
 //base frequency to control servo
@@ -34,8 +32,8 @@
 #define FAILURE 0
 #define SUCCESS 1
 
-#define SERVO_MIN_PULSE 38// for the servo out min is .75 ms
-#define SERVO_MAX_PULSE 112//90-> for esc, for servo the max is 2.25 ms
+#define SERVO_MIN_PULSE 40//55-> for esc
+#define SERVO_MAX_PULSE 110//90-> for esc
 
 
 volatile uint32_t ui32Load;
@@ -111,7 +109,7 @@ uint8_t servoSetMin();
 uint8_t servoSetCenter();
 
 
-void UART_Init(void);
+//void UART_Init(void);
 //void PutString(char* string);
 
 

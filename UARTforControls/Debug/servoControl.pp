@@ -21,7 +21,6 @@ servoControl.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/sysctl.h
 servoControl.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/uart.h
 servoControl.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/rom.h
 servoControl.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/pwm.h
-servoControl.obj: ../uart.h
 
 ../servoControl.c: 
 ../servoControl.h: 
@@ -44,4 +43,3 @@ C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/sysctl.h:
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/uart.h: 
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/rom.h: 
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/pwm.h: 
-../uart.h: 

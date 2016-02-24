@@ -6,12 +6,11 @@
  */
 
 #include "uart.h"
-#include "servoControl.h" // why is this included
-#include "motors.h" //
+#include "servoControl.h"
 
 
 void uartInit(){
-	//ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
+	ROM_SysCtlClockSet(SYSCTL_SYSDIV_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
 
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);

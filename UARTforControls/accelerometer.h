@@ -26,7 +26,11 @@ struct accelerometer {
  * Description - gets acceleromter data on all axis and puts them in the accel struct fields
  * Return - none
  */
+<<<<<<< HEAD
 void accelerometer_data_get (accelerometer *accel);
+=======
+void accelerometer_data_get (volatile accelerometer *accel);
+>>>>>>> refs/remotes/origin/LG_Testing
 
 /*
  * Param - void

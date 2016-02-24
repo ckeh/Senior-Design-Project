@@ -22,9 +22,6 @@ uart.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/sysctl.h
 uart.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/uart.h
 uart.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/rom.h
 uart.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/pwm.h
-uart.obj: ../motors.h
-uart.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdio.h
-uart.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/string.h
 
 ../uart.c: 
 ../uart.h: 
@@ -48,6 +45,3 @@ C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/sysctl.h:
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/uart.h: 
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/rom.h: 
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/pwm.h: 
-../motors.h: 
-C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdio.h: 
-C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/string.h: 
