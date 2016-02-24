@@ -124,8 +124,12 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // UART4 Rx and Tx
     IntDefaultHandler,                      // UART5 Rx and Tx
     IntDefaultHandler,                      // UART6 Rx and Tx
-	UART7IntHandler,                      // UART7 Rx and Tx
-    0,                                      // Reserved
+	#ifdef MOTOR_TEST
+	IntDefaultHandler, 						// UART7 Rx and Tx <--- commented out for motors Test harness
+	#else
+	UART7IntHandler,                      	// UART7 Rx and Tx
+	#endif
+	0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved

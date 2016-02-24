@@ -1,3 +1,5 @@
+#ifdef MAIN
+
 
 #include "leds.h"
 #include "servoControl.h"
@@ -6,6 +8,8 @@
 #include "i2c.h"
 #include "accelerometer.h"
 #include "motors.h"
+
+
 
 //Header for controls not needed since only one byte of data
 //#define HEADER						0xAA
@@ -201,4 +205,4 @@ uint8_t SetBitCount(uint8_t i){
     }
     return count;
 }
-
+#endif
