@@ -10,6 +10,7 @@ LIB_SRCS += \
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/ccs/Debug/driverlib.lib 
 
 C_SRCS += \
+../Timer.c \
 ../accelerometer.c \
 ../i2c.c \
 ../leds.c \
@@ -20,6 +21,7 @@ C_SRCS += \
 ../uart.c 
 
 OBJS += \
+./Timer.obj \
 ./accelerometer.obj \
 ./i2c.obj \
 ./leds.obj \
@@ -30,6 +32,7 @@ OBJS += \
 ./uart.obj 
 
 C_DEPS += \
+./Timer.pp \
 ./accelerometer.pp \
 ./i2c.pp \
 ./leds.pp \
@@ -40,6 +43,7 @@ C_DEPS += \
 ./uart.pp 
 
 C_DEPS__QUOTED += \
+"Timer.pp" \
 "accelerometer.pp" \
 "i2c.pp" \
 "leds.pp" \
@@ -50,6 +54,7 @@ C_DEPS__QUOTED += \
 "uart.pp" 
 
 OBJS__QUOTED += \
+"Timer.obj" \
 "accelerometer.obj" \
 "i2c.obj" \
 "leds.obj" \
@@ -60,6 +65,7 @@ OBJS__QUOTED += \
 "uart.obj" 
 
 C_SRCS__QUOTED += \
+"../Timer.c" \
 "../accelerometer.c" \
 "../i2c.c" \
 "../leds.c" \

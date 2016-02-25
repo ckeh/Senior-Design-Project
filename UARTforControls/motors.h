@@ -36,7 +36,7 @@
 
 #define PWM_FREQUENCY 50
 
-#define PULSE_MAX 95
+#define PULSE_MAX 93
 #define PULSE_MIN 55
 #define PULSE_CENTER 75 // for spec sheet this is deadzone +/- 25uS
 

@@ -32,8 +32,8 @@
 #define FAILURE 0
 #define SUCCESS 1
 
-#define SERVO_MIN_PULSE 40//55-> for esc
-#define SERVO_MAX_PULSE 110//90-> for esc
+#define SERVO_MIN_PULSE 38//55-> for esc
+#define SERVO_MAX_PULSE 112//90-> for esc
 
 
 volatile uint32_t ui32Load;

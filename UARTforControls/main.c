@@ -6,6 +6,7 @@
 #include "i2c.h"
 #include "accelerometer.h"
 #include "motors.h"
+#include "Timer.h"
 
 //Header for controls not needed since only one byte of data
 //#define HEADER						0xAA
@@ -18,6 +19,22 @@ static volatile uint8_t count=0;
 volatile accelerometer accel;
 
 //For the USB UART connection to get controls from the pc
+#ifdef CONTROLS
+
+void Timer0IntHandler(){
+	// Clear the timer interrupt
+	TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
+
+	accelerometer_data_get(&accel);
+	printf ("x0 = %d\n", accel.xg0);
+	printf ("x1 = %d\n", accel.xg1);
+//	printf ("y0 = %d\n", accel.yg0);
+//	printf ("y1 = %d\n", accel.yg1);
+//	printf ("z0 = %d\n", accel.zg0);
+//	printf ("z1 = %d\n", accel.zg1);
+
+
+}
 void UART0IntHandler(void)
 {
 	static uint8_t index = 0;
@@ -75,37 +92,50 @@ void UART7IntHandler(void)
 						servoSetCenter();
 						motorStop(MOTOR_1);
 						motorStop(MOTOR_2);
+
 					}else if((temp & RMOTOR_2BITS) == LIGHTS_TOGGLE){
 						PutString("Lights\n\r");
 						ledsBright();
+
 					} else {
 						PutString("Bad Command\n\r");
+
 					}
 				} else {
 					if ((temp & CAMERA_2BITS) == CAMERA_UP){
 						PutString("Camera up\n\r");
 						servoSetPulseWidth(1);
+
 					}else if((temp & CAMERA_2BITS) == CAMERA_DOWN){
 						PutString("Camera Down\n\r");
 						servoSetPulseWidth(0);
+
 					}else if((temp & LMOTOR_2BITS) == LMOTOR_UP){
 						PutString("Left motor up\n\r");
 						motorsSetPulseWidth(MOTOR_1,1);
+
 					}else if((temp & LMOTOR_2BITS) == LMOTOR_DOWN){
 						PutString("Left motor down\n\r");
 						motorsSetPulseWidth(MOTOR_1,-1);
+
 					}else if((temp & RMOTOR_2BITS) == RMOTOR_UP){
 						PutString("Right motor up\n\r");
 						motorsSetPulseWidth(MOTOR_2,1);
+
 					}else if((temp & RMOTOR_2BITS) == RMOTOR_DOWN){
 						PutString("Right motor down\n\r");
 						motorsSetPulseWidth(MOTOR_2,-1);
+
 					}else if((temp & ZMOTOR_2BITS) == ZMOTOR_UP){
-		    			accelerometer_data_get(&accel);
+//		    			accelerometer_data_get(&accel);
+						motorsSetPulseWidth(MOTOR_Z,1);
+
 		    			//printf ("x = %d\n", accel.xg0);
 						PutString("Z motor up\n\r");
 					}else if((temp & ZMOTOR_2BITS) == ZMOTOR_DOWN){
 						PutString("Z motor down\n\r");
+						motorsSetPulseWidth(MOTOR_Z,-1);
+
 					}
 					//headerflag = 0;
 				}
@@ -120,9 +150,14 @@ int main(void) {
 	servoInit();
 	ledsInit();
 	motorsInit();
+	timerInit();
 
 	initialize_i2c();
 	initialize_accelerometer();
+
+	ROM_IntMasterEnable(); //enable processor interrupts
+
+
 
 	char* mes = "Enter Commands (w, s, e, d, r, f, x, i, k, or l): ";
     uint8_t i;
@@ -168,6 +203,8 @@ int main(void) {
     		}else if (localdata == DIVE){
     			//UARTCharPut(UART7_BASE, HEADER);
     			UARTCharPut(UART7_BASE, ZMOTOR_DOWN);
+//    			accelerometer_data_get(&accel);
+//    			printf ("x = %d\n", accel.xg0);
     			i++;
     		}else if (localdata == SURFACE){
     			//UARTCharPut(UART7_BASE, HEADER);
@@ -190,6 +227,7 @@ int main(void) {
 
 }
 
+#endif
 
 uint8_t SetBitCount(uint8_t i){
     uint8_t count;

@@ -139,17 +139,20 @@ uint8_t motorsSetPulseWidth(uint8_t motor, int speedChange){
 uint8_t motorStop(uint8_t motor){
 
 	if(motor==MOTOR_1){
-		ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_4, PULSE_CENTER * ui32Load / 1000); //set percent to a pulse width
+		ui8PulseAdjust_1 = PULSE_CENTER;
+		ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_4, ui8PulseAdjust_1 * ui32Load / 1000); //set percent to a pulse width
 		//set PWM to output, might not need every chagne of pulse width, (need to verfiy)
 		ROM_PWMOutputState(PWM0_BASE, PWM_OUT_4_BIT, true);
 	}
 	else if(MOTOR_2){
-		ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_5, PULSE_CENTER * ui32Load / 1000); //set percent to a pulse width
+		ui8PulseAdjust_2 = PULSE_CENTER;
+		ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_5, ui8PulseAdjust_2 * ui32Load / 1000); //set percent to a pulse width
 		//set PWM to output, might not need every chagne of pulse width, (need to verfiy)
 		ROM_PWMOutputState(PWM0_BASE, PWM_OUT_5_BIT, true);
 	}
 	else if(MOTOR_Z){
-		ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, PULSE_CENTER * ui32Load / 1000); //set percent to a pulse width
+		ui8PulseAdjust_3 = PULSE_CENTER;
+		ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui8PulseAdjust_3 * ui32Load / 1000); //set percent to a pulse width
 		//set PWM to output, might not need every chagne of pulse width, (need to verfiy)
 		ROM_PWMOutputState(PWM1_BASE, PWM_OUT_6_BIT, true);
 	}
