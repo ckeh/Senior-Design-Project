@@ -28,7 +28,7 @@
 //the three motors will be using
 #define MOTOR_1 1
 #define MOTOR_2 2
-#define MOTOR_Y 3
+#define MOTOR_Z 3
 
 #define SUCCESS 1
 #define FAILURE 0
@@ -36,8 +36,9 @@
 
 #define PWM_FREQUENCY 50
 
-#define PULSE_MAX 100
-#define PULSE_MIN 50
+#define PULSE_MAX 95
+#define PULSE_MIN 55
+#define PULSE_CENTER 75 // for spec sheet this is deadzone +/- 25uS
 
 volatile uint32_t ui32Load;
 volatile uint32_t ui32PWMClock;
