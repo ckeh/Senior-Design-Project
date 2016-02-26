@@ -13,13 +13,14 @@ uint8_t timerInit(){
 	ROM_TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
 
 	//Timer at 10Hz and 50% duty cycle
-	ui32Period = 80000000;//(SysCtlClockGet() /2) / 2;
+	ui32Period = 2000000;//(SysCtlClockGet() /2) / 2;
 	ROM_TimerLoadSet(TIMER0_BASE, TIMER_A, ui32Period -1);
 
 	ROM_IntEnable(INT_TIMER0A); // enables timer 0a interrupt
 	ROM_TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT); //configures when interrupts will be generated
 	//IntMasterEnable(); //enable interrupts
 
+	ROM_IntPrioritySet(INT_TIMER0A, 0x20);
 	ROM_TimerEnable(TIMER0_BASE, TIMER_A);
 	return 1;
 

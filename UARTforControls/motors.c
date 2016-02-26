@@ -254,6 +254,8 @@ int main(void){
 		else if(data=='c'){
 			PutString("re-center motor 1");
 			motorStop(MOTOR_1);
+			motorStop(MOTOR_2);
+			motorStop(MOTOR_Z);
 			//resets data to empty
 			localdata = ' ';
 			data = ' ';

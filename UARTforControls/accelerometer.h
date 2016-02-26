@@ -13,12 +13,12 @@
 typedef struct accelerometer accelerometer;
 
 struct accelerometer {
-	int xg0, xg1;
-	int yg0, yg1;
-	int zg0, zg1;
+	int8_t xg0, xg1;
+	int8_t yg0, yg1;
+	int8_t zg0, zg1;
 
 	// Combined data from each of the fields above.
-	int x, y, z;
+	int16_t x, y, z;
 };
 
 /*

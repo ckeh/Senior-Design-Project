@@ -22,17 +22,19 @@ volatile accelerometer accel;
 #ifdef CONTROLS
 
 void Timer0IntHandler(){
+
+	static  uint8_t samplenum=0;
+
 	// Clear the timer interrupt
 	TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-
-	accelerometer_data_get(&accel);
-	printf ("x0 = %d\n", accel.xg0);
-	printf ("x1 = %d\n", accel.xg1);
-//	printf ("y0 = %d\n", accel.yg0);
-//	printf ("y1 = %d\n", accel.yg1);
-//	printf ("z0 = %d\n", accel.zg0);
-//	printf ("z1 = %d\n", accel.zg1);
-
+	if(samplenum <7){
+		accelerometer_data_get(&accel);
+		printf ("x = %d\n", accel.x);
+		//printf ("gy = %d\n", accel.yg0);
+		//printf ("z = %d\n", accel.z);
+	}
+	samplenum++;
+	if(samplenum >20) samplenum = 0;
 
 }
 void UART0IntHandler(void)
@@ -156,8 +158,6 @@ int main(void) {
 	initialize_accelerometer();
 
 	ROM_IntMasterEnable(); //enable processor interrupts
-
-
 
 	char* mes = "Enter Commands (w, s, e, d, r, f, x, i, k, or l): ";
     uint8_t i;

@@ -26,6 +26,10 @@ void accelerometer_data_get (volatile accelerometer *accel) {
 	accel->zg0 = read_byte(M_ACK|RUN);
 	accel->zg1 = read_byte(RUN|STOPI2C);
 
+	accel->x = (accel->xg1<<8)|(accel->xg0);
+	accel->y = (accel->yg1<<8)|(accel->yg0);
+	accel->z = (accel->zg1<<8)|(accel->zg0);
+
 }
 
 /*
@@ -42,7 +46,7 @@ void initialize_accelerometer (void) {
 //	write_byte(POWER_CTL, START|RUN);
 //	write_byte(0x08, RUN|STOP);
 
-	write_accelerometer(DATA_FORMAT, 0x03);
+	write_accelerometer(DATA_FORMAT, 0x0b);
 //	write_byte(DATA_FORMAT, START|RUN);
 //	write_byte(0x03, RUN|STOP);
 
