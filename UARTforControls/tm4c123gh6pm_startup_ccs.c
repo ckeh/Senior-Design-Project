@@ -27,8 +27,9 @@ static void IntDefaultHandler(void);
 extern void _c_int00(void);
 extern void UART0IntHandler(void);
 extern void UART7IntHandler(void);
+#ifdef TIMER
 extern void Timer0IntHandler(void);
-
+#endif
 
 //*****************************************************************************
 //
@@ -84,10 +85,10 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // ADC Sequence 3
     IntDefaultHandler,                      // Watchdog timer
 
-#ifdef MOTOR_TEST
-IntDefaultHandler,
-#else
+#ifdef TIMER
 Timer0IntHandler,
+#else
+IntDefaultHandler,
 #endif
 	//Timer0IntHandler,                      // Timer 0 subtimer A
     IntDefaultHandler,                      // Timer 0 subtimer B

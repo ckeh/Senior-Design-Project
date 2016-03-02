@@ -7,6 +7,7 @@
 
 #include "accelerometer.h"
 #include "i2c.h"
+#include "tm4c123gh6pm.h"
 
 /*
  * Param - accelerometer*
@@ -14,16 +15,21 @@
  * Return - none
  */
 void accelerometer_data_get (volatile accelerometer *accel) {
+
 	set_slave_address (0x1D);
 	write_byte(DATAX0, RUN|START);
 	// Get X, Y, Z data from accelerometer
+	I2C1_MCS_R &= 0xFFFFFFE0;
 	accel->xg0 = read_byte(M_ACK|START|RUN);
+
+	I2C1_MCS_R &= 0xFFFFFFE0;
 	accel->xg1 = read_byte(M_ACK|RUN);
 
 	accel->yg0 = read_byte(M_ACK|RUN);
 	accel->yg1 = read_byte(M_ACK|RUN);
 
 	accel->zg0 = read_byte(M_ACK|RUN);
+	I2C1_MCS_R &= 0xFFFFFFE0;
 	accel->zg1 = read_byte(RUN|STOPI2C);
 
 	accel->x = (accel->xg1<<8)|(accel->xg0);
@@ -46,7 +52,7 @@ void initialize_accelerometer (void) {
 //	write_byte(POWER_CTL, START|RUN);
 //	write_byte(0x08, RUN|STOP);
 
-	write_accelerometer(DATA_FORMAT, 0x0b);
+	write_accelerometer(DATA_FORMAT, 0x03);
 //	write_byte(DATA_FORMAT, START|RUN);
 //	write_byte(0x03, RUN|STOP);
 

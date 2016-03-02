@@ -1,4 +1,7 @@
 
+//#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "leds.h"
 #include "servoControl.h"
 #include "controlScheme.h"
@@ -7,6 +10,8 @@
 #include "accelerometer.h"
 #include "motors.h"
 #include "Timer.h"
+#include "driverlib/i2c.h"
+
 
 //Header for controls not needed since only one byte of data
 //#define HEADER						0xAA
@@ -16,27 +21,35 @@ uint8_t SetBitCount(uint8_t);
 //Store incoming data to be processed and packeted
 static volatile uint8_t data[64];
 static volatile uint8_t count=0;
+static volatile uint8_t upsideDown = 0;
 volatile accelerometer accel;
 
+
 //For the USB UART connection to get controls from the pc
-#ifdef CONTROLS
+#ifdef TIMER
 
 void Timer0IntHandler(){
 
-	static  uint8_t samplenum=0;
-
+	static short xtmp=0;
+	static short ytmp=0;
+	static short ztmp=0;
 	// Clear the timer interrupt
 	TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-	if(samplenum <7){
+
 		accelerometer_data_get(&accel);
-		printf ("x = %d\n", accel.x);
-		//printf ("gy = %d\n", accel.yg0);
-		//printf ("z = %d\n", accel.z);
-	}
-	samplenum++;
-	if(samplenum >20) samplenum = 0;
+		if(accel.x != xtmp|accel.y != ytmp|accel.z != ztmp){
+			if(accel.x == -6912){
+				upsideDown = 1; //if the accelerometer is past 90 degrees in any direction
+				accelerometer_data_get(&accel); //gets data from accelerometer and places it in accel
+			}
+			xtmp = accel.x;//asin(accel.x * 31.2);
+			ytmp = accel.y;//asin(accel.y * 31.2);
+			ztmp = accel.z;//asin(accel.z * 31.2);
+		}
 
 }
+#endif
+#ifdef CONTROLS
 void UART0IntHandler(void)
 {
 	static uint8_t index = 0;
@@ -152,25 +165,33 @@ int main(void) {
 	servoInit();
 	ledsInit();
 	motorsInit();
-	timerInit();
 
 	initialize_i2c();
 	initialize_accelerometer();
+	timerInit();
+	SysCtlDelay(SysCtlClockGet() / (1000 * 3)); //delay ~1 msec
 
 	ROM_IntMasterEnable(); //enable processor interrupts
+
+//	volatile accelerometer* accel;
+//	accel = malloc(sizeof(accelerometer));
+
 
 	char* mes = "Enter Commands (w, s, e, d, r, f, x, i, k, or l): ";
     uint8_t i;
     uint8_t localdata;
     PutString(mes);
 
-    SysCtlDelay(SysCtlClockGet() / (1000 * 3)); //delay ~1 msec
+    //SysCtlDelay(SysCtlClockGet() / (1000 * 3)); //delay ~1 msec
 
 
     //keeps an index of the data from uart
     i = 0;
     while (1) //let interrupt handler do the UART echo function
     {
+//		accelerometer_data_get(accel);
+
+//		printf("x = %d\n", accel->x);
 
     	//takes data from UART0 (the computer) and puts them into UART7 (transfer uart)
     	if (count > 0){

@@ -48,7 +48,7 @@
 
 void initialize_i2c(void);
 void set_slave_address(uint8_t address);
-int read_byte(uint8_t conditions);
+double read_byte(uint8_t conditions);
 void write_byte (uint8_t data, uint8_t conditions);
 
 

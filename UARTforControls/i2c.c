@@ -74,7 +74,7 @@ void set_slave_address (uint8_t address) {
 
 
 // Conditions will be STOP, START, RUN 2:0 respectively
-int read_byte (uint8_t conditions) {
+int8_t read_byte (uint8_t conditions) {
 
 	set_rw(1);
 	// Set Conditions for i2c
@@ -96,8 +96,7 @@ int read_byte (uint8_t conditions) {
 	}
 	// Read byte of data
 
-
-	return I2C1_MDR_R&0xFF;
+	return (I2C1_MDR_R & 0xFF);
 }
 
 void write_byte (uint8_t data, uint8_t conditions) {
@@ -108,7 +107,7 @@ void write_byte (uint8_t data, uint8_t conditions) {
 	I2C1_MDR_R |= data;
 	// 10. Initiate a single byte transmit of the data from Master to Slave by writing the I2CMCS register
 	// with a value of 0x0000.0007 (STOP, START, RUN).
-	I2C1_MCS_R |= 0<<4;
+	I2C1_MCS_R &= ~(1<<4);
 	I2C1_MCS_R |= conditions; // STOP, START, RUN
 
 	// 11. Wait until the transmission completes by polling the I2CMCS register's BUSBSY bit until it has
@@ -125,4 +124,5 @@ void write_byte (uint8_t data, uint8_t conditions) {
 			while ((I2C1_MCS_R & (1<<0)) != 0);
 		}
 	}
+
 }

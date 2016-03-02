@@ -46,12 +46,16 @@ void uartInit(){
 	ROM_UARTFIFOEnable(UART7_BASE);
 
 //	ROM_IntMasterEnable(); //enable processor interrupts
+
 	ROM_IntEnable(INT_UART0); //enable the UART interrupt
 	ROM_UARTIntEnable(UART0_BASE, UART_INT_RX|UART_INT_RT ); //only enable RX and TX interrupts
 	ROM_UARTEnable(UART0_BASE);
 	ROM_IntEnable(INT_UART7); //enable the UART interrupt
 	ROM_UARTIntEnable(UART7_BASE, UART_INT_RX|UART_INT_RT ); //only enable RX and TX interrupts
 	ROM_UARTEnable(UART7_BASE);
+
+	ROM_IntPrioritySet(INT_UART0, 0x00);
+	ROM_IntPrioritySet(INT_UART7, 0x00);
 }
 
 void PutString(char* string){
