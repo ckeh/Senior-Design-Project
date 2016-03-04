@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 		WriteFile((gpad._port), &header, sizeof (unsigned char), &gpad.bytes_written, NULL);
 		WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
 		cout << gpad.total_packet << endl;
-		Sleep(200);
+		Sleep(20);
 	}
 #endif
 #ifndef CLASS
