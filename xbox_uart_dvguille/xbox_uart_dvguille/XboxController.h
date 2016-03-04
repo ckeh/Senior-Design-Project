@@ -17,6 +17,7 @@ public:
 	unsigned char lstick{ 0 }, rstick{ 0 };			// Analog sticks
 	unsigned char triggers{ 0 };					// Left and right triggers of the controller
 	unsigned long total_packet;
+	unsigned char header {0xAA};
 
 
 	/* XboxController methods */

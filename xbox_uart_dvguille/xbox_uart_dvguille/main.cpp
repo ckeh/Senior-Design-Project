@@ -15,15 +15,17 @@ using xbox = XboxController;
 int main(int argc, char *argv[]) {
 #ifdef CLASS
 	xbox gpad;
+	unsigned char header = 0xAA;
 	if (gpad.On()) cout << "Controller " << gpad._id + 1 << " is connected." << endl;
 	if (gpad.Connect("COM9", 115200)) cout << "Serial line opened via COM9" << endl;
 	else cout << "Could not open a serial line" << endl;
 	while (1) {
-		gpad.Send();
-		cout << gpad.total_packet;
-		//WriteFile(&(gpad._port), &(gpad.total_packet), sizeof(gpad.total_packet), &gpad.bytes_written, NULL);
-		cout << " " << gpad.bytes_written << endl;
-		Sleep(1000);
+		//gpad.Send();
+		gpad.Update();
+		WriteFile((gpad._port), &header, sizeof (unsigned char), &gpad.bytes_written, NULL);
+		WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
+		cout << gpad.total_packet << endl;
+		Sleep(200);
 	}
 #endif
 #ifndef CLASS
