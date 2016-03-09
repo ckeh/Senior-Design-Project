@@ -19,7 +19,7 @@
 uint8_t SetBitCount(uint8_t);
 
 //Store incoming data to be processed and packeted
-static volatile uint8_t data[64];
+static volatile uint8_t data[20];
 static volatile uint8_t count=0;
 static volatile uint8_t upsideDown = 0;
 volatile accelerometer accel;
@@ -39,7 +39,7 @@ void Timer0IntHandler(){
 	accelerometer_data_get(&accel);
 		if(accel.x != xtmp|accel.y != ytmp|accel.z != ztmp){
 			if(accel.x == -6912){
-				upsideDown = 1; //if the accelerometer is past 90 degrees in any direction
+				//upsideDown = 1; //if the accelerometer is past 90 degrees in any direction
 				accelerometer_data_get(&accel); //gets data from accelerometer and places it in accel
 			}
 			if(accel.x <0){
@@ -61,10 +61,12 @@ void Timer0IntHandler(){
 					ytmp = 90.0;
 			}
 			if(accel.z <0){
+				upsideDown = 1;
 				ztmp = -asin((-accel.z * 31.2)/1000)* (180/3.14);
 				if((-accel.z * 31.2)/1000 >1)
 					ztmp = -90.0;
 			} else {
+				upsideDown = 0;
 				ztmp = asin((accel.z * 31.2)/1000)* (180/3.14);
 				if((accel.z * 31.2)/1000 >1)
 					ztmp = 90.0;
@@ -96,12 +98,13 @@ void UART0IntHandler(void)
 			//UARTCharPut(UART7_BASE, d);
 			//continue;
 			//if (d == LMSU |d == LMSD |d == RMSU |d == RMSD |d == STOP |d == CU |d == CD |d == SURFACE |d == DIVE | d==LIGHTS){
-				data[index]=d;
-				index++;
-				count++;
+
+				//data[index]=d;
+				//index++;
+				//count++;
 			//}
-			if(index > 63){
-				index = 0;
+			if(index > 19){
+				//index = 0;
 			}
 		}
 	}
@@ -115,81 +118,29 @@ void UART0IntHandler(void)
 //For UART 7 connecting to the other device
 void UART7IntHandler(void)
 {
-	//static uint8_t headerflag=0;
+	static uint8_t index = 0;
 	uint8_t temp;
 	uint32_t ui32Status;
 	ui32Status = UARTIntStatus(UART7_BASE, true); //get interrupt status
 	UARTIntClear(UART7_BASE, ui32Status); //clear the asserted interrupts
-
-	if(ui32Status == UART_INT_RX || ui32Status == UART_INT_RT){
+	if(ui32Status == UART_INT_RX| ui32Status == UART_INT_RT){
 		while(UARTCharsAvail(UART7_BASE)) //loop while there are chars
 		{
 			temp = UARTCharGetNonBlocking(UART7_BASE);
-			UARTCharPut(UART0_BASE, temp);
-			continue;
-			/*
-			if (temp == HEADER){
-				headerflag =1;
-				continue;
-			}
-			if(headerflag){
-				*/
-				if (SetBitCount(temp)!=1){
-					if(temp  == STOP_ALL){
-						PutString("Stop\n\r");
-						servoSetCenter();
-						motorStop(MOTOR_1);
-						motorStop(MOTOR_2);
+			//UARTCharPut(UART7_BASE, temp);
+			//continue;
+			//if (d == LMSU |d == LMSD |d == RMSU |d == RMSD |d == STOP |d == CU |d == CD |d == SURFACE |d == DIVE | d==LIGHTS){
 
-					}else if((temp & RMOTOR_2BITS) == LIGHTS_TOGGLE){
-						PutString("Lights\n\r");
-						ledsBright();
-
-					} else {
-						PutString("Bad Command\n\r");
-
-					}
-				} else {
-					if ((temp & CAMERA_2BITS) == CAMERA_UP){
-						PutString("Camera up\n\r");
-						servoSetPulseWidth(1);
-
-					}else if((temp & CAMERA_2BITS) == CAMERA_DOWN){
-						PutString("Camera Down\n\r");
-						servoSetPulseWidth(0);
-
-					}else if((temp & LMOTOR_2BITS) == LMOTOR_UP){
-						PutString("Left motor up\n\r");
-						motorsSetPulseWidth(MOTOR_1,1);
-
-					}else if((temp & LMOTOR_2BITS) == LMOTOR_DOWN){
-						PutString("Left motor down\n\r");
-						motorsSetPulseWidth(MOTOR_1,-1);
-
-					}else if((temp & RMOTOR_2BITS) == RMOTOR_UP){
-						PutString("Right motor up\n\r");
-						motorsSetPulseWidth(MOTOR_2,1);
-
-					}else if((temp & RMOTOR_2BITS) == RMOTOR_DOWN){
-						PutString("Right motor down\n\r");
-						motorsSetPulseWidth(MOTOR_2,-1);
-
-					}else if((temp & ZMOTOR_2BITS) == ZMOTOR_UP){
-//		    			accelerometer_data_get(&accel);
-						motorsSetPulseWidth(MOTOR_Z,1);
-
-		    			//printf ("x = %d\n", accel.xg0);
-						PutString("Z motor up\n\r");
-					}else if((temp & ZMOTOR_2BITS) == ZMOTOR_DOWN){
-						PutString("Z motor down\n\r");
-						motorsSetPulseWidth(MOTOR_Z,-1);
-
-					}
-					//headerflag = 0;
-				}
+				data[index]=temp;
+				index++;
+				count++;
 			//}
+			if(index > 19){
+				index = 0;
+			}
 		}
 	}
+
 
 }
 #endif
@@ -198,8 +149,8 @@ void UART7IntHandler(void)
 int main(void) {
 	uartInit();
 	servoInit();
-	//ledsInit();
-	//motorsInit();
+	ledsInit();
+	motorsInit();
 
 	//initialize_i2c();
 	//initialize_accelerometer();
@@ -220,7 +171,13 @@ int main(void) {
 
     //keeps an index of the data from uart
     i = 0;
-    int c =0;
+    uint8_t headerFlag =0;
+    uint8_t lightsFlag = 0;
+    uint8_t first;
+    uint8_t second;
+    uint8_t third;
+    uint8_t fourth;
+
     while (1) //let interrupt handler do the UART echo function
     {
 //		accelerometer_data_get(accel);
@@ -228,30 +185,183 @@ int main(void) {
 //		printf("x = %d\n", accel->x);
 
     	//takes data from UART0 (the computer) and puts them into UART7 (transfer uart)
-    	if (count > 0){
-    		localdata = data[i];
+    	if (count > 4){
     		count--;
+    		localdata = data[i];
 
+    		//HEADER
     		if(localdata == 0xAA){
-    			c=1;
-    			data[i]=0;
+    			headerFlag=1;
     			i++;
-
-    		}
-    		if(c){
+        		if (i > 19){
+        			i = 0;
+        		}
     			count --;
-    			localdata = data[i];
-    			if ((localdata & 1) ==1){
+    			first = data[i];
+    			i++;
+        		if (i > 19){
+        			i = 0;
+        		}
+    			count --;
+    			second = data[i];
+    			i++;
+        		if (i > 19){
+        			i = 0;
+        		}
+    			count --;
+    			third = data[i];
+    			i++;
+        		if (i > 19){
+        			i = 0;
+        		}
+    			count --;
+    			fourth = data[i];
+    			i++;
+        		if (i > 19){
+        			i = 0;
+        		}
+    		}
+
+
+    		//if header is detected that means we start looking for packet
+    		if(headerFlag){
+//    			count --;
+//    			localdata = data[i];
+//    			i++;
+//        		if (i > 19){
+//        			i = 0;
+//        		}
+
+    			/*-------------------------------------------------------------------
+    			 * first byte of packet
+    			 *
+    			 * ---------------------------------------------------------------- */
+
+    			// D pad UP
+    			if ((first & 1) ==1){
+    				//ledsBright();
+    				//motorsSetPulseWidth(MOTOR_1,1);
     				servoSetPulseWidth(1);
     			}
-    			if((localdata & 2)==2){
+
+    			// D pad Down
+    			if((first & 2)==2){
+    				//motorsSetPulseWidth(MOTOR_1,-1);
     				servoSetPulseWidth(0);
     			}
-    			data[i]=0;
-    			i++;
-    			c=0;
+
+    			// D pad Left
+    			if((first & 4)==4){
+    				//motorsSetPulseWidth(MOTOR_1,-1);
+    				servoSetPulseWidth(0);
+    			}
+
+    			// D pad Right
+    			if((first & 8)==8){
+    				//motorsSetPulseWidth(MOTOR_1,-1);
+    				servoSetPulseWidth(1);
+    			}
+
+    			// A
+    			if((first & 16)==16){
+    				//motorsSetPulseWidth(MOTOR_2,-1);
+    				//servoSetPulseWidth(0);
+    			}
+
+    			// B
+    			if((first & 32) == 32){
+    				servoSetCenter();
+    				motorStop(MOTOR_1);
+    				motorStop(MOTOR_2);
+    				motorStop(MOTOR_Z);
+    			}
+    			//user has to press and can't hold lights button
+    			// X
+    			if((first & 64) == 64 && lightsFlag ==0){
+    				ledsBright();
+    				lightsFlag =1;
+    			} else if((first &64) != 64){
+    				lightsFlag = 0;
+    			}
+
+    			// Y
+    			if((first & 128)==128){
+    				//motorsSetPulseWidth(MOTOR_2,1);
+    				//servoSetPulseWidth(0);
+    			}
+
+    			/*-------------------------------------------------------------------
+    			 * second byte of packet
+    			 *
+    			 * ---------------------------------------------------------------- */
+    			if((second & 0x0F) >= 0){
+//    				motorsSetPulseWidth(MOTOR_Z,1);
+    				// Edited by Guillen
+    				int tempmain = (second&0x0f);
+    				motorsVariable (MOTOR_Z, tempmain);
+    			}
+    			if((second & 0xF0) >0){
+//    				motorsSetPulseWidth(MOTOR_Z,-1);
+    				// Edited by Guillen
+    				int tempmain = (second&0xf0);
+    				tempmain = (tempmain>>4);
+					motorsVariable (MOTOR_Z, -tempmain);
+
+    			}
+
+    			/*-------------------------------------------------------------------
+    			 * third byte of packet
+    			 *
+    			 * ---------------------------------------------------------------- */
+    			if((third & 0x0F) >= 0){
+//    				motorsSetPulseWidth(MOTOR_1,1);
+//    				motorsSetPulseWidth(MOTOR_2,1);
+    				// edited by Guillen
+    				int tempmain = (third&0x0f);
+    				motorsVariable (MOTOR_1, tempmain);
+    				motorsVariable (MOTOR_2, tempmain);
+    			}
+    			if((third & 0xF0) > 0){
+
+//    				motorsSetPulseWidth(MOTOR_1,-1);
+//    				motorsSetPulseWidth(MOTOR_2,-1);
+    				// Edited by Guillen
+    				int tempmain = (third&0xf0);
+					tempmain = (tempmain>>4);
+					motorsVariable (MOTOR_1, -tempmain);
+					motorsVariable (MOTOR_2, -tempmain);
+    			}
+
+    			/*-------------------------------------------------------------------
+    			 * fourth byte of packet
+    			 *
+    			 * ---------------------------------------------------------------- */
+
+    			if((fourth & 0x0F)>0){
+//    				motorsSetPulseWidth(MOTOR_2,-1);
+//    				motorsSetPulseWidth(MOTOR_1,1);
+    				// edited by Guillen
+    				int tempmain = (fourth&0x0f);
+    				motorsVariable (MOTOR_1, tempmain);
+    				motorsVariable (MOTOR_2, -tempmain);
+    			}
+    			if((fourth & 0xF0)>0){
+//    				motorsSetPulseWidth(MOTOR_2,1);
+//    				motorsSetPulseWidth(MOTOR_1,-1);
+    				// edited by Guillen
+    				int tempmain = (fourth&0xf0);
+					tempmain = (tempmain>>4);
+					motorsVariable (MOTOR_1, -tempmain);
+					motorsVariable (MOTOR_2, tempmain);
+    			}
+
+
+    			headerFlag=0;
     		} else {
     			i++;
+        		if (i > 19){
+        			i = 0;
+        		}
     		}
 /*
     		if(localdata == LMSU){
@@ -298,7 +408,7 @@ int main(void) {
     			i++;
     		}
     		*/
-    		if (i > 63){
+    		if (i > 19){
     			i = 0;
     		}
     	}

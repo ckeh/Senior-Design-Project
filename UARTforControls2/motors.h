@@ -85,7 +85,20 @@ uint8_t motorsInit();
  *****************************************************/
 uint8_t motorsSetPulseWidth(uint8_t motor, int speedChange);
 
+/*****************************************************
+ * @Function motorsVariable()
+ * @param motor controlling, pulse want to change ti
+ *			motor must one of the following:  MOTOR_1, MOTOR_2, MOTOR_Y
 
+ * 			SpeedChange must be int (-5) - (5) which will be coresponding to jump in pulse width
+ * @return 1 on SUCCESS 0 on FAILURE
+ *
+ * @brief select motor want to change, then the speed you want to change
+ * @note
+ * @author Luis Gonzalez, Daniel Guillen, 3/7
+ *
+ *****************************************************/
+uint8_t motorsVariable(uint8_t motor, int speedChange);
 
 /*****************************************************
  * @Function motorStop()

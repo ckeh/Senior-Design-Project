@@ -144,13 +144,13 @@ uint8_t motorStop(uint8_t motor){
 		//set PWM to output, might not need every chagne of pulse width, (need to verfiy)
 		ROM_PWMOutputState(PWM0_BASE, PWM_OUT_4_BIT, true);
 	}
-	else if(MOTOR_2){
+	else if(MOTOR_2 == motor){
 		ui8PulseAdjust_2 = PULSE_CENTER;
 		ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_5, ui8PulseAdjust_2 * ui32Load / 1000); //set percent to a pulse width
 		//set PWM to output, might not need every chagne of pulse width, (need to verfiy)
 		ROM_PWMOutputState(PWM0_BASE, PWM_OUT_5_BIT, true);
 	}
-	else if(MOTOR_Z){
+	else if(MOTOR_Z == motor){
 		ui8PulseAdjust_3 = PULSE_CENTER;
 		ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui8PulseAdjust_3 * ui32Load / 1000); //set percent to a pulse width
 		//set PWM to output, might not need every chagne of pulse width, (need to verfiy)
@@ -161,7 +161,31 @@ uint8_t motorStop(uint8_t motor){
 	return 1; // might want to add failur when not valid call
 }
 
+uint8_t motorsVariable (uint8_t motor, int speedChange) {
+	uint8_t returnVal = SUCCESS; // will SUCCED unless in wrong bounds
 
+	if(motor == MOTOR_1 ){
+		ui8PulseAdjust_1 = (((float)speedChange/15)*18) + 75;
+		ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_4, ui8PulseAdjust_1 * ui32Load / 1000); //set percent to a pulse width
+		ROM_PWMOutputState(PWM0_BASE, PWM_OUT_4_BIT, true);
+
+	}
+
+	else if(motor == MOTOR_2 ){
+		ui8PulseAdjust_2 = (((float)speedChange/15)*18) + 75;
+		ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_5, ui8PulseAdjust_2 * ui32Load / 1000); //set percent to a pulse width
+		ROM_PWMOutputState(PWM0_BASE, PWM_OUT_5_BIT, true);
+	}
+
+	else if(motor == MOTOR_Z  ){
+		ui8PulseAdjust_3 = (((float)speedChange/15)*18) + 75;
+		ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_6, ui8PulseAdjust_3 * ui32Load / 1000); //set percent to a pulse width
+		ROM_PWMOutputState(PWM1_BASE, PWM_OUT_6_BIT, true);
+	}
+
+
+		return returnVal;
+}
 
 /*******************************************************************************************************
  *

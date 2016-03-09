@@ -17,15 +17,16 @@ int main(int argc, char *argv[]) {
 	xbox gpad;
 	unsigned char header = 0xAA;
 	if (gpad.On()) cout << "Controller " << gpad._id + 1 << " is connected." << endl;
-	if (gpad.Connect("COM9", 115200)) cout << "Serial line opened via COM9" << endl;
-	else cout << "Could not open a serial line" << endl;
+	if (gpad.Connect("\\\\.\\COM13", 115200)) cout << "Serial line opened via COM13" << endl;
+	else cout << "Could not open a serial line COM13" << endl;
 	while (1) {
+		
 		//gpad.Send();
 		gpad.Update();
 		WriteFile((gpad._port), &header, sizeof (unsigned char), &gpad.bytes_written, NULL);
 		WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
 		cout << gpad.total_packet << endl;
-		Sleep(20);
+		Sleep(50);
 	}
 #endif
 #ifndef CLASS
