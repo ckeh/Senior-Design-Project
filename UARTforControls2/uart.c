@@ -58,10 +58,10 @@ void uartInit(){
 	ROM_IntPrioritySet(INT_UART7, 0x00);
 }
 
-void PutString(char* string){
+void PutString(uint32_t uartbase, char* string){
 	uint32_t i;
 	for (i=0; i < strlen(string); i++){
-		UARTCharPut(UART0_BASE, string[i]);
+		UARTCharPut(uartbase, string[i]);
 	}
 }
 void PutStringNonBlocking(char* string){

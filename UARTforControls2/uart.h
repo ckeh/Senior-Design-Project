@@ -8,6 +8,7 @@
 #ifndef UARTFORCONTROLS2_UART_H_
 #define UARTFORCONTROLS2_UART_H_
 
+#include <stdint.h>
 /*
  * Function Prototypes
  */
@@ -45,7 +46,7 @@ void PutStringNonBlocking(char* string);
  * @author Christopher Keh
  *
  *****************************************************/
-void PutString(char* string);
+void PutString(uint32_t uartbase, char* string);
 
 
 #endif /* UARTFORCONTROLS2_UART_H_ */

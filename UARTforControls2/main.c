@@ -27,7 +27,6 @@ volatile accelerometer accel;
 
 //For the USB UART connection to get controls from the pc
 #ifdef TIMER
-#if 1
 
 void Timer0IntHandler(){
 
@@ -71,6 +70,38 @@ void Timer0IntHandler(){
 				if((accel.z * 31.2)/1000 >1)
 					ztmp = 90.0;
 			}
+			/*
+			if(xtmp >15 && xtmp<=30){
+				PutString(UART7_BASE, "x 30\n\r");
+			} else if (xtmp > 30 && xtmp <=60){
+				PutString(UART7_BASE, "x 60\n\r");
+			} else if (xtmp >60 && xtmp <=90){
+				PutString(UART7_BASE, "x 90\n\r");
+			} else if (xtmp <0 && xtmp>=-30){
+				PutString(UART7_BASE, "x -30\n\r");
+			} else if (xtmp <-30 && xtmp >=-60){
+				PutString(UART7_BASE, "x -60\n\r");
+			} else if (xtmp <-60 && xtmp >=-90){
+				PutString(UART7_BASE, "x -90\n\r");
+			} else {
+				PutString(UART7_BASE, "x 0\n\r");
+			}
+			if(ytmp >15 && ytmp<=30){
+				PutString(UART7_BASE, "y 30\n\r");
+			} else if (ytmp > 30 && ytmp <=60){
+				PutString(UART7_BASE, "y 60\n\r");
+			} else if (ytmp >60 && ytmp <=90){
+				PutString(UART7_BASE, "y 90\n\r");
+			} else if (ytmp <0 && ytmp>=-30){
+				PutString(UART7_BASE, "y -30\n\r");
+			} else if (ytmp <-30 && ytmp >=-60){
+				PutString(UART7_BASE, "y -60\n\r");
+			} else if (ytmp <-60 && ytmp >=-90){
+				PutString(UART7_BASE, "y -90\n\r");
+			} else {
+				PutString(UART7_BASE, "y 0\n\r");
+			}
+			*/
 			printf("x = %f, y= %f",xtmp,ytmp);
 			(upsideDown)? printf("  UpsideDown\n"): printf("  RightsideUp\n");
 			upsideDown = 0;
@@ -78,9 +109,7 @@ void Timer0IntHandler(){
 
 }
 #endif
-#endif
 #ifdef CONTROLS
-#if 1
 void UART0IntHandler(void)
 {
 	static uint8_t index = 0;
@@ -95,8 +124,10 @@ void UART0IntHandler(void)
 		while(UARTCharsAvail(UART0_BASE)) //loop while there are chars
 		{
 			d = UARTCharGetNonBlocking(UART0_BASE);
-			//UARTCharPut(UART7_BASE, d);
-			//continue;
+#ifdef UART_TEST
+			UARTCharPut(UART7_BASE, d);
+			continue;
+#endif
 			//if (d == LMSU |d == LMSD |d == RMSU |d == RMSD |d == STOP |d == CU |d == CD |d == SURFACE |d == DIVE | d==LIGHTS){
 
 				//data[index]=d;
@@ -127,8 +158,11 @@ void UART7IntHandler(void)
 		while(UARTCharsAvail(UART7_BASE)) //loop while there are chars
 		{
 			temp = UARTCharGetNonBlocking(UART7_BASE);
-			//UARTCharPut(UART7_BASE, temp);
-			//continue;
+			UARTCharPut(UART7_BASE, temp);
+#ifdef UART_TEST
+			UARTCharPut(UART0_BASE, temp);
+			continue;
+#endif
 			//if (d == LMSU |d == LMSD |d == RMSU |d == RMSD |d == STOP |d == CU |d == CD |d == SURFACE |d == DIVE | d==LIGHTS){
 
 				data[index]=temp;
@@ -143,18 +177,17 @@ void UART7IntHandler(void)
 
 
 }
-#endif
 
-#if 1
+
 int main(void) {
 	uartInit();
 	servoInit();
 	ledsInit();
 	motorsInit();
 
-	//initialize_i2c();
-	//initialize_accelerometer();
-	//timerInit();
+	initialize_i2c();
+	initialize_accelerometer();
+	timerInit();
 	SysCtlDelay(SysCtlClockGet() / (1000 * 3)); //delay ~1 msec
 
 	ROM_IntMasterEnable(); //enable processor interrupts
@@ -164,8 +197,8 @@ int main(void) {
 	char* mes = "Enter Commands (w, s, e, d, r, f, x, i, k, or l): ";
     uint8_t i;
     uint8_t localdata;
-    PutString(mes);
-
+    PutString(UART7_BASE, mes);
+    //UARTPutChar(UART7_BASE, 'huh');
     //SysCtlDelay(SysCtlClockGet() / (1000 * 3)); //delay ~1 msec
 
 
@@ -177,12 +210,11 @@ int main(void) {
     uint8_t second;
     uint8_t third;
     uint8_t fourth;
+    uint8_t tempmain;
+    uint8_t rBumper;
 
     while (1) //let interrupt handler do the UART echo function
     {
-//		accelerometer_data_get(accel);
-
-//		printf("x = %d\n", accel->x);
 
     	//takes data from UART0 (the computer) and puts them into UART7 (transfer uart)
     	if (count > 4){
@@ -244,66 +276,70 @@ int main(void) {
     				servoSetPulseWidth(1);
     			}
 
-    			// D pad Down
+    			// Left bumper
     			if((first & 2)==2){
     				//motorsSetPulseWidth(MOTOR_1,-1);
-    				servoSetPulseWidth(0);
+    				//servoSetPulseWidth(0);
     			}
 
-    			// D pad Left
+    			// Dpad down
     			if((first & 4)==4){
     				//motorsSetPulseWidth(MOTOR_1,-1);
+    				//servoSetPulseWidth(0);
     				servoSetPulseWidth(0);
     			}
 
-    			// D pad Right
+    			// D pad Right (Right Bumper Now)
     			if((first & 8)==8){
     				//motorsSetPulseWidth(MOTOR_1,-1);
-    				servoSetPulseWidth(1);
+    				//servoSetPulseWidth(1);
+    				rBumper = 1;
+    			} else {
+    				rBumper = 0;
     			}
 
-    			// A
-    			if((first & 16)==16){
-    				//motorsSetPulseWidth(MOTOR_2,-1);
-    				//servoSetPulseWidth(0);
+    			// Right Trigger = 16-255
+    			if((first & 0xF0) >= 0){
+    				tempmain = (first & 0xf0);
+    				tempmain = (tempmain>>4);
+    				motorsVariable (MOTOR_Z, tempmain);
     			}
 
-    			// B
-    			if((first & 32) == 32){
-    				servoSetCenter();
-    				motorStop(MOTOR_1);
-    				motorStop(MOTOR_2);
-    				motorStop(MOTOR_Z);
-    			}
-    			//user has to press and can't hold lights button
-    			// X
-    			if((first & 64) == 64 && lightsFlag ==0){
-    				ledsBright();
-    				lightsFlag =1;
-    			} else if((first &64) != 64){
-    				lightsFlag = 0;
-    			}
-
-    			// Y
-    			if((first & 128)==128){
-    				//motorsSetPulseWidth(MOTOR_2,1);
-    				//servoSetPulseWidth(0);
-    			}
 
     			/*-------------------------------------------------------------------
     			 * second byte of packet
     			 *
     			 * ---------------------------------------------------------------- */
-    			if((second & 0x0F) >= 0){
-//    				motorsSetPulseWidth(MOTOR_Z,1);
-    				// Edited by Guillen
-    				int tempmain = (second&0x0f);
-    				motorsVariable (MOTOR_Z, tempmain);
-    			}
+    			// A
+				if((second & 1)==1){
+
+				}
+
+				// B
+				if((second & 2) == 2){
+					servoSetCenter();
+					motorStop(MOTOR_1);
+					motorStop(MOTOR_2);
+					motorStop(MOTOR_Z);
+				}
+
+				//user has to press and can't hold lights button
+				// X
+				if((second & 4) == 4 && lightsFlag ==0){
+					ledsBright();
+					lightsFlag =1;
+				} else if((second & 4) != 4){
+					lightsFlag = 0;
+				}
+
+				// Y
+				if((second & 8)== 8){
+
+				}
+
+				//L Trigger
     			if((second & 0xF0) >0){
-//    				motorsSetPulseWidth(MOTOR_Z,-1);
-    				// Edited by Guillen
-    				int tempmain = (second&0xf0);
+    				tempmain = (second&0xf0);
     				tempmain = (tempmain>>4);
 					motorsVariable (MOTOR_Z, -tempmain);
 
@@ -313,20 +349,20 @@ int main(void) {
     			 * third byte of packet
     			 *
     			 * ---------------------------------------------------------------- */
+    			//Forward
     			if((third & 0x0F) >= 0){
 //    				motorsSetPulseWidth(MOTOR_1,1);
 //    				motorsSetPulseWidth(MOTOR_2,1);
-    				// edited by Guillen
-    				int tempmain = (third&0x0f);
+    				tempmain = (third&0x0f);
     				motorsVariable (MOTOR_1, tempmain);
     				motorsVariable (MOTOR_2, tempmain);
     			}
+    			//Backward
     			if((third & 0xF0) > 0){
 
 //    				motorsSetPulseWidth(MOTOR_1,-1);
 //    				motorsSetPulseWidth(MOTOR_2,-1);
-    				// Edited by Guillen
-    				int tempmain = (third&0xf0);
+    				tempmain = (third&0xf0);
 					tempmain = (tempmain>>4);
 					motorsVariable (MOTOR_1, -tempmain);
 					motorsVariable (MOTOR_2, -tempmain);
@@ -336,24 +372,34 @@ int main(void) {
     			 * fourth byte of packet
     			 *
     			 * ---------------------------------------------------------------- */
-
+    			// Turn Left
     			if((fourth & 0x0F)>0){
-//    				motorsSetPulseWidth(MOTOR_2,-1);
-//    				motorsSetPulseWidth(MOTOR_1,1);
-    				// edited by Guillen
-    				int tempmain = (fourth&0x0f);
-    				motorsVariable (MOTOR_1, tempmain);
-    				motorsVariable (MOTOR_2, -tempmain);
+    				tempmain = (fourth & 0x0f);
+    				if(rBumper == 1){
+	//    				motorsSetPulseWidth(MOTOR_2,-1);
+	//    				motorsSetPulseWidth(MOTOR_1,1);
+						motorsVariable (MOTOR_1, -tempmain);
+						motorsVariable (MOTOR_2, tempmain);
+    				} else {
+    					motorsVariable (MOTOR_1, 0);
+    					motorsVariable (MOTOR_2, tempmain);
+    				}
+
     			}
+    			// Turn Right
     			if((fourth & 0xF0)>0){
 //    				motorsSetPulseWidth(MOTOR_2,1);
 //    				motorsSetPulseWidth(MOTOR_1,-1);
-    				// edited by Guillen
-    				int tempmain = (fourth&0xf0);
-					tempmain = (tempmain>>4);
-					motorsVariable (MOTOR_1, -tempmain);
-					motorsVariable (MOTOR_2, tempmain);
-    			}
+    				tempmain = (fourth & 0xf0);
+					tempmain = (tempmain >> 4);
+					if(rBumper == 1){
+						motorsVariable (MOTOR_1, tempmain);
+						motorsVariable (MOTOR_2, -tempmain);
+					} else {
+						motorsVariable (MOTOR_2, 0);
+						motorsVariable (MOTOR_1, tempmain);
+					}
+				}
 
 
     			headerFlag=0;
@@ -363,6 +409,8 @@ int main(void) {
         			i = 0;
         		}
     		}
+
+    		//for keyboard controls
 /*
     		if(localdata == LMSU){
     			//UARTCharPut(UART7_BASE, HEADER);
@@ -416,7 +464,6 @@ int main(void) {
 
 }
 
-#endif
 #endif
 
 
