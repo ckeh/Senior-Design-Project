@@ -1,10 +1,4 @@
-﻿  XboxController.cpp
-c:\users\ckeh\documents\github\senior-design-project\senior-design-project\xbox_uart_dvguille\xbox_uart_dvguille\xboxcontroller.cpp(88): warning C4244: '=': conversion from 'float' to 'unsigned char', possible loss of data
-c:\users\ckeh\documents\github\senior-design-project\senior-design-project\xbox_uart_dvguille\xbox_uart_dvguille\xboxcontroller.cpp(90): warning C4244: '=': conversion from 'float' to 'unsigned char', possible loss of data
-c:\users\ckeh\documents\github\senior-design-project\senior-design-project\xbox_uart_dvguille\xbox_uart_dvguille\xboxcontroller.cpp(117): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-c:\users\ckeh\documents\github\senior-design-project\senior-design-project\xbox_uart_dvguille\xbox_uart_dvguille\xboxcontroller.cpp(146): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-  main.cpp
-  Generating Code...
-  LINK : C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe not found or not built by the last incremental link; performing full link
-  xbox_uart_dvguille.vcxproj -> C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe
-  xbox_uart_dvguille.vcxproj -> C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.pdb (Partial PDB)
+﻿  main.cpp
+  main.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
+  xbox_uart_dvguille.vcxproj -> C:\Users\dvguille\Documents\Visual Studio 2015\Projects\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe
+  xbox_uart_dvguille.vcxproj -> C:\Users\dvguille\Documents\Visual Studio 2015\Projects\xbox_uart_dvguille\Debug\xbox_uart_dvguille.pdb (Partial PDB)

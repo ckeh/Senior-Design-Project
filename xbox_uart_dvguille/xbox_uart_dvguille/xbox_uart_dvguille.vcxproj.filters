@@ -21,9 +21,27 @@
     <ClCompile Include="XboxController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="serial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XboxController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="serial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

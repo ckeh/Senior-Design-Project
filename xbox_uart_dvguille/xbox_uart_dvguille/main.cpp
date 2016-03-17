@@ -4,79 +4,68 @@
 #include <SDKDDKVer.h>
 #include <stdio.h>
 #include <tchar.h>
+#include <d2d1.h>
 
 #include "XboxController.h"
-#define CLASS
+#include "serial.h"
+#include "window.h"
+#include "graphics.h"
+
+#using <System.dll>
+
 using namespace std;
+using namespace System;
+using namespace System::IO::Ports;
+
 using xbox = XboxController;
+
 #pragma comment (lib,"XInput9_1_0.lib")
+#pragma comment (lib, "d2d1.lib")
 
+Graphics *graph;
 
-int main(int argc, char *argv[]) {
-#ifdef CLASS
+LRESULT _stdcall WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	if (uMsg == WM_DESTROY) { PostQuitMessage(0); return 0; }
+	
+	if (uMsg == WM_PAINT) {
+		graph->BeginDraw();
+		graph->ClearScreen(0.1f, 0.1f, 0.1f);
+		graph->FillCircle(400, 300, 100, 1.0f, 0.0f, 0.0f, 1);
+		graph->EndDraw();
+	}
+	return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+int _stdcall WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, int nCmdShow) {
+
+	window win(hInstance, WindowProc);
 	xbox gpad;
+	serial::open();
 	unsigned char header = 0xAA;
+	
 	if (gpad.On()) cout << "Controller " << gpad._id + 1 << " is connected." << endl;
-	if (gpad.Connect("\\\\.\\COM13", 115200)) cout << "Serial line opened via COM13" << endl;
-	else cout << "Could not open a serial line COM13" << endl;
-	while (1) {
-		
+	if (gpad.Connect("COM9", 115200)) cout << "Serial line opened via COM9" << endl;
+	else cout << "Could not open a serial line" << endl;
+	
+	win.CreateHandle(hInstance);
+
+	graph = new Graphics();
+	bool res = graph->Init(win.WindowHandle);
+	if (!res) {
+		delete graph;
+		return -1;
+	}
+
+	ShowWindow(win.WindowHandle, nCmdShow);
+	
+	MSG msg;
+	while (GetMessage(&msg, NULL, 0, 0)) {
+		DispatchMessage(&msg);
 		//gpad.Send();
-		gpad.Update();
+		//gpad.Update();
 		WriteFile((gpad._port), &header, sizeof (unsigned char), &gpad.bytes_written, NULL);
-		WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
-		cout << gpad.total_packet << endl;
-		Sleep(50);
+		WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);	
 	}
-#endif
-#ifndef CLASS
-	XINPUT_STATE state;
-	ZeroMemory(&state, sizeof(XINPUT_STATE));
-	XInputGetState(0, &state);
-	DCB cport;
-	HANDLE port{ 0 };
-	bool result = FALSE;
-	COMMTIMEOUTS tout;
-	//LPCSTR commString = "COM3";
-	port = CreateFile("COM9", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_WRITE_THROUGH, NULL);
-	cport.DCBlength = sizeof(DCB);				// Setup config length
-	GetCommState(&port, &cport);				// Get default port state
-	cport.BaudRate = 115200;					// Set baud rate
-	cport.fBinary = TRUE;						// Enable Binary mode
-	cport.fParity = TRUE;						// Disable parity 
-	cport.fOutxCtsFlow = FALSE;					// No CTS 
-	cport.fOutxDsrFlow = FALSE;					// No DSR
-	cport.fDtrControl = DTR_CONTROL_DISABLE;	// No DTR
-	cport.fDsrSensitivity = FALSE;				// No DSR sensitivity 
-	cport.fTXContinueOnXoff = TRUE;				// TX on XOFF
-	cport.fOutX = FALSE;						// No XON/XOFF
-	cport.fInX = FALSE;							//
-	cport.fErrorChar = FALSE;					// No error correction
-	cport.fNull = FALSE;						// Keep NULL values
-	cport.fRtsControl = RTS_CONTROL_DISABLE;	// Disable RTS
-	cport.fAbortOnError = FALSE;				// Disable abort-on-error
-	cport.ByteSize = 8;							// 8-bit frames
-	cport.Parity = EVENPARITY;					// Parity: none
-	cport.StopBits = ONESTOPBIT;				// StopBits: 1
-	SetCommState(port, &cport);
-	DWORD bytesTrans;
-	cout << &port << endl;
-	char buf[64];
-	int temp = 0;
-	while (1) {
-		//XInputGetState(0, &pad);
-		//cout << (bool)(pad.Gamepad.wButtons&XINPUT_GAMEPAD_A) << endl;
-		//WriteFile(gpad._port, "1", strlen("1"), NULL, NULL);
-		//ReadFile(gpad._port, buf, (DWORD)strlen("1"), NULL, NULL);
-		XInputGetState(0, &state);
-		int a = (state.Gamepad.wButtons & XINPUT_GAMEPAD_A);
-		cout << a << endl;
-		char b = a >> 12;
-			WriteFile(port, &b, 1, &bytesTrans, NULL);
-		temp = a;
-		Sleep(100);
-	}
-#endif
 	system("pause");
 
 	return 0;
