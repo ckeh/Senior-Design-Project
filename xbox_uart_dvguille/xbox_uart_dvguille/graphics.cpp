@@ -42,6 +42,10 @@ ID2D1SolidColorBrush * Graphics::CreateBrush(D2D1_COLOR_F &color) {
 	return brush;
 }
 
+ID2D1LinearGradientBrush * Graphics::CreateLinearGradientBrush() {
+	return nullptr;
+}
+
 void Graphics::FillCircle(D2D1_POINT_2F &center, float rad, D2D1_COLOR_F &color) {
 	ID2D1SolidColorBrush *brush;
 	renderTarget->CreateSolidColorBrush(color, &brush);
@@ -58,6 +62,41 @@ void Graphics::FillRect(D2D1_RECT_F &rect, D2D1_COLOR_F &color) {
 
 void Graphics::FillRect(D2D1_RECT_F &rect, ID2D1SolidColorBrush &brush) {
 	renderTarget->FillRectangle(rect, &brush);
+}
+
+void Graphics::FillRect(D2D1_RECT_F & rect, ID2D1LinearGradientBrush & brush)
+{
+	renderTarget->FillRectangle(rect, &brush);
+}
+
+void Graphics::DisplayGradient(const D2D1_POINT_2F &start, const D2D1_POINT_2F &end)
+{
+	ID2D1LinearGradientBrush *linearGradientBrush;
+	ID2D1GradientStopCollection *gradientStops = NULL;
+
+	D2D1_GRADIENT_STOP gradientStopsArray[3];
+	gradientStopsArray[0].color = D2D1::ColorF(ColorF::Red, 1);
+	gradientStopsArray[0].position = 1.0f;
+	gradientStopsArray[1].color = D2D1::ColorF(ColorF::Yellow, 1);
+	gradientStopsArray[1].position = 0.66f;
+	gradientStopsArray[2].color = D2D1::ColorF(ColorF::Green, 1);
+	gradientStopsArray[2].position = 0.33f;
+
+	renderTarget->CreateGradientStopCollection(
+		gradientStopsArray,
+		3,
+		D2D1_GAMMA_2_2,
+		D2D1_EXTEND_MODE_CLAMP,
+		&gradientStops
+		);
+	renderTarget->CreateLinearGradientBrush(
+		LinearGradientBrushProperties(
+			start,
+			end),
+		gradientStops,
+		&linearGradientBrush
+		);
+	renderTarget->FillRectangle(RectF(100, 100, 300, 300), linearGradientBrush);
 }
 
 
