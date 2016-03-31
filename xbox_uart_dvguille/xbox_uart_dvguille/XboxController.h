@@ -23,9 +23,8 @@ class XboxController {
 		char leftDirection;
 		char rightDirection;
 		
-		uint8_t lt;
-		uint8_t rt;
-		uint8_t rstickn;
+		uint16_t lt;
+		uint16_t rt;
 
 		unsigned long total_packet;
 		unsigned char header {0xAA};

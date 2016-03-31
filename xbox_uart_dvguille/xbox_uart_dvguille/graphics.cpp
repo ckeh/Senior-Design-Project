@@ -42,8 +42,33 @@ ID2D1SolidColorBrush * Graphics::CreateBrush(D2D1_COLOR_F &color) {
 	return brush;
 }
 
-ID2D1LinearGradientBrush * Graphics::CreateLinearGradientBrush() {
-	return nullptr;
+ID2D1LinearGradientBrush * Graphics::CreateLinearGradientBrush(const D2D1_POINT_2F &start, const D2D1_POINT_2F &end) {
+	ID2D1LinearGradientBrush *linearGradientBrush;
+	ID2D1GradientStopCollection *gradientStops = NULL;
+
+	D2D1_GRADIENT_STOP gradientStopsArray[3];
+	gradientStopsArray[0].color = D2D1::ColorF(ColorF::ForestGreen, 1);
+	gradientStopsArray[0].position = 0.f;
+	gradientStopsArray[1].color = D2D1::ColorF(ColorF::Yellow, 1);
+	gradientStopsArray[1].position = 0.66f;
+	gradientStopsArray[2].color = D2D1::ColorF(ColorF::Red, 1);
+	gradientStopsArray[2].position = 1.f;
+
+	renderTarget->CreateGradientStopCollection(
+		gradientStopsArray,
+		3,
+		D2D1_GAMMA_2_2,
+		D2D1_EXTEND_MODE_CLAMP,
+		&gradientStops
+		);
+	renderTarget->CreateLinearGradientBrush(
+		LinearGradientBrushProperties(
+			start,
+			end),
+		gradientStops,
+		&linearGradientBrush
+		);
+	return linearGradientBrush;
 }
 
 void Graphics::FillCircle(D2D1_POINT_2F &center, float rad, D2D1_COLOR_F &color) {
@@ -60,45 +85,9 @@ void Graphics::FillRect(D2D1_RECT_F &rect, D2D1_COLOR_F &color) {
 	brush->Release();
 }
 
-void Graphics::FillRect(D2D1_RECT_F &rect, ID2D1SolidColorBrush &brush) {
-	renderTarget->FillRectangle(rect, &brush);
+void Graphics::FillRect(D2D1_RECT_F &rect, ID2D1Brush *brush) {
+	renderTarget->FillRectangle(rect, brush);
 }
-
-void Graphics::FillRect(D2D1_RECT_F & rect, ID2D1LinearGradientBrush & brush)
-{
-	renderTarget->FillRectangle(rect, &brush);
-}
-
-void Graphics::DisplayGradient(const D2D1_POINT_2F &start, const D2D1_POINT_2F &end)
-{
-	ID2D1LinearGradientBrush *linearGradientBrush;
-	ID2D1GradientStopCollection *gradientStops = NULL;
-
-	D2D1_GRADIENT_STOP gradientStopsArray[3];
-	gradientStopsArray[0].color = D2D1::ColorF(ColorF::Red, 1);
-	gradientStopsArray[0].position = 1.0f;
-	gradientStopsArray[1].color = D2D1::ColorF(ColorF::Yellow, 1);
-	gradientStopsArray[1].position = 0.66f;
-	gradientStopsArray[2].color = D2D1::ColorF(ColorF::Green, 1);
-	gradientStopsArray[2].position = 0.33f;
-
-	renderTarget->CreateGradientStopCollection(
-		gradientStopsArray,
-		3,
-		D2D1_GAMMA_2_2,
-		D2D1_EXTEND_MODE_CLAMP,
-		&gradientStops
-		);
-	renderTarget->CreateLinearGradientBrush(
-		LinearGradientBrushProperties(
-			start,
-			end),
-		gradientStops,
-		&linearGradientBrush
-		);
-	renderTarget->FillRectangle(RectF(100, 100, 300, 300), linearGradientBrush);
-}
-
 
 void Graphics::DrawText(const wchar_t *text, const wchar_t *font, float size, D2D1_RECT_F &rect, D2D1_COLOR_F &color) {
 	UINT32 textLength = (UINT32)wcslen(text);
@@ -112,11 +101,45 @@ void Graphics::DrawText(const wchar_t *text, const wchar_t *font, float size, D2
 		L"en-us",
 		&textFormat);
 
-	textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-	textFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+	textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+	textFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
 	
 	ID2D1SolidColorBrush *brush;
 	renderTarget->CreateSolidColorBrush(color, &brush);
 	renderTarget->DrawText(text, textLength, textFormat, rect, brush);
 	brush->Release();
+}
+
+void Graphics::ShowPercentage()
+{
+	DrawText(
+		L"100",
+		L"Times New Roman",
+		14.f,
+		RectF(670, 50, 700, 150),
+		ColorF(ColorF::Black)
+		);
+	DrawText(
+		L"75",
+		L"Times New Roman",
+		14.f,
+		RectF(670, 175, 700, 200),
+		ColorF(ColorF::Black)
+		);
+	DrawText(
+		L"50",
+		L"Times New Roman",
+		14.f,
+		RectF(670, 300, 700, 325),
+		ColorF(ColorF::Black)
+		);
+	DrawText(
+		L"25",
+		L"Times New Roman",
+		14.f,
+		RectF(670, 425, 700, 450),
+		ColorF(ColorF::Black)
+		);
+
+
 }

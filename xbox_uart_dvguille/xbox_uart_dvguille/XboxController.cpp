@@ -88,8 +88,8 @@ void XboxController::Update() {
 	rtemp = (trigtemp / 255) * 15;
 	trigtemp = _state.Gamepad.bLeftTrigger;
 	ltemp = (trigtemp / 255) * 15;
-	this->triggers = rtemp;
-	this->triggers |= (ltemp << 4);
+	triggers = rtemp;
+	triggers |= (ltemp << 4);
 
 	//This block sets the thumbstick data and check for deadzones in the controller
 	float LY = _state.Gamepad.sThumbLY;
@@ -122,8 +122,9 @@ void XboxController::Update() {
 	else { 
 		lstick = (x << 4); 
 		leftDirection = DOWN;
+		
 	}
-	lt = (magnitude / 24827) * 250;
+	lt = (magnitude / 24827) * 500;
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////

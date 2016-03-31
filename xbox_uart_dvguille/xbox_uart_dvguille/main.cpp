@@ -53,9 +53,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	unsigned char header = 0xAA;
 	
 	//serial::open();
-	//if (gpad.On()) cout << "Controller " << gpad._id + 1 << " is connected." << endl;
 	//if (gpad.Connect("COM9", 115200)) cout << "Serial line opened via COM9" << endl;
-	//else cout << "Could not open a serial line" << endl;
+
 	
 	win->CreateHandle(hInstance, 800, 600);
 	bool res = graph->Init(win->GetHandle());
@@ -69,7 +68,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	msg.message = WM_NULL;
 	
 	graph3d->Init3D(win->GetHandle());
-	ID2D1SolidColorBrush *brush = graph->CreateBrush(ColorF(0.9f, 0.1f, 0.2f, 1.f));
+	ID2D1LinearGradientBrush *lBrush = graph->CreateLinearGradientBrush(Point2F(700, 300), Point2F(700, 100));
+
+	
 	while (msg.message != WM_QUIT) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
@@ -78,16 +79,35 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 		else {
 			gpad.Update();
 			graph->BeginDraw();
-			graph->Clear(ColorF(ColorF::AliceBlue, 1.f));
-			graph->DisplayGradient(Point2F(200, 300), Point2F(200, 100));
+			
+			graph->Clear(ColorF(ColorF::WhiteSmoke, 1.f));
+			graph->FillRect(RectF(700, 550 - gpad.lt, 750, 550), lBrush);
+			graph->ShowPercentage();
+			if (gpad.leftDirection == UP) {
+				graph->DrawText(
+					L"Forward",
+					L"Times New Roman",
+					14.f,
+					RectF(700, 25, 750, 50),
+					ColorF(ColorF::Black)
+					);
+			}
+			else {
+				graph->DrawText(
+					L"Reverse",
+					L"Times New Roman",
+					14.f,
+					RectF(700, 25, 750, 50),
+					ColorF(ColorF::Black)
+					);
+			}
 			graph->EndDraw();
 			/*gpad.Send();
-			gpad.Update();
 			WriteFile((gpad._port), &header, sizeof (unsigned char), &gpad.bytes_written, NULL);
 			WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);	*/
 		}
 	}
-	//system("pause");
-	graph->BrushRelease(brush);
+
+	graph->BrushRelease(lBrush);
 	return 0;
 }
