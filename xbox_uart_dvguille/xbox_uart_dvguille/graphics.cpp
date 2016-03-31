@@ -129,7 +129,7 @@ void Graphics::FillTriangle()
 
 	ID2D1GeometrySink *sink = nullptr;
 	pathGeometry->Open(&sink);
-	sink->SetFillMode(D2D1_FILL_MODE_WINDING);
+	sink->SetFillMode(D2D1_FILL_MODE::D2D1_FILL_MODE_WINDING);
 	sink->BeginFigure(
 		Point2F(50.0f, 200.0f),
 		D2D1_FIGURE_BEGIN_FILLED
