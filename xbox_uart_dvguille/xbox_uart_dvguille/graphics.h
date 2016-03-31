@@ -10,6 +10,7 @@ private:
 	ID2D1Factory *factory;
 	ID2D1HwndRenderTarget *renderTarget;
 	
+	ID2D1PathGeometry *pathGeometry;
 	IDWriteFactory *writeFactory;
 	IDWriteTextFormat *textFormat;
 	RECT rect;
@@ -29,6 +30,7 @@ public:
 
 	ID2D1SolidColorBrush * CreateBrush(D2D1_COLOR_F &color);
 	ID2D1LinearGradientBrush * CreateLinearGradientBrush(const D2D1_POINT_2F &start, const D2D1_POINT_2F &end);
+	ID2D1RadialGradientBrush * CreateRadialGradientBrush(const D2D1_POINT_2F &center, const D2D1_POINT_2F &offset);
 	
 	void BrushRelease(ID2D1Brush *brush) { brush->Release(); }
 	
@@ -36,6 +38,8 @@ public:
 	
 	void FillRect(D2D1_RECT_F &rect, D2D1_COLOR_F &color);
 	void FillRect(D2D1_RECT_F &rect, ID2D1Brush *brush);
+
+	void FillTriangle();
 	
 	void DrawText(const wchar_t *text, const wchar_t *font, float size, D2D1_RECT_F &rect, D2D1_COLOR_F &color);
 	void ShowPercentage();

@@ -1,5 +1,5 @@
 ﻿  main.cpp
-main.cpp(84): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-  Graphics3D.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
-  xbox_uart_dvguille.vcxproj -> C:\Users\vince\Documents\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe
-  xbox_uart_dvguille.vcxproj -> C:\Users\vince\Documents\xbox_uart_dvguille\Debug\xbox_uart_dvguille.pdb (Partial PDB)
+main.cpp(86): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+  brush.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
+  xbox_uart_dvguille.vcxproj -> C:\Users\dvguille\Documents\Visual Studio 2015\Projects\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe
+  xbox_uart_dvguille.vcxproj -> C:\Users\dvguille\Documents\Visual Studio 2015\Projects\xbox_uart_dvguille\Debug\xbox_uart_dvguille.pdb (Partial PDB)

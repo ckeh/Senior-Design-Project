@@ -33,6 +33,9 @@
     <ClCompile Include="Graphics3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="brush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XboxController.h">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Graphics3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="brush.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

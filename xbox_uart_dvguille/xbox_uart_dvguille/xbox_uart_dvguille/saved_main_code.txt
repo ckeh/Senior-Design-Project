@@ -1,0 +1,68 @@
+XINPUT_STATE state;
+	ZeroMemory(&state, sizeof(XINPUT_STATE));
+	XInputGetState(0, &state);
+	DCB cport;
+	HANDLE port{ 0 };
+	bool result = FALSE;
+	COMMTIMEOUTS tout;
+	//LPCSTR commString = "COM3";
+	port = CreateFile("COM9", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_WRITE_THROUGH, NULL);
+	cport.DCBlength = sizeof(DCB);				// Setup config length
+	GetCommState(&port, &cport);				// Get default port state
+	cport.BaudRate = 115200;					// Set baud rate
+	cport.fBinary = TRUE;						// Enable Binary mode
+	cport.fParity = TRUE;						// Disable parity 
+	cport.fOutxCtsFlow = FALSE;					// No CTS 
+	cport.fOutxDsrFlow = FALSE;					// No DSR
+	cport.fDtrControl = DTR_CONTROL_DISABLE;	// No DTR
+	cport.fDsrSensitivity = FALSE;				// No DSR sensitivity 
+	cport.fTXContinueOnXoff = TRUE;				// TX on XOFF
+	cport.fOutX = FALSE;						// No XON/XOFF
+	cport.fInX = FALSE;							//
+	cport.fErrorChar = FALSE;					// No error correction
+	cport.fNull = FALSE;						// Keep NULL values
+	cport.fRtsControl = RTS_CONTROL_DISABLE;	// Disable RTS
+	cport.fAbortOnError = FALSE;				// Disable abort-on-error
+	cport.ByteSize = 8;							// 8-bit frames
+	cport.Parity = EVENPARITY;					// Parity: none
+	cport.StopBits = ONESTOPBIT;				// StopBits: 1
+	SetCommState(port, &cport);
+	DWORD bytesTrans;   
+	cout << &port << endl;
+	char buf[64];
+	int temp = 0;
+	while (1) {
+		//XInputGetState(0, &pad);
+		//cout << (bool)(pad.Gamepad.wButtons&XINPUT_GAMEPAD_A) << endl;
+		//WriteFile(gpad._port, "1", strlen("1"), NULL, NULL);
+		//ReadFile(gpad._port, buf, (DWORD)strlen("1"), NULL, NULL);
+		XInputGetState(0, &state);
+		int a = (state.Gamepad.wButtons & XINPUT_GAMEPAD_A);
+		cout << a << endl;
+		char b = a >> 12;
+		
+		if (a != temp)
+			WriteFile(port, &b, 1, &bytesTrans, NULL);
+		temp = a;
+		Sleep(100);
+	}
+
+	graph->SetTransform(D2D1::Matrix3x2F::Rotation(angle, D2D1::Point2F(200, 200)));
+			graph->FillRect(RectF(100.f, 100.f, 300.f, 300.f), ColorF(0.f, 0.f, 0.f, 1.f));
+			graph->SetTransform(D2D1::Matrix3x2F::Identity());
+			//graph->DrawText(L"Hello", L"Gabriola", 18.0f, RectF(x, y, x+50, y+50), ColorF(0.0f, 0.6f, 0.0f, 1.0f));
+			//graph->SetTransform(D2D1::Matrix3x2F::Rotation(-angle, D2D1::Point2F(200, 200)));
+			graph->FillCircle(Point2F(200.f, 200.f), 25.f, ColorF(0.9f, 0.9f, 0.9f, 0.75f));
+
+			if (gpad.Direction() == UP)
+				graph->FillRect(RectF(600.f, 300.f-gpad.lt, 700.f, 301.f), *brush);
+			else
+				graph->FillRect(RectF(600.f, 300.f, 700.f, 301.f+gpad.lt), *brush);
+			
+			speedy += 0.5f;
+			initY += speedy;
+			if (initY > 275) {
+				initY = 275;
+				speedy = -speedy;
+			}
+			//graph->SetTransform(D2D1::Matrix3x2F::Identity());

@@ -68,7 +68,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	msg.message = WM_NULL;
 	
 	graph3d->Init3D(win->GetHandle());
-	ID2D1LinearGradientBrush *lBrush = graph->CreateLinearGradientBrush(Point2F(700, 300), Point2F(700, 100));
+	ID2D1Brush *lBrush = graph->CreateLinearGradientBrush(Point2F(700, 300), Point2F(700, 100));
+	ID2D1Brush *rBrush = graph->CreateRadialGradientBrush(Point2F(725, 300), Point2F(0, 0));
 
 	
 	while (msg.message != WM_QUIT) {
@@ -79,10 +80,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 		else {
 			gpad.Update();
 			graph->BeginDraw();
-			
 			graph->Clear(ColorF(ColorF::WhiteSmoke, 1.f));
+			graph->FillTriangle();
+			graph->FillRect(RectF(700, 50, 750, 550), rBrush);
 			graph->FillRect(RectF(700, 550 - gpad.lt, 750, 550), lBrush);
 			graph->ShowPercentage();
+			
 			if (gpad.leftDirection == UP) {
 				graph->DrawText(
 					L"Forward",
@@ -101,6 +104,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 					ColorF(ColorF::Black)
 					);
 			}
+			
 			graph->EndDraw();
 			/*gpad.Send();
 			WriteFile((gpad._port), &header, sizeof (unsigned char), &gpad.bytes_written, NULL);
