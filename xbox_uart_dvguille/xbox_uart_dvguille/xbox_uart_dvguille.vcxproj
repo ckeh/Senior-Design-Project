@@ -112,6 +112,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Graphics3D.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="serial.cpp" />
     <ClCompile Include="graphics.cpp" />
@@ -120,6 +121,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics.h" />
+    <ClInclude Include="Graphics3D.h" />
+    <ClInclude Include="includes.h" />
     <ClInclude Include="serial.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="XboxController.h" />

@@ -20,7 +20,7 @@ void serial::open() {
 	_serial->Open();
 	//Console::WriteLine("Press any key to continue...");
 	//Console::WriteLine();
-	Console::Read();
+	//Console::Read();
 	
 	_serial->Close();
 

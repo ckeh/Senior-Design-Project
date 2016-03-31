@@ -15,8 +15,12 @@ window::window(HINSTANCE hInstance, WNDPROC WindowProc) {
 
 }
 
-HWND window::CreateHandle(HINSTANCE hInstance) {
-	WindowHandle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, "Main", "ROV GUI", WS_OVERLAPPEDWINDOW, 100, 100, 800, 600, NULL, NULL, hInstance, NULL);
-	if (!WindowHandle) { return nullptr; }
+HWND window::CreateHandle(HINSTANCE hInstance, int height, int width) {
+	RECT rect = { 0, 0, height, width };
+	AdjustWindowRectEx(&rect, WS_OVERLAPPED, false, WS_EX_OVERLAPPEDWINDOW);
+
+	windowHandle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, "Main", "ROV GUI", WS_OVERLAPPEDWINDOW, 200, 200, 
+		rect.right-rect.left, rect.bottom-rect.top, NULL, NULL, hInstance, NULL);
+	if (!windowHandle) { return nullptr; }
 
 }

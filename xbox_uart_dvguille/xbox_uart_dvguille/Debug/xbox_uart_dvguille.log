@@ -1,4 +1,4 @@
 ﻿  main.cpp
-  main.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
-  xbox_uart_dvguille.vcxproj -> C:\Users\dvguille\Documents\Visual Studio 2015\Projects\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe
-  xbox_uart_dvguille.vcxproj -> C:\Users\dvguille\Documents\Visual Studio 2015\Projects\xbox_uart_dvguille\Debug\xbox_uart_dvguille.pdb (Partial PDB)
+  Graphics3D.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
+  xbox_uart_dvguille.vcxproj -> C:\Users\vince\Documents\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe
+  xbox_uart_dvguille.vcxproj -> C:\Users\vince\Documents\xbox_uart_dvguille\Debug\xbox_uart_dvguille.pdb (Partial PDB)
