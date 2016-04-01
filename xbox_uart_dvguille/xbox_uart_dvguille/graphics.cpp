@@ -40,7 +40,7 @@ bool Graphics::Init(HWND windowHandle) {
 	return true;
 }
 
-ID2D1SolidColorBrush * Graphics::CreateBrush(D2D1_COLOR_F &color) {
+ID2D1SolidColorBrush * Graphics::CreateSolidColorBrush(D2D1_COLOR_F &color) {
 	ID2D1SolidColorBrush *brush;
 	renderTarget->CreateSolidColorBrush(color, &brush);
 	return brush;
@@ -55,7 +55,7 @@ ID2D1LinearGradientBrush * Graphics::CreateLinearGradientBrush(const D2D1_POINT_
 	gradientStopsArray[0].position = 0.f;
 	gradientStopsArray[1].color = D2D1::ColorF(ColorF::Yellow, 1);
 	gradientStopsArray[1].position = 0.66f;
-	gradientStopsArray[2].color = D2D1::ColorF(ColorF::Red, 1);
+	gradientStopsArray[2].color = D2D1::ColorF(ColorF::DarkRed, 1);
 	gradientStopsArray[2].position = 1.f;
 
 	renderTarget->CreateGradientStopCollection(
@@ -110,7 +110,10 @@ void Graphics::FillCircle(D2D1_POINT_2F &center, float rad, D2D1_COLOR_F &color)
 	renderTarget->CreateSolidColorBrush(color, &brush);
 	renderTarget->FillEllipse(Ellipse(center, rad, rad), brush);
 	brush->Release();
-	
+}
+
+void Graphics::DrawCircle(D2D1_POINT_2F &center, float rad, ID2D1Brush *brush) {
+	renderTarget->DrawEllipse(Ellipse(center, rad, rad), brush);
 }
 
 void Graphics::FillRect(D2D1_RECT_F &rect, D2D1_COLOR_F &color) {
@@ -124,33 +127,39 @@ void Graphics::FillRect(D2D1_RECT_F &rect, ID2D1Brush *brush) {
 	renderTarget->FillRectangle(rect, brush);
 }
 
-void Graphics::FillTriangle()
+void Graphics::CreateSink()
 {
 
 	ID2D1GeometrySink *sink = nullptr;
-	pathGeometry->Open(&sink);
-	sink->SetFillMode(D2D1_FILL_MODE::D2D1_FILL_MODE_WINDING);
-	sink->BeginFigure(
-		Point2F(50.0f, 200.0f),
-		D2D1_FIGURE_BEGIN_FILLED
-		);
-	D2D1_POINT_2F points[3] = {
-		Point2F(150, 100),
-		Point2F(250, 200),
-		Point2F(50, 200),
-	};
-	sink->AddLines(points, ARRAYSIZE(points));
-	sink->EndFigure(D2D1_FIGURE_END_CLOSED);
-	sink->Close();
-	sink->Release();
-	ID2D1SolidColorBrush *brush;
-	renderTarget->CreateSolidColorBrush(ColorF(ColorF::Black), &brush);
-	renderTarget->FillGeometry(pathGeometry, brush);
-	brush->Release();
+	HRESULT res = pathGeometry->Open(&sink);
 
+	if (SUCCEEDED(res)) {
+		sink->SetFillMode(D2D1_FILL_MODE_WINDING);
+
+		sink->BeginFigure(
+			Point2F(90.0f, 150.0f),
+			D2D1_FIGURE_BEGIN_FILLED
+			);
+
+		D2D1_POINT_2F points[] = {
+			Point2F(100.0f, 75.0f),
+			Point2F(105.0f, 150.0f),
+			Point2F(95.0f, 150.0f),
+		};
+		sink->AddLines(points, ARRAYSIZE(points));
+		sink->EndFigure(D2D1_FIGURE_END_CLOSED);
+	}
+	res = sink->Close();
+	sink->Release();
 }
 
-void Graphics::DrawText(const wchar_t *text, const wchar_t *font, float size, D2D1_RECT_F &rect, D2D1_COLOR_F &color) {
+void Graphics::FillTriangle(ID2D1Brush *brush)
+{
+	renderTarget->FillGeometry(pathGeometry, brush);
+}
+
+void Graphics::DrawText(const wchar_t *text, const wchar_t *font, float size, D2D1_RECT_F &rect, D2D1_COLOR_F &color) 
+{
 	UINT32 textLength = (UINT32)wcslen(text);
 	HRESULT res = writeFactory->CreateTextFormat(
 		font,

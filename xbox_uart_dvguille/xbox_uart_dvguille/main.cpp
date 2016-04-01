@@ -52,9 +52,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	XboxController gpad;
 	unsigned char header = 0xAA;
 	
-	//serial::open();
-	//if (gpad.Connect("COM9", 115200)) cout << "Serial line opened via COM9" << endl;
-
+	serial::open();
+	gpad.Connect("COM4", 115200);
 	
 	win->CreateHandle(hInstance, 800, 600);
 	bool res = graph->Init(win->GetHandle());
@@ -70,7 +69,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	graph3d->Init3D(win->GetHandle());
 	ID2D1Brush *lBrush = graph->CreateLinearGradientBrush(Point2F(700, 300), Point2F(700, 100));
 	ID2D1Brush *rBrush = graph->CreateRadialGradientBrush(Point2F(725, 300), Point2F(0, 0));
-
+	ID2D1SolidColorBrush *sBrush = graph->CreateSolidColorBrush(ColorF(ColorF::DodgerBlue));
+	graph->CreateSink();
 	
 	while (msg.message != WM_QUIT) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -78,12 +78,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			DispatchMessage(&msg);
 		}
 		else {
+			char buf[64];
+			DWORD bytes = 0;
+			ReadFile(gpad._port, buf, 64, &bytes, NULL);
+			size_t length = strlen(buf);
+			std::wstring text_wchar(length, L'#');
+			mbstowcs(&text_wchar[0], buf, length);
+			const wchar_t *wbuf = text_wchar.c_str();
 			gpad.Update();
 			graph->BeginDraw();
 			graph->Clear(ColorF(ColorF::WhiteSmoke, 1.f));
-			graph->FillTriangle();
+			graph->SetTransform(Matrix3x2F::Rotation(gpad.rotation, D2D1::Point2F(100, 150)));
+			sBrush->SetColor(ColorF(ColorF::DodgerBlue));
+			graph->FillTriangle(sBrush);
+			graph->SetTransform(Matrix3x2F::Identity());
+			sBrush->SetColor(ColorF(ColorF::Black));
+			graph->DrawCircle(Point2F(100.0f, 150.0f), 75.0f, sBrush);
 			graph->FillRect(RectF(700, 50, 750, 550), rBrush);
 			graph->FillRect(RectF(700, 550 - gpad.lt, 750, 550), lBrush);
+			graph->DrawText(wbuf, L"Times New Roman", 14.0f, RectF(400, 200, 600, 400), ColorF(ColorF::Black));
 			graph->ShowPercentage();
 			
 			if (gpad.leftDirection == UP) {
@@ -109,9 +122,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			/*gpad.Send();
 			WriteFile((gpad._port), &header, sizeof (unsigned char), &gpad.bytes_written, NULL);
 			WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);	*/
+			
 		}
 	}
 
 	graph->BrushRelease(lBrush);
+	graph->BrushRelease(rBrush);
 	return 0;
 }

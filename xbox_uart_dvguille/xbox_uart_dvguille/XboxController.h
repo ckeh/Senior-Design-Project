@@ -25,6 +25,7 @@ class XboxController {
 		
 		uint16_t lt;
 		uint16_t rt;
+		int32_t rotation;
 
 		unsigned long total_packet;
 		unsigned char header {0xAA};

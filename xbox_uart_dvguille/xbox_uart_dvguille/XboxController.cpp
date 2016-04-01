@@ -29,8 +29,14 @@ bool XboxController::Connect(LPCSTR portname, DWORD baud) {
 	LPDCB port = new DCB();
 	bool result = FALSE;
 
-	_port = CreateFile(portname, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_WRITE_THROUGH, NULL);
-	std::cout << &_port << std::endl;
+	_port = CreateFile(
+		portname, 
+		GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 
+		NULL, 
+		OPEN_EXISTING, 
+		FILE_FLAG_WRITE_THROUGH, 
+		NULL
+		);
 	if (&_port == INVALID_HANDLE_VALUE) {
 		CloseHandle(_port);
 		_port = NULL;
@@ -69,7 +75,7 @@ void XboxController::Update() {
 	total_packet = 0;
 	DWORD id = XInputGetState(this->_id, &(this->_state));
 	// Variables to be used by multiple blocks to set data;
-	unsigned char rtemp, ltemp; 
+	unsigned char rtemp, ltemp;
 	// This block sets the dpad and buttons on the controller into the a single byte of data.
 	unsigned char buttontemp{ 0 };
 	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_A)>>8;
@@ -80,16 +86,20 @@ void XboxController::Update() {
 	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
 	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
 	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
-	this->buttons = buttontemp;
+	buttons = buttontemp;
 
 	// This block sets the trigger data into a single byte.
-	float trigtemp{ 0 };
-	trigtemp = _state.Gamepad.bRightTrigger;
+	float trigtemp{ 0 }, rotationTempR{ 0 }, rotationTempL{ 0 };
+	trigtemp = rotationTempR = _state.Gamepad.bRightTrigger;
 	rtemp = (trigtemp / 255) * 15;
-	trigtemp = _state.Gamepad.bLeftTrigger;
+	trigtemp = rotationTempL = _state.Gamepad.bLeftTrigger;
 	ltemp = (trigtemp / 255) * 15;
 	triggers = rtemp;
 	triggers |= (ltemp << 4);
+
+	rotation = 0;
+	if (rotationTempR) rotation = (rotationTempR / 255) * 180;
+	else if (rotationTempL) rotation = -(rotationTempL / 255) * 180;
 
 	//This block sets the thumbstick data and check for deadzones in the controller
 	float LY = _state.Gamepad.sThumbLY;

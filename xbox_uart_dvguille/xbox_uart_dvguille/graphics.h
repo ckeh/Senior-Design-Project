@@ -28,18 +28,21 @@ public:
 	void SetTransform(D2D1_MATRIX_3X2_F &matrix) { renderTarget->SetTransform(matrix); }
 	void EndDraw() { renderTarget->EndDraw(); }
 
-	ID2D1SolidColorBrush * CreateBrush(D2D1_COLOR_F &color);
+	ID2D1SolidColorBrush * CreateSolidColorBrush(D2D1_COLOR_F &color);
 	ID2D1LinearGradientBrush * CreateLinearGradientBrush(const D2D1_POINT_2F &start, const D2D1_POINT_2F &end);
 	ID2D1RadialGradientBrush * CreateRadialGradientBrush(const D2D1_POINT_2F &center, const D2D1_POINT_2F &offset);
 	
 	void BrushRelease(ID2D1Brush *brush) { brush->Release(); }
 	
 	void FillCircle(D2D1_POINT_2F &center, float rad, D2D1_COLOR_F &color);
+	void DrawCircle(D2D1_POINT_2F &center, float rad, ID2D1Brush *brush);
 	
 	void FillRect(D2D1_RECT_F &rect, D2D1_COLOR_F &color);
 	void FillRect(D2D1_RECT_F &rect, ID2D1Brush *brush);
 
-	void FillTriangle();
+	void FillTriangle(ID2D1Brush *brush);
+
+	void CreateSink();
 	
 	void DrawText(const wchar_t *text, const wchar_t *font, float size, D2D1_RECT_F &rect, D2D1_COLOR_F &color);
 	void ShowPercentage();

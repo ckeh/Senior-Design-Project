@@ -1,5 +1,6 @@
 #include "serial.h"
 #using <System.dll>
+#include <vcclr.h>
 
 using namespace System;
 using namespace System::IO::Ports;
@@ -33,6 +34,6 @@ void serial::close() {
 void serial::DataReceivedHandler(Object ^ sender, SerialDataReceivedEventArgs ^ e) {
 	SerialPort^ sp = (SerialPort^)sender;
 	String^ indata = sp->ReadExisting();
-	Console::WriteLine("Data Received:");
-	Console::Write(indata);
+	pin_ptr<const wchar_t> data = PtrToStringChars(indata);
+
 }
