@@ -1,11 +1,6 @@
-﻿  brush.cpp
-  graphics.cpp
-  main.cpp
+﻿  main.cpp
 main.cpp(91): warning C4244: 'argument': conversion from 'int32_t' to 'FLOAT', possible loss of data
 main.cpp(98): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-  window.cpp
-  Generating Code...
-c:\users\dvguille\desktop\xbox_uart_dvguille\xbox_uart_dvguille\window.cpp(26): warning C4715: 'window::CreateHandle': not all control paths return a value
   brush.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
-  xbox_uart_dvguille.vcxproj -> C:\Users\dvguille\Desktop\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe
-  xbox_uart_dvguille.vcxproj -> C:\Users\dvguille\Desktop\xbox_uart_dvguille\Debug\xbox_uart_dvguille.pdb (Partial PDB)
+  xbox_uart_dvguille.vcxproj -> C:\Users\dvguille\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe
+  xbox_uart_dvguille.vcxproj -> C:\Users\dvguille\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.pdb (Partial PDB)

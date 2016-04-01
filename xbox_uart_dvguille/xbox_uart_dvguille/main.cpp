@@ -71,7 +71,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	ID2D1Brush *rBrush = graph->CreateRadialGradientBrush(Point2F(725, 300), Point2F(0, 0));
 	ID2D1SolidColorBrush *sBrush = graph->CreateSolidColorBrush(ColorF(ColorF::DodgerBlue));
 	graph->CreateSink();
-	
+	//wchar_t oldbuf[64] = L"";
 	while (msg.message != WM_QUIT) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
@@ -80,11 +80,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 		else {
 			char buf[64];
 			DWORD bytes = 0;
-			ReadFile(gpad._port, buf, 64, &bytes, NULL);
-			size_t length = strlen(buf);
-			std::wstring text_wchar(length, L'#');
-			mbstowcs(&text_wchar[0], buf, length);
-			const wchar_t *wbuf = text_wchar.c_str();
+			ReadFile(gpad._port, buf, sizeof(buf), &bytes, NULL);
+			//size_t length = strlen(buf);
+			//std::wstring text_wchar(length, L'#');
+			//mbstowcs(&text_wchar[0], buf, length);
+			//const wchar_t *wbuf = text_wchar.c_str();
 			gpad.Update();
 			graph->BeginDraw();
 			graph->Clear(ColorF(ColorF::WhiteSmoke, 1.f));
@@ -96,9 +96,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			graph->DrawCircle(Point2F(100.0f, 150.0f), 75.0f, sBrush);
 			graph->FillRect(RectF(700, 50, 750, 550), rBrush);
 			graph->FillRect(RectF(700, 550 - gpad.lt, 750, 550), lBrush);
-			graph->DrawText(wbuf, L"Times New Roman", 14.0f, RectF(400, 200, 600, 400), ColorF(ColorF::Black));
+
+			//if (wcscmp(oldbuf, wbuf) == 0)
+				//graph->DrawText((wchar_t*)buf, L"Times New Roman", 14.0f, RectF(400, 200, 600, 250), ColorF(ColorF::Black));
+			//wcscpy(oldbuf, wbuf);
+
 			graph->ShowPercentage();
 			
+
 			if (gpad.leftDirection == UP) {
 				graph->DrawText(
 					L"Forward",
