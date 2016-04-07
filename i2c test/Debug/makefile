@@ -12,7 +12,9 @@ GEN_CMDS__FLAG :=
 ORDERED_OBJS += \
 "./accelerometer.obj" \
 "./i2c.obj" \
+"./i2c0.obj" \
 "./main.obj" \
+"./pressure.obj" \
 "./tm4c123gh6pm_startup_ccs.obj" \
 "C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/ccs/Debug/driverlib.lib" \
 "../tm4c123gh6pm.cmd" \
@@ -153,8 +155,8 @@ i2c\ test.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "accelerometer.pp" "i2c.pp" "main.pp" "tm4c123gh6pm_startup_ccs.pp" 
-	-$(RM) "accelerometer.obj" "i2c.obj" "main.obj" "tm4c123gh6pm_startup_ccs.obj" 
+	-$(RM) "accelerometer.pp" "i2c.pp" "i2c0.pp" "main.pp" "pressure.pp" "tm4c123gh6pm_startup_ccs.pp" 
+	-$(RM) "accelerometer.obj" "i2c.obj" "i2c0.obj" "main.obj" "pressure.obj" "tm4c123gh6pm_startup_ccs.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

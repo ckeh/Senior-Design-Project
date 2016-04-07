@@ -13,7 +13,7 @@
  * Description - gets acceleromter data on all axis and puts them in the accel struct fields
  * Return - none
  */
-void accelerometer_data_get (accelerometer *accel) {
+void accelerometer_data_get (volatile accelerometer *accel) {
 	set_slave_address (0x1D);
 	write_byte(DATAX0, RUN|START);
 	// Get X, Y, Z data from accelerometer

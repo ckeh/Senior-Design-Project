@@ -108,7 +108,7 @@ void write_byte (uint8_t data, uint8_t conditions) {
 	I2C1_MDR_R |= data;
 	// 10. Initiate a single byte transmit of the data from Master to Slave by writing the I2CMCS register
 	// with a value of 0x0000.0007 (STOP, START, RUN).
-	I2C1_MCS_R |= 0<<4;
+	I2C1_MCS_R &= ~(0<<4);
 	I2C1_MCS_R |= conditions; // STOP, START, RUN
 
 	// 11. Wait until the transmission completes by polling the I2CMCS register's BUSBSY bit until it has
