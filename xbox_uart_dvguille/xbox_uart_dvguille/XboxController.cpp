@@ -83,9 +83,10 @@ void XboxController::Update() {
 	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_X)>>8;
 	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_Y)>>8;
 	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP);
-	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
-	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
-	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
+	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) >> 6;//2;
+	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) >> 7;//3;
+	buttontemp |= (_state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) << 1;
+
 	buttons = buttontemp;
 
 	// This block sets the trigger data into a single byte.
@@ -168,10 +169,21 @@ void XboxController::Update() {
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
+//CKEH EDIT
+	unsigned char first, second;
 
 
-	this->total_packet |= (this->buttons);
-	this->total_packet |= (this->triggers << 8);
+
+	first = (this->buttons & 0x0F); //dpad
+	first |= (this->triggers & 0x0F) << 4; //R trigger
+
+	second = (this->triggers & 0xF0);
+	second |= (this->buttons & 0xF0) >> 4; //xyab
+
+	this->total_packet = (unsigned long)(first);//|= (this->buttons);
+	this->total_packet |= second << 8;//(this->triggers << 8);
+	//this->total_packet |= (this->buttons);
+	//this->total_packet |= (this->triggers << 8);
 	this->total_packet |= (this->lstick << 16);
 	this->total_packet |= (this->rstick << 24);
 }

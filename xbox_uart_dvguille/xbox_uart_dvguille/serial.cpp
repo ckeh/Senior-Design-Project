@@ -8,7 +8,7 @@ using namespace System::IO::Ports;
 serial::serial() {}
 
 void serial::open() {
-	SerialPort^ _serial = gcnew SerialPort("COM4");
+	SerialPort^ _serial = gcnew SerialPort("COM5");
 
 	_serial->BaudRate = 115200;
 	_serial->Parity = Parity::Even;
