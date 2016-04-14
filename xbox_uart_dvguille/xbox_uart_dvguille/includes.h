@@ -14,5 +14,6 @@
 #include "window.h"
 #include "graphics.h"
 #include "Graphics3D.h"
+#include "util.h"
 
 #using <System.dll>

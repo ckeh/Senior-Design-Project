@@ -117,6 +117,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="serial.cpp" />
     <ClCompile Include="graphics.cpp" />
+    <ClCompile Include="util.cpp" />
     <ClCompile Include="window.cpp" />
     <ClCompile Include="XboxController.cpp" />
   </ItemGroup>
@@ -126,6 +127,7 @@
     <ClInclude Include="Graphics3D.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="serial.h" />
+    <ClInclude Include="util.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="XboxController.h" />
   </ItemGroup>
