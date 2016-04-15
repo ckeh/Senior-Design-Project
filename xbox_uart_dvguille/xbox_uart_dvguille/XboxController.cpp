@@ -180,20 +180,23 @@ void XboxController::Update() {
 	second = (this->triggers & 0xF0);
 	second |= (this->buttons & 0xF0) >> 4; //xyab
 
+	this->total_packet |= (this->buttons);
+	this->total_packet |= (this->triggers << 8);
 	this->total_packet = (unsigned long)(first);//|= (this->buttons);
 	this->total_packet |= second << 8;//(this->triggers << 8);
-	//this->total_packet |= (this->buttons);
-	//this->total_packet |= (this->triggers << 8);
 	this->total_packet |= (this->lstick << 16);
 	this->total_packet |= (this->rstick << 24);
+	//this->total_packet |= (this->header);
 }
 
-void XboxController::Send() {
-	Update();
-	WriteFile(_port, &total_packet, 4, &bytes_written, NULL);	
+int XboxController::DataAvailable() {
+	if (_port == nullptr) return -1;
 
+	DWORD errorflags = 0;
+	COMSTAT comstat;
+
+	ClearCommError(_port, &errorflags, &comstat);
+
+	return (int)comstat.cbInQue;
 }
-
-
-
 

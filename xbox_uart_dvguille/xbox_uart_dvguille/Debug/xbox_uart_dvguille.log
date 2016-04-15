@@ -1,5 +1,6 @@
 ﻿  main.cpp
-main.cpp(198): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+main.cpp(183): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+main.cpp(57): warning C4101: 'i': unreferenced local variable
   brush.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
   xbox_uart_dvguille.vcxproj -> C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe
   xbox_uart_dvguille.vcxproj -> C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.pdb (Partial PDB)

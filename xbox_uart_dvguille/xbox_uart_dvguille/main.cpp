@@ -1,5 +1,7 @@
 #include "includes.h"
 
+#define PACKET_SIZE 80
+
 using namespace std;
 using namespace System;
 using namespace System::IO::Ports;
@@ -89,101 +91,84 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			DispatchMessage(&msg);
 		}
 		else {
-			int16_t xdata=0;
-			int16_t ydata=0;
-			int16_t zdata=0;
+			int16_t xdata;
+			int16_t ydata;
+			int16_t zdata;
+			uint32_t pressure;
+			uint32_t temperature;
+			int result;
 
-			char dataprint[100] = { '\0' };
-			char dataprintx[20] = { '\0' };
-			char dataprinty[20] = { '\0' };
-			char dataprintz[20] = { '\0' };
+			char dataprint[100];
+			char dataprintx[20];
+			char dataprinty[20];
+			char dataprintz[20];
 
-			uint8_t buf = '\0' ;
-			uint8_t buff[32] = { '\0' };
+			uint8_t buf[100] = { '\0' };
+			uint8_t buff[6] = { '\0' };
 			char headerr[1] = { '\0' };
 			
 			DWORD bytes = 0;
-			while (bytes == 0) {
+			int temp = gpad.DataAvailable();
+			if (temp >= PACKET_SIZE+1) {
+				xdata = 0;
+				ydata = 0;
+				zdata = 0;
+				pressure = 0;
+				temperature = 0;
+				result = 0;
+				dataprint[100] = { '\0' };
+				dataprintx[100] = { '\0' };
+				dataprinty[100] = { '\0' };
+				dataprintz[100] = { '\0' };
 				ReadFile(gpad._port, headerr, 1, &bytes, NULL);
-			}
-			if (headerr[0] == 'a') {
-				for (i = 0; i < 2; i++) {
-					bytes = 0;
-					while (bytes == 0) {
-						ReadFile(gpad._port, &buf, 1, &bytes, NULL);
-						if (bytes > 1) exit(1);
+				if (headerr[0] == 'a') {
+					ReadFile(gpad._port, &buf, PACKET_SIZE/8, &bytes, NULL);
+				}
+
+
+					for (int i = 0; i < 2; i++) {
+						xdata |= buf[i];
+						if (i == 0)
+							xdata = xdata << 8;
 					}
-					buff[i] = buf;
-				} 
+					sprintf(dataprintx, "x = %d", xdata);
 
-				
-				for (int i = 1; i > -1; i--) {
-					xdata |= buff[i];
-					if (i == 1)
-						xdata = xdata << 8;
-				}
-				sprintf(dataprintx, "x = %d", xdata);
+					for (int i = 2; i < 6; i++) {
+						pressure |= buf[i];
+						if (i != 5)
+							pressure = pressure << 8;
+					}
 
-	
+					for (int i = 6; i < 10; i++) {
+						temperature |= buf[i];
+						if (i != 9)
+							temperature = temperature << 8;
+					}
+
+					result = calcPressure(pressure, temperature) / 10;
+					sprintf(dataprint, "press = %d mbar", result);
 #if 0
-				for (int i = 3; i > 1; i--) {
-					ydata |= buff[i];
-					if (i == 3)
-						ydata = ydata << 8;
-				}
+					for (int i = 3; i > 1; i--) {
+						ydata |= buff[i];
+						if (i == 3)
+							ydata = ydata << 8;
+					}
 
-				for (int i = 5; i > 3; i--) {
-					zdata |= buff[i];
-					if (i == 5)
-						zdata = zdata << 8;
-				}
+					for (int i = 5; i > 3; i--) {
+						zdata |= buff[i];
+						if (i == 5)
+							zdata = zdata << 8;
+					}
 
-				sprintf(dataprintx, "x = %d", xdata);
-				sprintf(dataprinty, "y = %d", ydata);
-				sprintf(dataprintz, "z = %d", zdata);
+					sprintf(dataprintx, "x = %d", xdata);
+					sprintf(dataprinty, "y = %d", ydata);
+					sprintf(dataprintz, "z = %d", zdata);
 #endif	
-				headerr[0] = '\0';
-			}
-
-#if 0
-				// Convert to a wchar_t*
-				size_t bufsize = strlen(buff) + 1;
-				const size_t newsize = 100;
-				size_t convertedChars = 0;
-				wchar_t wcstring[newsize];
-				mbstowcs_s(&convertedChars, wcstring, bufsize, buff, _TRUNCATE);
-#endif			
-				wcstring = convert(dataprintx);
-#if 0
-				// Convert to a wchar_t* X
-				size_t bufsize = strlen(dataprintx) + 1;
-				const size_t newsize = 100;
-				size_t convertedChars = 0;
-				wchar_t wcstring[newsize] = { '\0' };
-				mbstowcs_s(&convertedChars, wcstring, bufsize, dataprintx, _TRUNCATE);
-				//graph->DrawText(wcstring, L"Times New Roman", 14.0f, RectF(400, 200, 600, 250), ColorF(ColorF::Black));
-
-#endif		
-#if 0
-				// Convert to a wchar_t* Y
-				size_t bufsize = strlen(dataprinty) + 1;
-				const size_t newsize = 100;
-				size_t convertedChars = 0;
-				wchar_t wcstring[newsize];
-				mbstowcs_s(&convertedChars, wcstring, bufsize, dataprinty, _TRUNCATE);
-				//graph->DrawText(wcstring, L"Times New Roman", 14.0f, RectF(400, 200, 600, 250), ColorF(ColorF::Black));
-#endif
-#if 0
-				// Convert to a wchar_t* Z
-				size_t bufsize = strlen(dataprintz) + 1;
-				const size_t newsize = 100;
-				size_t convertedChars = 0;
-				wchar_t wcstring[newsize];
-				mbstowcs_s(&convertedChars, wcstring, bufsize, dataprintz, _TRUNCATE);
-				//graph->DrawText(wcstring, L"Times New Roman", 14.0f, RectF(400, 200, 600, 250), ColorF(ColorF::Black));
-#endif
-
-
+					headerr[0] = '\0';
+				}
+			
+		
+			wcstring = convert(dataprint);
 
 			gpad.Update();
 			graph->BeginDraw();

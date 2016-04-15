@@ -37,6 +37,7 @@ class XboxController {
 		void Update();
 		void Send();
 		char Direction() { return leftDirection; }
+		int DataAvailable();
 		
 
 	private:
