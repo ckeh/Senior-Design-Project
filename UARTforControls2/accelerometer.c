@@ -8,15 +8,16 @@
 #include "accelerometer.h"
 #include "i2c.h"
 #include "tm4c123gh6pm.h"
+#include <math.h>
 
 /*
  * Param - accelerometer*
- * Description - gets acceleromter data on all axis and puts them in the accel struct fields
+ * Description - gets acceleromter data on all value and puts them in the accel struct fields
  * Return - none
  */
 void accelerometer_data_get (volatile accelerometer *accel) {
 
-	set_slave_address (0x1D);
+	set_slave_address (0xA6>>1);//(0x1D);
 	write_byte(DATAX0, RUN|START);
 	// Get X, Y, Z data from accelerometer
 //	I2C1_MCS_R &= 0xFFFFFFE0;
@@ -46,7 +47,7 @@ void accelerometer_data_get (volatile accelerometer *accel) {
  * Return - none
  */
 void initialize_accelerometer (void) {
-	set_slave_address (0x1D);
+	set_slave_address (0xA6>>1);//(0x1D);
 
 	write_accelerometer(POWER_CTL, 0x08);
 //	write_byte(POWER_CTL, START|RUN);
@@ -59,9 +60,11 @@ void initialize_accelerometer (void) {
 	write_accelerometer(TAP_AXES, 0x08);
 //	write_byte(TAP_AXES, RUN|START);
 //	write_byte(0x08, RUN|STOP);
-	write_accelerometer(OFSX, 0xFE);
+	write_accelerometer(OFSX, 0x01);
 
 	write_accelerometer(OFSY, 0xFF);
+
+	write_accelerometer(OFSZ, 0x02);
 
 }
 
@@ -76,3 +79,42 @@ void write_accelerometer (uint8_t reg, uint8_t data) {
 	write_byte(data, RUN|STOPI2C);
 }
 
+int16_t to_degrees(uint8_t axis, int16_t value, volatile accelerometer* accel){
+
+	switch(axis){
+		case XAXIS:
+			if (accel->x < 0) {
+				value = -asin((-accel->x * 31.2) / 1000) * (180 / 3.14);
+				if ((-accel->x * 31.2) / 1000 > .9984)
+					value = -90.0;
+			} else {
+				value = asin((accel->x * 31.2) / 1000) * (180 / 3.14);
+				if ((accel->x * 31.2) / 1000 > 1)
+					value = 90.0;
+			}
+			break;
+		case YAXIS:
+			if (accel->y < 0) {
+				value = -asin((-accel->y * 31.2) / 1000) * (180 / 3.14);
+				if ((-accel->y * 31.2) / 1000 > .9984)
+					value = -90.0;
+			} else {
+				value = asin((accel->y * 31.2) / 1000) * (180 / 3.14);
+				if ((accel->y * 31.2) / 1000 > 1)
+					value = 90.0;
+			}
+			break;
+		case ZAXIS:
+			if (accel->z < 0) {
+				value = -asin((-accel->z * 31.2) / 1000) * (180 / 3.14);
+				if ((-accel->z * 31.2) / 1000 > .9984)
+					value = -90.0;
+			} else {
+				value = asin((accel->z * 31.2) / 1000) * (180 / 3.14);
+				if ((accel->z * 31.2) / 1000 > 1)
+					value = 90.0;
+			}
+			break;
+	}
+		return value;
+}

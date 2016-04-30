@@ -50,7 +50,7 @@ uint8_t servoInit(){
 	PWMGenPeriodSet(PWM1_BASE, PWM_GEN_0, ui32Load);
 
 	//initial pulse width operations
-	ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_0,ui8Adjust * ui32Load / 1000); // calc this 938 in notebook
+	ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_0, ui8Adjust * ui32Load / 1000); // calc this 938 in notebook
 	ROM_PWMOutputState(PWM1_BASE, PWM_OUT_0_BIT, true);
 	//do we need to enable everytime? -- dont think so
 	ROM_PWMGenEnable(PWM1_BASE, PWM_GEN_0);

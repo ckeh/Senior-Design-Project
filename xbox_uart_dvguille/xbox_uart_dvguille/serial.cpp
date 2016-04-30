@@ -11,7 +11,7 @@ void serial::open() {
 	SerialPort^ _serial = gcnew SerialPort("COM5");
 
 	_serial->BaudRate = 115200;
-	_serial->Parity = Parity::Even;
+	_serial->Parity = Parity::None;
 	_serial->StopBits = StopBits::One;
 	_serial->DataBits = 8;
 	_serial->Handshake = Handshake::None;

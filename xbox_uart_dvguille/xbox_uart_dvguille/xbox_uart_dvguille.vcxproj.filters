@@ -69,4 +69,15 @@
   <ItemGroup>
     <Text Include="saved_main_code.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Flashlight_clear.JPG">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="FrontROV.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="SideROV.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

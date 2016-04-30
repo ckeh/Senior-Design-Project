@@ -41,15 +41,14 @@
 #define FAILURE 0
 #define SUCCESS 1
 
-
 #define OFF 1 // since counter goes to 0
-//for testing using lesser units, to light is not as bright
-#define MIN 156// 1563 //25%
-#define MIDDLE_MIN 313 //3125 //50%
-#define MIDDLE 469 //4688 //75%
-#define MAX 625 //6250 //100%
+//for testing using lesser units, to light is not as bright divide by half
+#define MIN 125// 1563 //25% -- 20%
+#define MIDDLE_MIN 250 //3125 //50% -- 40%
+#define MIDDLE 375 //4688 //75% -- 60%
+#define MAX 500 //6250 //100% -- 80%
+#define SUPERMAX 625 //6250 //100% -- 100%
 #define MAX_LIMIT 12499
-
 
 
 

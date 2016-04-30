@@ -72,6 +72,7 @@ ID2D1LinearGradientBrush * Graphics::CreateLinearGradientBrush(const D2D1_POINT_
 		gradientStops,
 		&linearGradientBrush
 		);
+
 	return linearGradientBrush;
 }
 
@@ -211,5 +212,233 @@ void Graphics::ShowPercentage()
 		ColorF(ColorF::Black)
 		);
 
+
+}
+
+void Graphics::DrawMotorBars(ID2D1RadialGradientBrush *rBrush)
+{
+	rBrush->SetCenter(Point2F(725, 300));
+	FillRect(RectF(700, 50, 750, 550), rBrush);
+	rBrush->SetCenter(Point2F(650, 300));
+	FillRect(RectF(625, 50, 675, 550), rBrush);
+	rBrush->SetCenter(Point2F(575, 300));
+	FillRect(RectF(550, 50, 600, 550), rBrush);
+}
+
+void Graphics::FillMotorBars(ID2D1LinearGradientBrush *lBrush, XboxController gpad)
+{
+	////////////// Third Motor Bar ////////////////////
+	lBrush->SetStartPoint(Point2F(700, 300));
+	lBrush->SetEndPoint(Point2F(700, 550));
+	if (gpad.leftDirection == DOWN )
+	{
+		int diff = int(gpad.lt - gpad.rt);
+		if (gpad.lt)
+		{
+			if ((diff >= 0) && (gpad.rightDirection == LEFT))
+				FillRect(RectF(700, 300, 750, (300 + gpad.lt)-gpad.rt), lBrush);
+			else
+				FillRect(RectF(700, 300, 750, 300 + (gpad.lt)), lBrush);	// Alter this line with gpad direction (second argument of RectF)
+		}
+		else
+		{
+			FillRect(RectF(700, 300, 750, 300 + (gpad.lt)), lBrush);	// Alter this line with gpad direction (second argument of RectF)
+		}
+		
+	}
+		
+	else if (gpad.rightDirection == RIGHT && !gpad.lt)
+	{
+		FillRect(RectF(700, 300, 750, 300+gpad.rt), lBrush);
+	}
+	else if (gpad.rightDirection == RIGHT && !gpad.lt && (gpad.buttons & 0x8)) {
+		FillRect(RectF(700, 300, 750, 300 + gpad.rt), lBrush);
+	}
+	else if (gpad.rightDirection == LEFT && !gpad.lt && (gpad.buttons & 0x8)) {
+		FillRect(RectF(700, 300, 750, 300 - gpad.rt), lBrush);
+	}
+	lBrush->SetStartPoint(Point2F(700, 300));
+	lBrush->SetEndPoint(Point2F(700, 50));
+	if (gpad.leftDirection == UP)
+	{
+		if (gpad.rightDirection == RIGHT && gpad.lt)
+		{
+			FillRect(RectF(700, (300 - gpad.lt) + gpad.rt, 750, 300), lBrush);
+		}
+		else
+			FillRect(RectF(700, 300 - gpad.lt, 750, 300), lBrush);		// Alter this line with gpad direction (second argument of RectF)
+		/*if (gpad.rightDirection == RIGHT)
+			FillRect(RectF(700, (300 - gpad.lt) + gpad.rt, 750, 300), lBrush);*/
+	}
+	///////////////////////////////////////////////////
+
+	////////////// Second Motor Bar ////////////////////
+	lBrush->SetStartPoint(Point2F(700, 300));
+	lBrush->SetEndPoint(Point2F(700, 550));
+	if (gpad.leftDirection == DOWN)
+	{
+		int diff = int(gpad.lt - gpad.rt);
+		if ((gpad.lt))
+		{
+			if ((diff >= 0) && (gpad.rightDirection == RIGHT))
+				FillRect(RectF(625, 300, 675, (300+gpad.lt)-gpad.rt), lBrush);
+			else
+				FillRect(RectF(625, 300, 675, (300 + gpad.lt)), lBrush);
+
+		}
+		else
+		{
+			FillRect(RectF(625, 300, 675, 300 + (gpad.lt)), lBrush);	// Alter this line with gpad direction (second argument of RectF)
+		}
+	}
+	else if (gpad.rightDirection == LEFT && !gpad.lt)
+	{
+		FillRect(RectF(625, 300, 675, 300 + gpad.rt), lBrush);
+	}
+	else if (gpad.rightDirection == RIGHT && !gpad.lt && (gpad.buttons & 0x8))
+	{
+		FillRect(RectF(625, 300, 675, 300 - gpad.rt), lBrush);
+	}
+	lBrush->SetStartPoint(Point2F(700, 300));
+	lBrush->SetEndPoint(Point2F(700, 50));
+	if (gpad.leftDirection == UP)
+	{
+		if (gpad.rightDirection == LEFT && gpad.lt)
+		{
+			FillRect(RectF(625, (300 - gpad.lt) + gpad.rt, 675, 300), lBrush);
+		}
+		else
+			FillRect(RectF(625, 300 - gpad.lt, 675, 300), lBrush);
+	}
+	// Alter this line with gpad direction (second argument of RectF)
+	///////////////////////////////////////////////////
+
+	////////////// First Motor Bar ////////////////////
+	
+
+	//FillRect(RectF(550, 300, 600, 550), lBrush);
+	int diff = gpad.rz - gpad.lz;
+	if (diff > 0) 
+	{
+		lBrush->SetStartPoint(Point2F(700, 300));
+		lBrush->SetEndPoint(Point2F(700, 50));
+		FillRect(RectF(550, 300-diff, 600, 300), lBrush);
+	}
+	else
+	{
+		lBrush->SetStartPoint(Point2F(700, 300));
+		lBrush->SetEndPoint(Point2F(700, 550));
+		FillRect(RectF(550, 300, 600, 300-diff), lBrush);
+	}
+	//if (gpad.lz)
+	//{
+	//	//if (gpad.rz)
+	//	//	FillRect(RectF(550, 300, 600, 300 + gpad.lz), lBrush);	// Alter this line with gpad direction (second argument of RectF)
+
+	//	if ((gpad.lz - gpad.rz) > 0)
+	//	{
+	//		FillRect(RectF(550, 300, 600, (300 + gpad.lz)-gpad.rz), lBrush);	// Alter this line with gpad direction (second argument of RectF)
+	//	}
+	//	else
+	//	{
+	//		lBrush->SetStartPoint(Point2F(700, 300));
+	//		lBrush->SetEndPoint(Point2F(700, 50));
+	//		FillRect(RectF(550, 300, 600, 300), lBrush);	// Alter this line with gpad direction (second argument of RectF)
+	//	}
+	//}
+
+	//lBrush->SetStartPoint(Point2F(700, 300));
+	//lBrush->SetEndPoint(Point2F(700, 50));
+	////FillRect(RectF(550, 50, 600, 300), lBrush);
+	//FillRect(RectF(550, (300), 600, 300), lBrush);		// Alter this line with gpad direction (second argument of RectF)
+	/////////////////////////////////////////////////////
+}
+
+Bitmap::Bitmap(const wchar_t *filename, std::shared_ptr<Graphics> gfx)
+{
+	graph = gfx;
+	bmp = nullptr;
+	HRESULT hr;
+
+	IWICImagingFactory *wicFactory = nullptr;
+	hr = CoCreateInstance(
+		CLSID_WICImagingFactory,
+		NULL,
+		CLSCTX_INPROC_SERVER,
+		IID_IWICImagingFactory,
+		(LPVOID*)&wicFactory
+		);
+
+	IWICBitmapDecoder *wicDecoder = nullptr;
+	hr = wicFactory->CreateDecoderFromFilename(
+		filename,
+		NULL,
+		GENERIC_READ,
+		WICDecodeMetadataCacheOnDemand,
+		&wicDecoder
+		);
+
+	IWICBitmapFrameDecode *wicFrame = nullptr;
+	hr = wicDecoder->GetFrame(0, &wicFrame);
+
+	IWICFormatConverter *wicConverter = nullptr;
+	hr = wicFactory->CreateFormatConverter(&wicConverter);
+
+	hr = wicConverter->Initialize(
+		wicFrame,
+		GUID_WICPixelFormat32bppPBGRA,
+		WICBitmapDitherTypeNone,
+		NULL,
+		0.0,
+		WICBitmapPaletteTypeCustom
+		);
+
+	graph->GetRenderTarget()->CreateBitmapFromWicBitmap(
+		wicConverter,
+		&bmp
+		);
+
+	if (wicFactory) wicFactory->Release();
+	if (wicDecoder) wicDecoder->Release();
+	if (wicFrame) wicFrame->Release();
+	if (wicConverter) wicConverter->Release();
+}
+
+Bitmap::~Bitmap()
+{
+	if (bmp != nullptr) bmp->Release();
+}
+
+void Bitmap::Draw(float x, float y, int flag)
+{
+	if (flag) {
+		graph->GetRenderTarget()->DrawBitmap(
+			bmp,
+			RectF(x, y, x + 150, y + 150),
+			1.0f,
+			D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
+			RectF(0.0f, 0.0f, bmp->GetSize().width, bmp->GetSize().height)
+			);
+	}
+	else {
+		graph->GetRenderTarget()->DrawBitmap(
+			bmp,
+			RectF(x, y, x + 200, y + 150),
+			1.0f,
+			D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
+			RectF(0.0f, 0.0f, bmp->GetSize().width, bmp->GetSize().height)
+			);
+	}
+}
+
+void Bitmap::Draw(float x, float y, float opacity)
+{
+	graph->GetRenderTarget()->DrawBitmap(
+		bmp,
+		RectF(x, y, x + 125, y + 125),
+		opacity,
+		D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
+		RectF(0.0f, 0.0f, bmp->GetSize().width, bmp->GetSize().height)
+		);
 
 }

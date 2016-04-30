@@ -25,7 +25,7 @@ uint8_t ledsInit(){
 	 *
 	 * */
 	//ui8Adjust = 75; // so that starts in center
-	lightlevel = 1;
+	lightlevel = 0;
 	brightness = OFF;
 
 	//all the proper pin configurations
@@ -44,16 +44,16 @@ uint8_t ledsInit(){
 	ROM_GPIOPinConfigure(GPIO_PD1_M1PWM1 );
 
 
-	ui32PWMClock = SysCtlClockGet() / 64;
-	ui32Load = (ui32PWMClock / LED_FREQUENCY) - 1; //sets pwm period to 12500 ticks of PWM clock (which is at 625kHz)
-	PWMGenConfigure(PWM1_BASE, PWM_GEN_0, PWM_GEN_MODE_DOWN);
-	PWMGenPeriodSet(PWM1_BASE, PWM_GEN_0, ui32Load);
+//	ui32PWMClock = SysCtlClockGet() / 64;
+//	ui32Load = (ui32PWMClock / LED_FREQUENCY) - 1; //sets pwm period to 12500 ticks of PWM clock (which is at 625kHz)
+//	PWMGenConfigure(PWM1_BASE, PWM_GEN_0, PWM_GEN_MODE_DOWN);
+//	PWMGenPeriodSet(PWM1_BASE, PWM_GEN_0, ui32Load);
 
 	//initial pulse width operations
 	ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_1, brightness); // calc this 938 in notebook
 	ROM_PWMOutputState(PWM1_BASE, PWM_OUT_1_BIT, true);
 	//do we need to enable everytime? -- dont think so
-	ROM_PWMGenEnable(PWM1_BASE, PWM_GEN_0);
+//	ROM_PWMGenEnable(PWM1_BASE, PWM_GEN_0);
 
 	return 1;
 }
@@ -74,7 +74,7 @@ uint8_t ledsBright(){
 	uint8_t returnVal = SUCCESS;
 
 	//will dim livel
-	if(lightlevel>=4){
+	if(lightlevel>4){
 		lightlevel=0;
 	}else lightlevel+=1;
 
@@ -98,6 +98,9 @@ uint8_t ledsBright(){
 	//100%brightness
 	else if(lightlevel==4){
 		brightness = MAX;
+	}
+	else if(lightlevel==5){
+			brightness = SUPERMAX;
 	}
 	else returnVal = FAILURE;
 

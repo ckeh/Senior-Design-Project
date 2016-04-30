@@ -44,6 +44,7 @@ main.obj: ../servoControl.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdio.h
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/string.h
 main.obj: C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/i2c.h
+main.obj: ../pressure.h
 
 ../main.c: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/math.h: 
@@ -89,3 +90,4 @@ C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/timer.h:
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/stdio.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include/string.h: 
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/i2c.h: 
+../pressure.h: 

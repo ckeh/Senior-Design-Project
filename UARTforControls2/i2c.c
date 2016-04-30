@@ -69,16 +69,19 @@ void initialize_i2c (void) {        // Will add parameter to set the speed of th
 }
 
 void set_slave_address (uint8_t address) {
-	I2C1_MSA_R |= (address<<1);
+	uint32_t tmp = (uint32_t)address;
+	tmp = tmp << 1;
+	tmp |= 0xFFFFFF00;
+	I2C1_MSA_R = (tmp);
 }
 
 
 // Conditions will be STOP, START, RUN 2:0 respectively
-int read_byte (uint8_t conditions) {
+uint32_t read_byte (uint8_t conditions) {
 
 	set_rw(1);
 	// Set Conditions for i2c
-	I2C1_MCS_R |= conditions;
+	I2C1_MCS_R = conditions;
 	// Check to make sure line isnt busy.
 
 	// Wait until i2c is idle
@@ -97,7 +100,7 @@ int read_byte (uint8_t conditions) {
 	// Read byte of data
 
 
-	return I2C1_MDR_R&0xFF;
+	return I2C1_MDR_R;
 }
 
 void write_byte (uint8_t data, uint8_t conditions) {
@@ -105,11 +108,11 @@ void write_byte (uint8_t data, uint8_t conditions) {
 	// Conditions from 0-7 in decimal/hex or 3 bits in binary
 	// 9. Place data (byte) to be transmitted in the data register by writing the I2CMDR register with the
 	// desired data.
-	I2C1_MDR_R |= data;
+	I2C1_MDR_R = data;
 	// 10. Initiate a single byte transmit of the data from Master to Slave by writing the I2CMCS register
 	// with a value of 0x0000.0007 (STOP, START, RUN).
-	I2C1_MCS_R &= ~(1<<4);
-	I2C1_MCS_R |= conditions; // STOP, START, RUN
+//	I2C1_MCS_R &= ~(1<<4);
+	I2C1_MCS_R = conditions; // STOP, START, RUN
 
 	// 11. Wait until the transmission completes by polling the I2CMCS register's BUSBSY bit until it has
 	// been cleared.

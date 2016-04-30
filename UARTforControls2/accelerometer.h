@@ -10,6 +10,10 @@
 
 #include <inttypes.h>
 
+#define XAXIS 1
+#define YAXIS 2
+#define ZAXIS 3
+
 typedef struct accelerometer accelerometer;
 
 struct accelerometer {
@@ -44,5 +48,12 @@ void initialize_accelerometer (void);
  * Return - none
  */
 void write_accelerometer (uint8_t reg, uint8_t data);
+
+/*
+ * Param -
+ * Description -
+ * Return - none
+ */
+int16_t to_degrees(uint8_t axis, int16_t value, volatile accelerometer* accel);
 
 #endif /* UARTFORCONTROLS2_ACCELEROMETER_H_ */

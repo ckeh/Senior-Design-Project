@@ -59,7 +59,7 @@ bool XboxController::Connect(LPCSTR portname, DWORD baud) {
 	port->fRtsControl = RTS_CONTROL_DISABLE;
 	port->fAbortOnError = FALSE;
 	port->ByteSize = 8;
-	port->Parity = EVENPARITY;
+	port->Parity = NOPARITY;
 	port->StopBits = ONESTOPBIT;
 
 	if (!SetCommState(_port, port)) {
@@ -93,8 +93,10 @@ void XboxController::Update() {
 	float trigtemp{ 0 }, rotationTempR{ 0 }, rotationTempL{ 0 };
 	trigtemp = rotationTempR = _state.Gamepad.bRightTrigger;
 	rtemp = (trigtemp / 255) * 15;
+	rz = (trigtemp / 255) * 250;
 	trigtemp = rotationTempL = _state.Gamepad.bLeftTrigger;
 	ltemp = (trigtemp / 255) * 15;
+	lz = (trigtemp / 255) * 250;
 	triggers = rtemp;
 	triggers |= (ltemp << 4);
 
@@ -135,7 +137,7 @@ void XboxController::Update() {
 		leftDirection = DOWN;
 		
 	}
-	lt = (magnitude / 24827) * 500;
+	lt = (magnitude / 24827) * 250;
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
@@ -163,8 +165,17 @@ void XboxController::Update() {
 		rstick = 0;
 	}
 	unsigned char y = (magnituder / (32767- XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)) * 15;
-	if (normalizedRX == 1) rstick = y;
-	else rstick = (y << 4);
+	if (normalizedRX == 1)
+	{
+		rstick = y;
+		rightDirection = RIGHT;
+	}
+	else
+	{
+		rstick = (y << 4);
+		rightDirection = LEFT;
+	}
+	rt = (magnituder / 24078) * 250;
 	//std::cout << (unsigned short)rstick << std::endl;
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////
