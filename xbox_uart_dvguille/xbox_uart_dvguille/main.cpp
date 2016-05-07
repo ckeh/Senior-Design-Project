@@ -18,7 +18,7 @@ float previousX = 0.f;
 float previousY = 0.f;
 float x = 0.0f;
 float angle = 0.0f;
-
+unsigned long prevControlsPacket = 0;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	
@@ -62,7 +62,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	XboxController gpad;
 	unsigned char header = 0xAA;
 	
-	serial::open();
+	//serial::open();
 	gpad.Connect("COM5", 115200);
 	
 	win->CreateHandle(hInstance, 800, 600);
@@ -271,18 +271,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 					}
 
 			graph->EndDraw();
+			//|| (gpad.buttons & 0x4) || (gpad.buttons & 0x1)
 			//gpad.Send();
-			if (count > 1000 || (gpad.buttons & 0x4) || (gpad.buttons & 0x1) || (gpad.buttons & 0x40)) {
+			
+			
+			if (prevControlsPacket != gpad.total_packet) {
 				WriteFile((gpad._port), &header, sizeof(unsigned char), &gpad.bytes_written, NULL);
 				WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
-				count = 0;
 			}
-			//else {
-			//	count++;
+
+			//if (count > 20 ) {
+				//WriteFile((gpad._port), &header, sizeof(unsigned char), &gpad.bytes_written, NULL);
+				//WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
+				//count = 0;
 			//}
+			//else {
+				//count++;
+			//}
+			prevControlsPacket = gpad.total_packet;
 			delete[] wcstring;
 		}
-		count++;
+		//count++;
 	}
 
 	graph->BrushRelease(lBrush);
