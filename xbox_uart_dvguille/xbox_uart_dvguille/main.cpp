@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 
-#define PACKET_SIZE 96
+#define PACKET_SIZE 96 //packet size in bits
 
 using namespace std;
 using namespace System;
@@ -73,11 +73,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	auto win = make_shared<window>(hInstance, WindowProc);
 	auto graph = make_shared<Graphics>();
 	auto graph3d = make_shared <Graphics3D>();
+	
 	//XboxController gpad; //moved to top
 	//unsigned char header = 0xAA; //moved to top
-
-	
-	SetTimer(NULL, 0,750, (TIMERPROC)&f); //sets timer to 750ms
+	SetTimer(NULL, 0,600, (TIMERPROC)&f); //sets timer to N ms
 	
 	//serial::open();
 	gpad.Connect("COM4", 115200);
@@ -104,6 +103,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 
 	wchar_t oldbuf[100] = L"";
 	//KENNY CHANGES
+	//LG--commented out for now, while debugging
+	int batteryCount = 0;
 	ofstream myfile;
 	myfile.open("test.txt");
 
@@ -180,29 +181,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 						}
 					}
 
-					//for (int i = 0; i < 4; i++) {
-					//	pressure |= buf[i];
-					//	if (i != 3)
-					//		pressure = pressure << 8;
-					//}
-					//for (int i = 4; i < 6; i++) {
-					//	xdata |= buf[i];
-					//	if (i != 5)
-					//		xdata = xdata << 8;
-					//}
-
-					//for (int i = 6; i < 8; i++) {
-					//	ydata |= buf[i];
-					//	if (i != 7)
-					//		ydata = ydata << 8;
-					//}
-
-					//for (int i = 8; i < 10; i++) {
-					//	zdata |= buf[i];
-					//	if (i != 9)
-					//		zdata = zdata << 8;
-					//}
-	
 
 				}
 
@@ -308,7 +286,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			//gpad.Send();
 			
 			
-	/*		if (prevControlsPacket != gpad.total_packet) {
+			/*if (prevControlsPacket != gpad.total_packet) {
 				WriteFile((gpad._port), &header, sizeof(unsigned char), &gpad.bytes_written, NULL);
 				WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
 			}*/
@@ -322,7 +300,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			//else {
 				//count++;
 			//}
-			prevControlsPacket = gpad.total_packet;
+			//prevControlsPacket = gpad.total_packet;
 			delete[] wcstring;
 		}
 		//count++;
@@ -330,6 +308,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 
 	graph->BrushRelease(lBrush);
 	graph->BrushRelease(rBrush);
+	myfile.close(); //--LG commented out while debugging 5/11
 	return 0;
 }
 
