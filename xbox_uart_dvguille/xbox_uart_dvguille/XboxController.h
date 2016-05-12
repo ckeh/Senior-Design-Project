@@ -30,6 +30,7 @@ class XboxController {
 		int32_t rotation;
 
 		unsigned long total_packet;
+		
 		unsigned char header {0xAA};
 
 

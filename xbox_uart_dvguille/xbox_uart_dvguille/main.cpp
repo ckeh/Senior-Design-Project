@@ -1,6 +1,8 @@
 #include "includes.h"
+#include <iostream>
+#include <fstream>
 
-#define PACKET_SIZE 80
+#define PACKET_SIZE 96
 
 using namespace std;
 using namespace System;
@@ -19,6 +21,8 @@ float previousY = 0.f;
 float x = 0.0f;
 float angle = 0.0f;
 unsigned long prevControlsPacket = 0;
+XboxController gpad; //make it global
+unsigned char header = 0xAA; //to make global
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	
@@ -47,7 +51,17 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, int nCmdShow) {
+
+//the timer set on line 75, want to sent controls in this isr
+void CALLBACK f(HWND hwnd, UINT uMsg, UINT timerId, DWORD dwTime)
+{
+	//printf("Hello");
+	WriteFile((gpad._port), &header, sizeof(unsigned char), &gpad.bytes_written, NULL);
+	WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
+}
+
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, int nCmdShow ) {
 	int count = 0;
 	int16_t xtmp = 0;
 	int16_t ytmp = 0;
@@ -59,11 +73,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	auto win = make_shared<window>(hInstance, WindowProc);
 	auto graph = make_shared<Graphics>();
 	auto graph3d = make_shared <Graphics3D>();
-	XboxController gpad;
-	unsigned char header = 0xAA;
+	//XboxController gpad; //moved to top
+	//unsigned char header = 0xAA; //moved to top
+
+	
+	SetTimer(NULL, 0,750, (TIMERPROC)&f); //sets timer to 750ms
 	
 	//serial::open();
-	gpad.Connect("COM5", 115200);
+	gpad.Connect("COM4", 115200);
 	
 	win->CreateHandle(hInstance, 800, 600);
 	bool res = graph->Init(win->GetHandle());
@@ -86,7 +103,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	graph->CreateSink();
 
 	wchar_t oldbuf[100] = L"";
-
+	//KENNY CHANGES
+	ofstream myfile;
+	myfile.open("test.txt");
 
 
 	while (msg.message != WM_QUIT) {
@@ -96,9 +115,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			DispatchMessage(&msg);
 		}
 		else {
+
+		
+
+		
+
 			int16_t xdata;
 			int16_t ydata;
 			int16_t zdata;
+			uint16_t battery;
 			uint32_t pressure;
 			uint32_t temperature;
 			int result;
@@ -121,6 +146,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 				pressure = 0;
 				temperature = 0;
 				result = 0;
+				battery = 0;
 				dataprint[100] = { '\0' };
 				dataprintx[100] = { '\0' };
 				dataprinty[100] = { '\0' };
@@ -146,6 +172,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 							zdata |= buf[i];
 							if (i != 9)
 								zdata = zdata << 8;
+						}
+						else if (i >= 10 && i < 12) {
+							battery |= buf[i];
+							if (i != 11) 
+								battery = battery << 8;
 						}
 					}
 
@@ -194,6 +225,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 					sprintf(dataprinty, "y = %d", ydata);
 					sprintf(dataprintz, "z = %d", zdata);
 					headerr[0] = '\0';
+
+					myfile << battery << "\n";
 				}
 			
 		
@@ -275,10 +308,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			//gpad.Send();
 			
 			
-			if (prevControlsPacket != gpad.total_packet) {
+	/*		if (prevControlsPacket != gpad.total_packet) {
 				WriteFile((gpad._port), &header, sizeof(unsigned char), &gpad.bytes_written, NULL);
 				WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
-			}
+			}*/
+			
 
 			//if (count > 20 ) {
 				//WriteFile((gpad._port), &header, sizeof(unsigned char), &gpad.bytes_written, NULL);
@@ -298,3 +332,4 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	graph->BrushRelease(rBrush);
 	return 0;
 }
+

@@ -73,6 +73,7 @@ bool XboxController::Connect(LPCSTR portname, DWORD baud) {
 
 void XboxController::Update() {
 	total_packet = 0;
+	
 	DWORD id = XInputGetState(this->_id, &(this->_state));
 	// Variables to be used by multiple blocks to set data;
 	unsigned char rtemp, ltemp;
@@ -198,6 +199,8 @@ void XboxController::Update() {
 	this->total_packet |= (this->lstick << 16);
 	this->total_packet |= (this->rstick << 24);
 	//this->total_packet |= (this->header);
+
+
 }
 
 int XboxController::DataAvailable() {
