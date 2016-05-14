@@ -1,13 +1,1 @@
-﻿  main.cpp
-main.cpp(223): warning C4305: '+=': truncation from 'double' to 'float'
-main.cpp(240): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-main.cpp(71): warning C4101: 'i': unreferenced local variable
-  brush.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
-.NETFramework,Version=v4.0.AssemblyAttributes.obj : warning LNK4099: PDB 'vc140.pdb' was not found with '.NETFramework,Version=v4.0.AssemblyAttributes.obj' or at 'C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\vc140.pdb'; linking object as if no debug info
-XboxController.obj : warning LNK4099: PDB 'vc140.pdb' was not found with 'XboxController.obj' or at 'C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\vc140.pdb'; linking object as if no debug info
-window.obj : warning LNK4099: PDB 'vc140.pdb' was not found with 'window.obj' or at 'C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\vc140.pdb'; linking object as if no debug info
-graphics.obj : warning LNK4099: PDB 'vc140.pdb' was not found with 'graphics.obj' or at 'C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\vc140.pdb'; linking object as if no debug info
-Graphics3D.obj : warning LNK4099: PDB 'vc140.pdb' was not found with 'Graphics3D.obj' or at 'C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\vc140.pdb'; linking object as if no debug info
-brush.obj : warning LNK4099: PDB 'vc140.pdb' was not found with 'brush.obj' or at 'C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\vc140.pdb'; linking object as if no debug info
-  xbox_uart_dvguille.vcxproj -> C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe
-  xbox_uart_dvguille.vcxproj -> C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.pdb (Partial PDB)
+﻿

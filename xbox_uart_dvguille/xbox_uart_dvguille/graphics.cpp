@@ -76,6 +76,34 @@ ID2D1LinearGradientBrush * Graphics::CreateLinearGradientBrush(const D2D1_POINT_
 	return linearGradientBrush;
 }
 
+ID2D1LinearGradientBrush * Graphics::CreateLinearGradientBrush2(const D2D1_POINT_2F &start, const D2D1_POINT_2F &end) 
+{
+	ID2D1LinearGradientBrush *linearGradientBrush;
+	ID2D1GradientStopCollection *gradientStops = NULL;
+
+	D2D1_GRADIENT_STOP gradientStopsArray[2];
+	gradientStopsArray[0].color = D2D1::ColorF(ColorF::DodgerBlue, 1);
+	gradientStopsArray[0].position = 0.5f;
+	gradientStopsArray[1].color = D2D1::ColorF(ColorF::WhiteSmoke, 1);
+	gradientStopsArray[1].position = .50f;
+
+	renderTarget->CreateGradientStopCollection(
+		gradientStopsArray,
+		2,
+		D2D1_GAMMA_2_2,
+		D2D1_EXTEND_MODE_CLAMP,
+		&gradientStops
+		);
+	renderTarget->CreateLinearGradientBrush(
+		LinearGradientBrushProperties(
+			start,
+			end),
+		gradientStops,
+		&linearGradientBrush
+		);
+	return linearGradientBrush;
+}
+
 ID2D1RadialGradientBrush * Graphics::CreateRadialGradientBrush(const D2D1_POINT_2F &center, const D2D1_POINT_2F &offset) {
 	ID2D1RadialGradientBrush *radialGradientBrush;
 	ID2D1GradientStopCollection *gradientStops = NULL;
@@ -113,6 +141,10 @@ void Graphics::FillCircle(D2D1_POINT_2F &center, float rad, D2D1_COLOR_F &color)
 	brush->Release();
 }
 
+void Graphics::FillCircle(D2D1_POINT_2F &center, float rad, ID2D1Brush *lBrush) {
+	renderTarget->FillEllipse(Ellipse(center, rad, rad), lBrush);
+}
+
 void Graphics::DrawCircle(D2D1_POINT_2F &center, float rad, ID2D1Brush *brush) {
 	renderTarget->DrawEllipse(Ellipse(center, rad, rad), brush);
 }
@@ -138,16 +170,18 @@ void Graphics::CreateSink()
 		sink->SetFillMode(D2D1_FILL_MODE_WINDING);
 
 		sink->BeginFigure(
-			Point2F(90.0f, 150.0f),
+			Point2F(190.0f, 150.0f),
 			D2D1_FIGURE_BEGIN_FILLED
 			);
 
-		D2D1_POINT_2F points[] = {
-			Point2F(100.0f, 75.0f),
-			Point2F(105.0f, 150.0f),
-			Point2F(95.0f, 150.0f),
-		};
-		sink->AddLines(points, ARRAYSIZE(points));
+		sink->AddArc(
+			ArcSegment(
+			Point2F(10, 150),
+			SizeF(90, 90),
+			0.0f, 
+			D2D1_SWEEP_DIRECTION_CLOCKWISE,
+			D2D1_ARC_SIZE_SMALL
+			));
 		sink->EndFigure(D2D1_FIGURE_END_CLOSED);
 	}
 	res = sink->Close();

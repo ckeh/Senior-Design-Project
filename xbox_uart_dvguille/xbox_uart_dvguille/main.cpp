@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 
-#define PACKET_SIZE 96 //packet size in bits
+#define PACKET_SIZE 80 //packet size in bits
 
 using namespace std;
 using namespace System;
@@ -23,6 +23,7 @@ float angle = 0.0f;
 unsigned long prevControlsPacket = 0;
 XboxController gpad; //make it global
 unsigned char header = 0xAA; //to make global
+
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	
@@ -56,8 +57,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 void CALLBACK f(HWND hwnd, UINT uMsg, UINT timerId, DWORD dwTime)
 {
 	//printf("Hello");
-	WriteFile((gpad._port), &header, sizeof(unsigned char), &gpad.bytes_written, NULL);
-	WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
+	//if (prevControlsPacket != 0) {
+			WriteFile((gpad._port), &header, sizeof(unsigned char), &gpad.bytes_written, NULL);
+			WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
+	//		prevControlsPacket = gpad.total_packet;
+	//}
 }
 
 
@@ -76,7 +80,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	
 	//XboxController gpad; //moved to top
 	//unsigned char header = 0xAA; //moved to top
-	SetTimer(NULL, 0,600, (TIMERPROC)&f); //sets timer to N ms
+	SetTimer(NULL, 0,300, (TIMERPROC)&f); //sets timer to N ms
 	
 	//serial::open();
 	gpad.Connect("COM4", 115200);
@@ -97,6 +101,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 
 	graph3d->Init3D(win->GetHandle());
 	ID2D1LinearGradientBrush *lBrush = graph->CreateLinearGradientBrush(Point2F(700, 300), Point2F(700, 100));
+	ID2D1LinearGradientBrush *lBrush2 = graph->CreateLinearGradientBrush2(Point2F(100, 225), Point2F(100, 75));
 	ID2D1RadialGradientBrush *rBrush = graph->CreateRadialGradientBrush(Point2F(725, 300), Point2F(0, 0));
 	ID2D1SolidColorBrush *sBrush = graph->CreateSolidColorBrush(ColorF(ColorF::DodgerBlue));
 	graph->CreateSink();
@@ -123,6 +128,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 
 			int16_t xdata;
 			int16_t ydata;
+			int16_t sydata;
 			int16_t zdata;
 			uint16_t battery;
 			uint32_t pressure;
@@ -143,6 +149,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			if (temp >= (PACKET_SIZE/8)+1) {
 				xdata = 0;
 				ydata = 0;
+				sydata = 0;
 				zdata = 0;
 				pressure = 0;
 				temperature = 0;
@@ -174,19 +181,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 							if (i != 9)
 								zdata = zdata << 8;
 						}
-						else if (i >= 10 && i < 12) {
-							battery |= buf[i];
-							if (i != 11) 
-								battery = battery << 8;
-						}
+						//else if (i >= 10 && i < 12) {
+						//	battery |= buf[i];
+						//	if (i != 11) 
+						//		battery = battery << 8;
+						//}
 					}
 
 
 				}
 
-
+				sydata = (((ydata +90) * (180 +180)) / (90 +90)) -180;
 			
-
+						if(ydata < 0 && zdata < 0){
+							if(xdata > 0){
+								xdata = 180-xdata;
+							} else {
+								xdata = -180-xdata;
+							}
+						}
 
 					//result = calcPressure(pressure, temperature) / 10 * 1.0f;
 				pressure = pressure / 10;
@@ -230,15 +243,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 				lightflag = 1;
 			}
 			
-
-
-			bmp3->Draw(415.0f, 55.0f, opacity);
+			sBrush->SetColor(ColorF(ColorF::Black));
+			graph->DrawCircle(Point2F(100.0f, 150.0f), 90.0f, sBrush);
+			graph->DrawCircle(Point2F(300.0f, 150.0f), 90.0f, sBrush);
+			bmp3->Draw(415.0f, 85.0f, opacity);
 			if (opacity == 1.2f) opacity = 0.0f;
-			graph->SetTransform(Matrix3x2F::Rotation(xdata, D2D1::Point2F(105, 125)));
-			bmp->Draw(30.0f, 50.0f, 1);
+			//graph->SetTransform(Matrix3x2F::Rotation(-xdata, D2D1::Point2F(100, 150)));
+			/////////////////////////////////////////////////////////////////////////////////bmp->Draw(30.0f, 50.0f, 1);
+			sBrush->SetColor(ColorF(ColorF::DodgerBlue));
+			graph->FillTriangle(sBrush);
 			graph->SetTransform(Matrix3x2F::Identity());
-			graph->SetTransform(Matrix3x2F::Rotation(-ydata, D2D1::Point2F(305, 125)));
-			bmp2->Draw(205.0f, 50.0f, 0);
+			//graph->SetTransform(Matrix3x2F::Rotation(-ydata, D2D1::Point2F(305, 125)));
+			/////////////////////////////////////////////////////////////////////////////////bmp2->Draw(205.0f, 50.0f, 0);
+			graph->SetTransform(Matrix3x2F::Rotation(-xdata, D2D1::Point2F(300, 150)));
+			graph->FillCircle(Point2F(300.0f, 150.0f), 90.0f, lBrush2);
+			lBrush2->SetStartPoint(Point2F(100, 225 + sydata)); //225 +-90
 			graph->SetTransform(Matrix3x2F::Identity());
 			//bmp3->Draw(400.0f, 50.0f);
 			//if (wcscmp(oldbuf, wcstring) != 0) {
@@ -262,8 +281,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 				graph->DrawText(L"Lights", L"Times New Roman", 14.f, RectF(460, 25, 600, 50), ColorF(ColorF::Black));
 				//graph->DrawText(L"0/5", L"Times New Roman", 14.f, RectF(460, 75, 600, 50), ColorF(ColorF::Black));
 
-				graph->DrawText(L"Side View", L"Times New Roman", 14.f, RectF(280, 25, 600, 50), ColorF(ColorF::Black));
-				graph->DrawText(L"Front View", L"Times New Roman", 14.f, RectF(70, 25, 600, 50), ColorF(ColorF::Black));
+				graph->DrawText(L"Pitch", L"Times New Roman", 14.f, RectF(280, 25, 600, 50), ColorF(ColorF::Black));
+				graph->DrawText(L"Roll", L"Times New Roman", 14.f, RectF(85, 25, 600, 50), ColorF(ColorF::Black));
 				graph->DrawText(L"0", L"Times New Roman", 14.f, RectF(755, 290, 800, 550), ColorF(ColorF::Black));
 				graph->DrawText(L"100", L"Times New Roman", 14.f, RectF(755, 60, 800, 550), ColorF(ColorF::Black));
 				graph->DrawText(L"-100", L"Times New Roman", 14.f, RectF(755, 530, 800, 800), ColorF(ColorF::Black));
