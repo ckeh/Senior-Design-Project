@@ -267,7 +267,10 @@ int main(void) {
 				if (i > BUFF_SIZE-1) {
 					i = 0;
 				}
-				if (first == 0xAA) headerFlag = 0;
+				if (first == 0xAA) {
+					headerFlag = 0;
+					continue;
+				}
 
 				count--;
 				second = data[i];
@@ -275,7 +278,10 @@ int main(void) {
 				if (i > BUFF_SIZE-1) {
 					i = 0;
 				}
-				if (second == 0xAA) headerFlag = 0;
+				if (second == 0xAA){
+					headerFlag = 0;
+					continue;
+				}
 				count--;
 
 				third = data[i];
@@ -283,7 +289,10 @@ int main(void) {
 				if (i > BUFF_SIZE-1) {
 					i = 0;
 				}
-				if (third == 0xAA) headerFlag = 0;
+				if (third == 0xAA){
+					headerFlag = 0;
+					continue;
+				}
 				count--;
 
 				fourth = data[i];
@@ -291,7 +300,10 @@ int main(void) {
 				if (i > BUFF_SIZE-1) {
 					i = 0;
 				}
-				if (fourth == 0xAA) headerFlag = 0;
+				if (fourth == 0xAA){
+					headerFlag = 0;
+					continue;
+				}
 			}
 			//if header is detected that means we start looking for packet
 			if (headerFlag) {
