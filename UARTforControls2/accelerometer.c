@@ -60,11 +60,12 @@ void initialize_accelerometer (void) {
 	write_accelerometer(TAP_AXES, 0x08);
 //	write_byte(TAP_AXES, RUN|START);
 //	write_byte(0x08, RUN|STOP);
-	write_accelerometer(OFSX, 0x01);
 
-	write_accelerometer(OFSY, 0xFF);
+	write_accelerometer(OFSX, 0x03);
 
-	write_accelerometer(OFSZ, 0x02);
+	write_accelerometer(OFSY, 0x01);
+
+	write_accelerometer(OFSZ, 0x00);
 
 }
 

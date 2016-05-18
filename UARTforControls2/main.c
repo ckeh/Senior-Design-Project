@@ -27,6 +27,22 @@ volatile accelerometer accel;
 volatile pressure p;
 
 
+/*
+ * init of GPIO interrupt for excpetion detecting of RF module
+ *
+ * LG-5/1
+ *
+ * */
+void PortAIntHandler(void); //function
+void gpioInterruptInit(){
+	GPIOIntRegister(GPIO_PORTA_BASE,PortAIntHandler);
+	GPIOPinTypeGPIOInput(GPIO_PORTA_BASE,GPIO_PIN_2);// PA2 as input
+	GPIOIntTypeSet(GPIO_PORTA_BASE,GPIO_PIN_2,GPIO_HIGH_LEVEL); //set to interrupt when goes high
+	GPIOIntEnable(GPIO_PORTA_BASE,GPIO_PIN_2);
+}
+
+
+
 
 //For the USB UART connection to get controls from the pc
 #ifdef TIMER
@@ -140,7 +156,8 @@ void Timer0IntHandler() {
 		UARTCharPut(UART7_BASE, (ztmp>>8) & 0xFF);
 		UARTCharPut(UART7_BASE, ztmp);
 
-		printf("x%d y%d z%d\n\rp%d",xtmp,ytmp,ztmp,p.pressure);
+		printf("x%d y%d z%d\n\rp%d",accel.x,accel.y,accel.z,p.pressure);
+		//printf("x%d y%d z%d\n\rp%d",xtmp,ytmp,ztmp,p.pressure);
 		// Clear the timer interrupt
 		TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 
@@ -188,6 +205,12 @@ void UART7IntHandler(void) {
 	}
 }
 
+void PortAIntHandler(void){
+	static int exceptionCount=0;
+	GPIOIntClear(GPIO_PORTA_BASE,GPIO_INT_PIN_2);
+	exceptionCount++;
+}
+
 int main(void) {
 	unsigned char check;
 
@@ -196,8 +219,10 @@ int main(void) {
 	servoInit();
 	ledsInit();
 
+	//gpioInterruptInit();
+
 	initialize_i2c();
-	pressure_init(&p);
+	pressure_init(&p); //LG edit 5/11 for debugging
 	check = p.c[0] >> 12;
 	if(check != crc4(p.c)) exit(1);
 	initialize_accelerometer();
@@ -242,24 +267,31 @@ int main(void) {
 				if (i > BUFF_SIZE-1) {
 					i = 0;
 				}
+				if (first == 0xAA) headerFlag = 0;
+
 				count--;
 				second = data[i];
 				i++;
 				if (i > BUFF_SIZE-1) {
 					i = 0;
 				}
+				if (second == 0xAA) headerFlag = 0;
 				count--;
+
 				third = data[i];
 				i++;
 				if (i > BUFF_SIZE-1) {
 					i = 0;
 				}
+				if (third == 0xAA) headerFlag = 0;
 				count--;
+
 				fourth = data[i];
 				i++;
 				if (i > BUFF_SIZE-1) {
 					i = 0;
 				}
+				if (fourth == 0xAA) headerFlag = 0;
 			}
 			//if header is detected that means we start looking for packet
 			if (headerFlag) {
@@ -379,8 +411,8 @@ int main(void) {
 						motorsVariable(MOTOR_1, -tempmain);
 						motorsVariable(MOTOR_2, tempmain);
 					} else {
-						motorsVariable(MOTOR_1, -tempmain);
-						motorsVariable(MOTOR_2, 0);
+						motorsVariable(MOTOR_1, tempmain/2);
+						motorsVariable(MOTOR_2, tempmain);
 					}
 
 				}
@@ -394,8 +426,8 @@ int main(void) {
 						motorsVariable(MOTOR_1, tempmain);
 						motorsVariable(MOTOR_2, -tempmain);
 					} else {
-						motorsVariable(MOTOR_2, -tempmain);
-						motorsVariable(MOTOR_1, 0);
+						motorsVariable(MOTOR_2, tempmain/2);
+						motorsVariable(MOTOR_1, tempmain);
 					}
 				}
 

@@ -13,7 +13,9 @@ uint8_t timerInit(){
 	ROM_TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
 
 	//Timer at 10Hz and 50% duty cycle
-	ui32Period = 2000000; //2000000/40000000 = .05s
+	//ui32Period = 2000000; //2000000/40000000 = .05s
+	//ui32Period = 20000000; //2000000/40000000 = .5s
+	ui32Period = 8000000; //2000000/40000000 = .2s
 	ROM_TimerLoadSet(TIMER0_BASE, TIMER_A, ui32Period -1);
 
 	ROM_IntEnable(INT_TIMER0A); // enables timer 0a interrupt
