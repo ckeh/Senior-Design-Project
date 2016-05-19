@@ -18,7 +18,8 @@ void uartInit(){
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART7);
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
 
-	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF); //enable GPIO port for LED
+	//Removed, put into ReadBattery.c at GPIOInit()
+	//ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF); //enable GPIO port for LED
 
 
 	ROM_GPIOPinConfigure(GPIO_PA0_U0RX);

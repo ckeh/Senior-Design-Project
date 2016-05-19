@@ -10,10 +10,17 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./Timer.obj" \
 "./accelerometer.obj" \
 "./i2c.obj" \
+"./leds.obj" \
 "./main.obj" \
+"./motors.obj" \
+"./pressure.obj" \
+"./servoControl.obj" \
 "./tm4c123gh6pm_startup_ccs.obj" \
+"./uart.obj" \
+"./uartstdio.obj" \
 "C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/ccs/Debug/driverlib.lib" \
 "../tm4c123gh6pm.cmd" \
 $(GEN_CMDS__FLAG) \
@@ -121,40 +128,40 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-UARTCON2.out \
+UartForControls2.out \
 
 EXE_OUTPUTS__QUOTED += \
-"UARTCON2.out" \
+"UartForControls2.out" \
 
 BIN_OUTPUTS += \
-UARTCON2.hex \
+UartForControls2.hex \
 
 BIN_OUTPUTS__QUOTED += \
-"UARTCON2.hex" \
+"UartForControls2.hex" \
 
 
 # All Target
-all: UARTCON2.out
+all: UartForControls2.out
 
 # Tool invocations
-UARTCON2.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
+UartForControls2.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: ARM Linker'
-	"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 --abi=eabi -me -O2 --gcc --define=ccs="ccs" --define=PART_TM4C123GH6PM --diag_wrap=off --diag_warning=225 --display_error_number -z -m"UARTCON2.map" --heap_size=0 --stack_size=512 -i"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include" --reread_libs --display_error_number --diag_wrap=off --warn_sections --xml_link_info="UARTCON2_linkInfo.xml" --rom_model -o "UARTCON2.out" $(ORDERED_OBJS)
+	"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 --abi=eabi -me -O2 --gcc --define=ccs="ccs" --define=PART_TM4C123GH6PM --diag_wrap=off --diag_warning=225 --display_error_number -z -m"UartForControls2.map" --heap_size=0 --stack_size=512 -i"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/lib" -i"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/include" --reread_libs --display_error_number --diag_wrap=off --warn_sections --xml_link_info="UartForControls2_linkInfo.xml" --rom_model -o "UartForControls2.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-UARTCON2.hex: $(EXE_OUTPUTS)
+UartForControls2.hex: $(EXE_OUTPUTS)
 	@echo 'Invoking: ARM Hex Utility'
-	"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/bin/armhex"  -o "UARTCON2.hex" $(EXE_OUTPUTS__QUOTED)
+	"C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.5/bin/armhex"  -o "UartForControls2.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "accelerometer.pp" "i2c.pp" "main.pp" "tm4c123gh6pm_startup_ccs.pp" 
-	-$(RM) "accelerometer.obj" "i2c.obj" "main.obj" "tm4c123gh6pm_startup_ccs.obj" 
+	-$(RM) "Timer.pp" "accelerometer.pp" "i2c.pp" "leds.pp" "main.pp" "motors.pp" "pressure.pp" "servoControl.pp" "tm4c123gh6pm_startup_ccs.pp" "uart.pp" "uartstdio.pp" 
+	-$(RM) "Timer.obj" "accelerometer.obj" "i2c.obj" "leds.obj" "main.obj" "motors.obj" "pressure.obj" "servoControl.obj" "tm4c123gh6pm_startup_ccs.obj" "uart.obj" "uartstdio.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

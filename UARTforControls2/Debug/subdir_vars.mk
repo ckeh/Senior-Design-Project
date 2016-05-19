@@ -10,6 +10,7 @@ LIB_SRCS += \
 C:/ti/TivaWare_C_Series-2.1.2.111/driverlib/ccs/Debug/driverlib.lib 
 
 C_SRCS += \
+../ReadBattery.c \
 ../Timer.c \
 ../accelerometer.c \
 ../i2c.c \
@@ -23,6 +24,7 @@ C_SRCS += \
 ../uartstdio.c 
 
 OBJS += \
+./ReadBattery.obj \
 ./Timer.obj \
 ./accelerometer.obj \
 ./i2c.obj \
@@ -36,6 +38,7 @@ OBJS += \
 ./uartstdio.obj 
 
 C_DEPS += \
+./ReadBattery.pp \
 ./Timer.pp \
 ./accelerometer.pp \
 ./i2c.pp \
@@ -49,6 +52,7 @@ C_DEPS += \
 ./uartstdio.pp 
 
 C_DEPS__QUOTED += \
+"ReadBattery.pp" \
 "Timer.pp" \
 "accelerometer.pp" \
 "i2c.pp" \
@@ -62,6 +66,7 @@ C_DEPS__QUOTED += \
 "uartstdio.pp" 
 
 OBJS__QUOTED += \
+"ReadBattery.obj" \
 "Timer.obj" \
 "accelerometer.obj" \
 "i2c.obj" \
@@ -75,6 +80,7 @@ OBJS__QUOTED += \
 "uartstdio.obj" 
 
 C_SRCS__QUOTED += \
+"../ReadBattery.c" \
 "../Timer.c" \
 "../accelerometer.c" \
 "../i2c.c" \

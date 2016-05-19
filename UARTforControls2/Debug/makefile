@@ -10,6 +10,7 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./ReadBattery.obj" \
 "./Timer.obj" \
 "./accelerometer.obj" \
 "./i2c.obj" \
@@ -160,8 +161,8 @@ UartForControls2.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "Timer.pp" "accelerometer.pp" "i2c.pp" "leds.pp" "main.pp" "motors.pp" "pressure.pp" "servoControl.pp" "tm4c123gh6pm_startup_ccs.pp" "uart.pp" "uartstdio.pp" 
-	-$(RM) "Timer.obj" "accelerometer.obj" "i2c.obj" "leds.obj" "main.obj" "motors.obj" "pressure.obj" "servoControl.obj" "tm4c123gh6pm_startup_ccs.obj" "uart.obj" "uartstdio.obj" 
+	-$(RM) "ReadBattery.pp" "Timer.pp" "accelerometer.pp" "i2c.pp" "leds.pp" "main.pp" "motors.pp" "pressure.pp" "servoControl.pp" "tm4c123gh6pm_startup_ccs.pp" "uart.pp" "uartstdio.pp" 
+	-$(RM) "ReadBattery.obj" "Timer.obj" "accelerometer.obj" "i2c.obj" "leds.obj" "main.obj" "motors.obj" "pressure.obj" "servoControl.obj" "tm4c123gh6pm_startup_ccs.obj" "uart.obj" "uartstdio.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

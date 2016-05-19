@@ -11,8 +11,10 @@
 #include "Timer.h"
 #include "driverlib/i2c.h"
 #include "pressure.h"
+#include "ReadBattery.h"
 
 #define BUFF_SIZE 40
+#define RESET 0x0
 
 #define RADTD (180/3.14)
 //Header for controls not needed since only one byte of data
@@ -25,6 +27,8 @@ static volatile uint8_t data[BUFF_SIZE];
 static volatile uint8_t count = 0;
 volatile accelerometer accel;
 volatile pressure p;
+
+static volatile uint32_t prevBat = 0;
 
 
 /*
@@ -51,6 +55,8 @@ void Timer0IntHandler() {
 	static int16_t xtmp = 0;
 	static int16_t ytmp = 0;
 	static int16_t ztmp = 0;
+	static int32_t battery = 0;
+	static int8_t batPercent = 0;
 
 	float depth = 0;
 	static float max = 0;
@@ -58,6 +64,15 @@ void Timer0IntHandler() {
 
 	pressure_read(&p);
 	calculatePress(&p);
+
+	//Battery Changes
+	battery = ReadADC();
+	FlashWrite(battery);
+	batPercent = convertBat(battery);
+
+	//If curval is lower than old, charge capacitor
+	if(battery < prevBat) openGate();
+	else closeGate();
 
 	//depth = ((p.pressure*10.0f)-101300)/(997*9.80665); // in meters
 //	depth = ((p.pressure/10.0f)*0.0335); // in feet
@@ -140,8 +155,6 @@ void Timer0IntHandler() {
 //		UARTCharPut(UART7_BASE, p.digital_temperature>>8);
 //		UARTCharPut(UART7_BASE, p.digital_temperature);
 
-
-
 		UARTCharPut(UART7_BASE, p.pressure>>24);
 		UARTCharPut(UART7_BASE, p.pressure>>16);
 		UARTCharPut(UART7_BASE, p.pressure>>8);
@@ -155,6 +168,9 @@ void Timer0IntHandler() {
 
 		UARTCharPut(UART7_BASE, (ztmp>>8) & 0xFF);
 		UARTCharPut(UART7_BASE, ztmp);
+
+		//BATTERY CHANGES
+		UARTCharPut(UART7_BASE, batPercent);
 
 		printf("x%d y%d z%d\n\rp%d",accel.x,accel.y,accel.z,p.pressure);
 		//printf("x%d y%d z%d\n\rp%d",xtmp,ytmp,ztmp,p.pressure);
@@ -218,6 +234,8 @@ int main(void) {
 	motorsInit();
 	servoInit();
 	ledsInit();
+	ADCInit();
+	GPIOInit();
 
 	//gpioInterruptInit();
 
@@ -245,9 +263,18 @@ int main(void) {
 	uint8_t tempmain;
 	uint8_t rBumper;
 
+	//Battery changes
+	prevBat = FlashRead(0);
+	if(prevBat > 4096) prevBat = 0;
+
 	while (1) //let interrupt handler do the UART echo function
 	{
 		//UARTCharPut(UART7_BASE, 'a');
+
+		//Check for battery reset pushbutton
+		if(buttonCheck() == 1){
+			FlashWrite(RESET);
+		}
 
 		//takes data from UART0 (the computer) and puts them into UART7 (transfer uart)
 		if (count > 4) {
