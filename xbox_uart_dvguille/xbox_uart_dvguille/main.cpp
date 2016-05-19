@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 
-#define PACKET_SIZE 80 //packet size in bits
+#define PACKET_SIZE 88 //packet size in bits
 
 using namespace std;
 using namespace System;
@@ -80,18 +80,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	
 	//XboxController gpad; //moved to top
 	//unsigned char header = 0xAA; //moved to top
-	SetTimer(NULL, 0,300, (TIMERPROC)&f); //sets timer to N ms
+	SetTimer(NULL, 0,200, (TIMERPROC)&f); //sets timer to N ms
 	
 	//serial::open();
-	gpad.Connect("COM4", 115200);
+	gpad.Connect("COM5", 115200);
 	
 	win->CreateHandle(hInstance, 800, 600);
 	bool res = graph->Init(win->GetHandle());
 	if (!res) {
 		return -1;
 	}
-	auto bmp = make_shared <Bitmap>(L"FrontROV.jpg", graph);
-	auto bmp2 = make_shared <Bitmap>(L"SideROV.jpg", graph);
+	//auto bmp = make_shared <Bitmap>(L"FrontROV.jpg", graph);
+	//auto bmp2 = make_shared <Bitmap>(L"SideROV.jpg", graph);
 	auto bmp3 = make_shared <Bitmap>(L"Flashlight_clear.JPG", graph);
 	float opacity = 0.0;
 	ShowWindow(win->GetHandle(), nCmdShow);
@@ -109,9 +109,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	wchar_t oldbuf[100] = L"";
 	//KENNY CHANGES
 	//LG--commented out for now, while debugging
-	int batteryCount = 0;
-	ofstream myfile;
-	myfile.open("test.txt");
+	//int batteryCount = 0;
+	//ofstream myfile;
+	//myfile.open("test.txt");
 
 
 	while (msg.message != WM_QUIT) {
@@ -130,7 +130,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			int16_t ydata;
 			int16_t sydata;
 			int16_t zdata;
-			uint16_t battery;
+			uint8_t battery;
 			uint32_t pressure;
 			uint32_t temperature;
 			int result;
@@ -181,11 +181,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 							if (i != 9)
 								zdata = zdata << 8;
 						}
-						//else if (i >= 10 && i < 12) {
-						//	battery |= buf[i];
-						//	if (i != 11) 
-						//		battery = battery << 8;
-						//}
+						else if (i == 10 ) {
+							battery |= buf[i];
+						}
 					}
 
 
@@ -193,7 +191,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 
 				sydata = (((ydata +90) * (180 +180)) / (90 +90)) -180;
 			
-						if(ydata < 0 && zdata < 0){
+						if(zdata < 0){
 							if(xdata > 0){
 								xdata = 180-xdata;
 							} else {
@@ -207,7 +205,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 					depth = pressure * 0.0334552565551f;
 					//float alt = 0;
 					//alt = (1 - pow((result / 1013.25), .190284))*145366.45*.3048;
-					sprintf(dataprint, "press = %d mbar, depth = %f ft\nx = %d, y = %d", pressure, depth,xdata,ydata);
+					sprintf(dataprint, "press = %d mbar, depth = %f ft\nx = %d, y = %d\nBattery = %d %", pressure, depth,xdata,sydata, battery);
 					//sprintf(dataprint, "depth = %lf m", depth);
 					//sprintf(dataprint, "alt = %lf m", alt);
 
@@ -217,7 +215,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 					sprintf(dataprintz, "z = %d", zdata);
 					headerr[0] = '\0';
 
-					myfile << battery << "\n";
+					//myfile << battery << "\n";
 				}
 			
 		
@@ -248,14 +246,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			graph->DrawCircle(Point2F(300.0f, 150.0f), 90.0f, sBrush);
 			bmp3->Draw(415.0f, 85.0f, opacity);
 			if (opacity == 1.2f) opacity = 0.0f;
-			//graph->SetTransform(Matrix3x2F::Rotation(-xdata, D2D1::Point2F(100, 150)));
+			graph->SetTransform(Matrix3x2F::Rotation(-xdata, D2D1::Point2F(100, 150)));
 			/////////////////////////////////////////////////////////////////////////////////bmp->Draw(30.0f, 50.0f, 1);
 			sBrush->SetColor(ColorF(ColorF::DodgerBlue));
 			graph->FillTriangle(sBrush);
 			graph->SetTransform(Matrix3x2F::Identity());
 			//graph->SetTransform(Matrix3x2F::Rotation(-ydata, D2D1::Point2F(305, 125)));
 			/////////////////////////////////////////////////////////////////////////////////bmp2->Draw(205.0f, 50.0f, 0);
-			graph->SetTransform(Matrix3x2F::Rotation(-xdata, D2D1::Point2F(300, 150)));
+			//graph->SetTransform(Matrix3x2F::Rotation(-xdata, D2D1::Point2F(300, 150)));
 			graph->FillCircle(Point2F(300.0f, 150.0f), 90.0f, lBrush2);
 			lBrush2->SetStartPoint(Point2F(100, 225 + sydata)); //225 +-90
 			graph->SetTransform(Matrix3x2F::Identity());
@@ -327,7 +325,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 
 	graph->BrushRelease(lBrush);
 	graph->BrushRelease(rBrush);
-	myfile.close(); //--LG commented out while debugging 5/11
+	//myfile.close(); //--LG commented out while debugging 5/11
 	return 0;
 }
 
