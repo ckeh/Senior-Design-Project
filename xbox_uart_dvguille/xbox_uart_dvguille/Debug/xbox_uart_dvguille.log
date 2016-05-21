@@ -1,9 +1,1 @@
-﻿  main.cpp
-main.cpp(234): warning C4305: '+=': truncation from 'double' to 'float'
-main.cpp(249): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-main.cpp(258): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-main.cpp(208): warning C4778: 'sprintf' : unterminated format string '%'
-main.cpp(75): warning C4101: 'i': unreferenced local variable
-  brush.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
-  xbox_uart_dvguille.vcxproj -> C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe
-  xbox_uart_dvguille.vcxproj -> C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.pdb (Partial PDB)
+﻿
