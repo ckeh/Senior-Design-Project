@@ -178,7 +178,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 				if (pressure <= 1000 && pressure >= 980) basePressure = pressure;
 				float depth = 0;
 				depth = (pressure-basePressure) * 0.0334552565551f;
-				sprintf(dataprint, "press = %d mbar, depth = %d ft\nx = %d, y = %d\nBattery = %d %", pressure, depth, xdata, sydata, battery);
+				sprintf(dataprint, "press = %d mbar, depth = %f ft\nx = %d, y = %d\nBattery = %d %", pressure, depth, xdata, sydata, battery);
 
 				headerr[0] = '\0';
 
