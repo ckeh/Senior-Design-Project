@@ -4,7 +4,7 @@
 #define RADIUS 90
 #define PI 3.14159265
 #define X 100
-#define Y 75
+#define Y 60
 
 using namespace D2D1;
 
@@ -147,19 +147,19 @@ ID2D1RadialGradientBrush * Graphics::CreateRadialGradientBrush(const D2D1_POINT_
 void Graphics::CircleGraphics()
 {
 	//FillRect(RectF(265, 220, 285, 221), ColorF(ColorF::Black));
-	FillRect(RectF(250, 82, 300, 83), ColorF(ColorF::Black));
+	FillRect(RectF(260, 82, 340, 83), ColorF(ColorF::Black));
 
-	FillRect(RectF(265, 105, 285, 106), ColorF(ColorF::Black));
+	FillRect(RectF(285, 105, 315, 106), ColorF(ColorF::Black));
 
-	FillRect(RectF(250, 127, 300, 128), ColorF(ColorF::Black));
+	FillRect(RectF(260, 127, 340, 128), ColorF(ColorF::Black));
 
 	FillRect(RectF(220, 150, 380, 151), ColorF(ColorF::Black)); // Middle bar
 
-	FillRect(RectF(250, 172, 300, 173), ColorF(ColorF::Black));
+	FillRect(RectF(260, 172, 340, 173), ColorF(ColorF::Black));
 
-	FillRect(RectF(265, 195, 285, 196), ColorF(ColorF::Black));
+	FillRect(RectF(285, 195, 315, 196), ColorF(ColorF::Black));
 
-	FillRect(RectF(250, 217, 300, 218), ColorF(ColorF::Black));
+	FillRect(RectF(260, 217, 340, 218), ColorF(ColorF::Black));
 	//FillRect(RectF(265, 80, 285, 81), ColorF(ColorF::Black));
 }
 void Graphics::CircleGraphics2(ID2D1Brush *brush)
