@@ -14,6 +14,8 @@ private:
 	ID2D1HwndRenderTarget *renderTarget;
 	
 	ID2D1PathGeometry *pathGeometry;
+	ID2D1PathGeometry *pathGeometry2;
+	D2D1_POINT_2F *points;
 	IDWriteFactory *writeFactory;
 	IDWriteTextFormat *textFormat;
 	RECT rect;
@@ -54,7 +56,13 @@ public:
 	void FillMotorBars(ID2D1LinearGradientBrush *lBrush, XboxController gpad);
 	void DrawText(const wchar_t *text, const wchar_t *font, float size, D2D1_RECT_F &rect, D2D1_COLOR_F &color);
 	void ShowPercentage();
+
+	void CircleGraphics();
+	void CircleGraphics2(ID2D1Brush *brush);
+	void CreateSink2();
+	void FillTriangle2(ID2D1Brush *brush);
 };
+
 
 class Bitmap
 {

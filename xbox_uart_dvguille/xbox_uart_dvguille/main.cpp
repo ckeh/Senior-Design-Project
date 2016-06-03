@@ -92,6 +92,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	ID2D1RadialGradientBrush *rBrush = graph->CreateRadialGradientBrush(Point2F(725, 300), Point2F(0, 0));
 	ID2D1SolidColorBrush *sBrush = graph->CreateSolidColorBrush(ColorF(ColorF::DodgerBlue));
 	graph->CreateSink();
+	graph->CreateSink2();
 
 	wchar_t oldbuf[100] = L"";
 	//KENNY CHANGES
@@ -205,8 +206,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			}
 
 			sBrush->SetColor(ColorF(ColorF::Black));
+			//graph->CircleGraphics();
+			//graph->CircleGraphics2(sBrush);
+
 			graph->DrawCircle(Point2F(100.0f, 150.0f), 90.0f, sBrush);
 			graph->DrawCircle(Point2F(300.0f, 150.0f), 90.0f, sBrush);
+
 			bmp3->Draw(415.0f, 85.0f, opacity);
 			if (opacity == 1.2f) opacity = 0.0f;
 			graph->SetTransform(Matrix3x2F::Rotation(-xdata, D2D1::Point2F(100, 150)));
@@ -221,6 +226,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			lBrush2->SetStartPoint(Point2F(100, 225 + sydata)); //225 +-90
 			graph->SetTransform(Matrix3x2F::Identity());
 
+			sBrush->SetColor(ColorF(ColorF::Black));
+			graph->CircleGraphics();
+			graph->CircleGraphics2(sBrush);
 
 			graph->DrawText(L"Right Motor", L"Times New Roman", 14.f, RectF(700, 25, 800, 50), ColorF(ColorF::Black));
 			graph->DrawText(L"Left Motor", L"Times New Roman", 14.f, RectF(620, 25, 700, 50), ColorF(ColorF::Black));

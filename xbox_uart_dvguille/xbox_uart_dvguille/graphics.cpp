@@ -1,11 +1,20 @@
 #include "graphics.h"
 
+#define THETA 22.5
+#define RADIUS 90
+#define PI 3.14159265
+#define X 100
+#define Y 75
+
 using namespace D2D1;
+
+D2D1_POINT_2F * SegmentLength();
 
 Graphics::Graphics() {
 	factory = nullptr;
 	renderTarget = nullptr;
 	writeFactory = nullptr;
+	points = SegmentLength();
 }
 
 Graphics::~Graphics() {
@@ -33,6 +42,7 @@ bool Graphics::Init(HWND windowHandle) {
 		);
 
 	factory->CreatePathGeometry(&pathGeometry);
+	factory->CreatePathGeometry(&pathGeometry2);
 	
 
 	if (res != S_OK) return false;
@@ -134,6 +144,53 @@ ID2D1RadialGradientBrush * Graphics::CreateRadialGradientBrush(const D2D1_POINT_
 	return radialGradientBrush;
 }
 
+void Graphics::CircleGraphics()
+{
+	//FillRect(RectF(265, 220, 285, 221), ColorF(ColorF::Black));
+	FillRect(RectF(250, 82, 300, 83), ColorF(ColorF::Black));
+
+	FillRect(RectF(265, 105, 285, 106), ColorF(ColorF::Black));
+
+	FillRect(RectF(250, 127, 300, 128), ColorF(ColorF::Black));
+
+	FillRect(RectF(220, 150, 380, 151), ColorF(ColorF::Black)); // Middle bar
+
+	FillRect(RectF(250, 172, 300, 173), ColorF(ColorF::Black));
+
+	FillRect(RectF(265, 195, 285, 196), ColorF(ColorF::Black));
+
+	FillRect(RectF(250, 217, 300, 218), ColorF(ColorF::Black));
+	//FillRect(RectF(265, 80, 285, 81), ColorF(ColorF::Black));
+}
+void Graphics::CircleGraphics2(ID2D1Brush *brush)
+{
+	FillTriangle2(brush);
+
+	for (int i = 0; i < 8; ++i)
+	{
+		if (!i) continue;
+		SetTransform(Matrix3x2F::Rotation(THETA*i - 90, points[i]));
+		if (i % 2)
+			FillRect(RectF(points[i].x, points[i].y, points[i].x + 5, points[i].y + 1), brush);
+		else
+			FillRect(RectF(points[i].x, points[i].y, points[i].x + 15, points[i].y + 1), brush);
+		SetTransform(Matrix3x2F::Identity());
+	}
+
+
+	for (int i = 8; i < 16; ++i)
+	{
+		if (i == 8) continue;
+		SetTransform(Matrix3x2F::Rotation(-THETA*(i - 8) - 90, points[i]));
+		if (i % 2)
+			FillRect(RectF(points[i].x, points[i].y, points[i].x + 5, points[i].y + 1), brush);
+		else
+			FillRect(RectF(points[i].x, points[i].y, points[i].x + 15, points[i].y + 1), brush);
+		SetTransform(Matrix3x2F::Identity());
+	}
+
+}
+
 void Graphics::FillCircle(D2D1_POINT_2F &center, float rad, D2D1_COLOR_F &color) {
 	ID2D1SolidColorBrush *brush;
 	renderTarget->CreateSolidColorBrush(color, &brush);
@@ -188,9 +245,38 @@ void Graphics::CreateSink()
 	sink->Release();
 }
 
+void Graphics::CreateSink2()
+{
+	ID2D1GeometrySink *sink = nullptr;
+	HRESULT res = pathGeometry2->Open(&sink);
+
+	if (SUCCEEDED(res)) {
+		sink->SetFillMode(D2D1_FILL_MODE_WINDING);
+		// Begin PFD graphics
+		sink->BeginFigure(
+			Point2F(100, 75),
+			D2D1_FIGURE_BEGIN_FILLED
+			);
+		D2D1_POINT_2F points[3] = {
+			Point2F(95,70),
+			Point2F(105,70),
+			Point2F(100,75),
+		};
+		sink->AddLines(points, ARRAYSIZE(points));
+		sink->EndFigure(D2D1_FIGURE_END_CLOSED);
+	}
+	res = sink->Close();
+	sink->Release();
+}
+
 void Graphics::FillTriangle(ID2D1Brush *brush)
 {
 	renderTarget->FillGeometry(pathGeometry, brush);
+}
+
+void Graphics::FillTriangle2(ID2D1Brush *brush)
+{
+	renderTarget->FillGeometry(pathGeometry2, brush);
 }
 
 void Graphics::DrawText(const wchar_t *text, const wchar_t *font, float size, D2D1_RECT_F &rect, D2D1_COLOR_F &color) 
@@ -475,4 +561,29 @@ void Bitmap::Draw(float x, float y, float opacity)
 		RectF(0.0f, 0.0f, bmp->GetSize().width, bmp->GetSize().height)
 		);
 
+}
+
+D2D1_POINT_2F * SegmentLength()
+{
+	float segments[8];
+	static D2D1_POINT_2F points[16];
+
+	for (int i = 0; i < 8; ++i)
+	{
+		float theta = (THETA*i) * PI / 180;
+		segments[i] = RADIUS*sqrt(2 - 2 * cosf(theta));
+		float psi = theta / 2;
+		float x = segments[i] * cosf(psi);
+		float y = segments[i] * sinf(psi);
+		points[i] = Point2F(X + x, Y + y);
+	}
+	for (int i = 0; i < 8; ++i)
+	{
+		float theta = (THETA*i) * PI / 180;
+		float psi = theta / 2;
+		float x = segments[i] * cosf(psi);
+		float y = segments[i] * sinf(psi);
+		points[i + 8] = Point2F(X - x, Y + y);
+	}
+	return points;
 }
