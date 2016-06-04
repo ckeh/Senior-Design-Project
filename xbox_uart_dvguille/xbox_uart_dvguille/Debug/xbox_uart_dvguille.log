@@ -1,25 +1,9 @@
-﻿  graphics.cpp
-graphics.cpp(172): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-graphics.cpp(184): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-graphics.cpp(359): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(361): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(365): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(372): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(375): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(378): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(386): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(389): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(404): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(406): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(411): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(416): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(420): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(428): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(431): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(445): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(451): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
-graphics.cpp(573): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-graphics.cpp(582): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+﻿  main.cpp
+main.cpp(169): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+main.cpp(203): warning C4305: '+=': truncation from 'double' to 'float'
+main.cpp(219): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+main.cpp(184): warning C4778: 'sprintf' : unterminated format string '%'
+main.cpp(67): warning C4101: 'i': unreferenced local variable
   brush.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
   xbox_uart_dvguille.vcxproj -> C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.exe
   xbox_uart_dvguille.vcxproj -> C:\Users\ckeh\Documents\GitHub\Senior-Design-Project\xbox_uart_dvguille\Debug\xbox_uart_dvguille.pdb (Partial PDB)

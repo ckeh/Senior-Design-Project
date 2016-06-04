@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 
-#define PACKET_SIZE 88 //packet size in bits
+#define PACKET_SIZE 48 //packet size in bits
 
 using namespace std;
 using namespace System;
@@ -88,7 +88,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 
 	graph3d->Init3D(win->GetHandle());
 	ID2D1LinearGradientBrush *lBrush = graph->CreateLinearGradientBrush(Point2F(700, 300), Point2F(700, 100));
-	ID2D1LinearGradientBrush *lBrush2 = graph->CreateLinearGradientBrush2(Point2F(100, 225), Point2F(100, 75));
+	ID2D1LinearGradientBrush *lBrush2 = graph->CreateLinearGradientBrush2(Point2F(100, 240), Point2F(100, 59));
 	ID2D1RadialGradientBrush *rBrush = graph->CreateRadialGradientBrush(Point2F(725, 300), Point2F(0, 0));
 	ID2D1SolidColorBrush *sBrush = graph->CreateSolidColorBrush(ColorF(ColorF::DodgerBlue));
 	graph->CreateSink();
@@ -109,12 +109,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 		}
 		else {
 			uint32_t basePressure;
-			int16_t xdata;
-			int16_t ydata;
-			int16_t sydata;
-			int16_t zdata;
+			int8_t xdata;
+			int xtmp;
+			int8_t ydata;
+			float sydata;
+			int8_t zdata;
 			uint8_t battery;
-			uint32_t pressure;
+			uint16_t pressure;
 			char dataprint[256];
 
 			uint8_t buf[PACKET_SIZE / 8] = { '\0' };
@@ -133,31 +134,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 				dataprint[256] = { '\0' };
 
 				ReadFile(gpad._port, headerr, 1, &bytes, NULL);
-				if (headerr[0] == 'a') {
+				if (headerr[0] == 'f') {
 					ReadFile(gpad._port, &buf, PACKET_SIZE / 8, &bytes, NULL);
 
 					for (int i = 0; i < PACKET_SIZE / 8; i++) {
-						if (i < 4) {
+						if (i < 2) {
 							pressure |= buf[i];
-							if (i != 3)
+							if (i != 1)
 								pressure = pressure << 8;
 						}
-						else if (i >= 4 && i < 6) {
+						else if (i < 3) {
 							xdata |= buf[i];
-							if (i != 5)
-								xdata = xdata << 8;
+							//if (i != 5)
+							//	xdata = xdata << 8;
 						}
-						else if (i >= 6 && i < 8) {
+						else if (i < 4) {
 							ydata |= buf[i];
-							if (i != 7)
-								ydata = ydata << 8;
+							//if (i != 7)
+							//	ydata = ydata << 8;
 						}
-						else if (i >= 8 && i < 10) {
+						else if (i < 5) {
 							zdata |= buf[i];
-							if (i != 9)
-								zdata = zdata << 8;
+							//if (i != 9)
+							//	zdata = zdata << 8;
 						}
-						else if (i == 10) {
+						else {//if (i == 10) {
 							battery |= buf[i];
 						}
 					}
@@ -165,21 +166,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 
 				}
 
-				sydata = (((ydata + 90) * (180 + 180)) / (90 + 90)) - 180;
-
+				sydata = (((ydata + 90.0) / (90 + 90)) * (180 + 180)) - 180;
+				//((Input - InputLow) / (InputHigh - InputLow)) * (OutputHigh - OutputLow) + OutputLow;
+				xtmp = xdata;
 				if (zdata < 0) {
 					if (xdata > 0) {
-						xdata = 180 - xdata;
+						xtmp = 180 - xtmp;
 					}
 					else {
-						xdata = -180 - xdata;
+						xtmp = -180 - xtmp;
 					}
 				}
-				pressure = pressure / 10;
+				//pressure = pressure / 10;
 				if (pressure <= 1000 && pressure >= 980) basePressure = pressure;
 				float depth = 0;
 				depth = (pressure-basePressure) * 0.0334552565551f;
-				sprintf(dataprint, "press = %d mbar, depth = %f ft\nx = %d, y = %d\nBattery = %d %", pressure, depth, xdata, sydata, battery);
+				sprintf(dataprint, "press = %d mbar, depth = %f ft\nx = %d, y = %d\nBattery = %d %", pressure, depth, xtmp, (int)sydata, battery);
 
 				headerr[0] = '\0';
 
@@ -214,7 +216,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 
 			bmp3->Draw(415.0f, 85.0f, opacity);
 			if (opacity == 1.2f) opacity = 0.0f;
-			graph->SetTransform(Matrix3x2F::Rotation(-xdata, D2D1::Point2F(100, 150)));
+			graph->SetTransform(Matrix3x2F::Rotation(-xtmp, D2D1::Point2F(100, 150)));
 			//bmp->Draw(30.0f, 50.0f, 1);
 			sBrush->SetColor(ColorF(ColorF::DodgerBlue));
 			graph->FillTriangle(sBrush);
@@ -223,8 +225,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			//bmp2->Draw(205.0f, 50.0f, 0);
 			//graph->SetTransform(Matrix3x2F::Rotation(-xdata, D2D1::Point2F(300, 150)));
 			graph->FillCircle(Point2F(300.0f, 150.0f), 90.0f, lBrush2);
-			lBrush2->SetStartPoint(Point2F(100, 225 + sydata)); //225 +-90
-			graph->SetTransform(Matrix3x2F::Identity());
+			lBrush2->SetStartPoint(Point2F(100, 240 +sydata)); //225 +-90
+			//graph->SetTransform(Matrix3x2F::Identity());
 
 			sBrush->SetColor(ColorF(ColorF::Black));
 			graph->CircleGraphics();
