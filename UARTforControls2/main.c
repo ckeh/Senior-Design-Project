@@ -52,9 +52,9 @@ void gpioInterruptInit(){
 #ifdef TIMER
 
 void Timer0IntHandler() {
-	static int16_t xtmp = 0;
-	static int16_t ytmp = 0;
-	static int16_t ztmp = 0;
+	static int8_t xtmp = 0;
+	static int8_t ytmp = 0;
+	static int8_t ztmp = 0;
 	static int32_t battery = 0;
 	static int8_t batPercent = 0;
 
@@ -92,47 +92,6 @@ void Timer0IntHandler() {
 		ztmp = to_degrees(ZAXIS, ztmp, &accel);
 
 
-//		//7
-//		if(ytmp < 0 && ztmp < 0 && xtmp < 0){
-//			xtmp = -180 - xtmp;
-//			ytmp = -180 - ytmp;
-//		}
-//		//8
-//		else if(ytmp < 0 && ztmp < 0 && xtmp >= 0){
-//			xtmp = xtmp;
-//			ytmp = 180 - ytmp;
-//		}
-//		//3
-//		else if(ytmp < 0 && ztmp >= 0 && xtmp < 0){
-//			xtmp = -180 - xtmp;
-//			ytmp = -180 - ytmp;
-//		}
-//		//4
-//		else if(ytmp < 0 && ztmp >= 0 && xtmp >= 0){
-//			xtmp = xtmp;
-//			ytmp = 180 - ytmp;
-//		}
-//		//6
-//		else if(ytmp >= 0 && ztmp < 0 && xtmp < 0){
-//			xtmp = 180 - xtmp;
-//			ytmp = ytmp;
-//		}
-//		//5
-//		else if(ytmp >= 0 && ztmp < 0 && xtmp >= 0){
-//			xtmp = xtmp;
-//			ytmp = ytmp;
-//		}
-//		//2
-//		else if(ytmp >= 0 && ztmp >= 0 && xtmp < 0){
-//			xtmp = 180 - xtmp;
-//			ytmp = ytmp;
-//		}
-//		//1
-//		else if(ytmp >= 0 && ztmp >= 0 && xtmp >= 0){
-//			xtmp = xtmp;
-//			ytmp = ytmp;
-//		}
-
 		//lets x and y be full +-180
 //		if(ytmp < 0 && ztmp < 0){
 //			if(xtmp > 0){
@@ -143,7 +102,7 @@ void Timer0IntHandler() {
 //		}
 
 	}
-		UARTCharPut(UART7_BASE, 'a');
+		UARTCharPut(UART7_BASE, 'f');
 
 //		UARTCharPut(UART7_BASE, p.digital_pressure>>24);
 //		UARTCharPut(UART7_BASE, p.digital_pressure>>16);
@@ -155,24 +114,25 @@ void Timer0IntHandler() {
 //		UARTCharPut(UART7_BASE, p.digital_temperature>>8);
 //		UARTCharPut(UART7_BASE, p.digital_temperature);
 
-		UARTCharPut(UART7_BASE, p.pressure>>24);
-		UARTCharPut(UART7_BASE, p.pressure>>16);
+//		UARTCharPut(UART7_BASE, p.pressure>>24);
+//		UARTCharPut(UART7_BASE, p.pressure>>16);
+		p.pressure = p.pressure/10;
 		UARTCharPut(UART7_BASE, p.pressure>>8);
 		UARTCharPut(UART7_BASE, p.pressure);
 
-		UARTCharPut(UART7_BASE, (xtmp>>8) & 0xFF);
-		UARTCharPut(UART7_BASE, xtmp & 0xFF);
+//		UARTCharPut(UART7_BASE, (xtmp>>8) & 0xFF);
+		UARTCharPut(UART7_BASE, xtmp);// & 0xFF);
 
-		UARTCharPut(UART7_BASE, (ytmp>>8) & 0xFF);
-		UARTCharPut(UART7_BASE, ytmp & 0xFF);
+//		UARTCharPut(UART7_BASE, (ytmp>>8) & 0xFF);
+		UARTCharPut(UART7_BASE, ytmp);// & 0xFF);
 
-		UARTCharPut(UART7_BASE, (ztmp>>8) & 0xFF);
+//		UARTCharPut(UART7_BASE, (ztmp>>8) & 0xFF);
 		UARTCharPut(UART7_BASE, ztmp);
 
 		//BATTERY CHANGES
 		UARTCharPut(UART7_BASE, batPercent);
 
-		printf("x%d y%d z%d\n\rp%d",accel.x,accel.y,accel.z,p.pressure);
+		//printf("x%d y%d z%d\n\rp%d",accel.x,accel.y,accel.z,p.pressure);
 		//printf("x%d y%d z%d\n\rp%d",xtmp,ytmp,ztmp,p.pressure);
 		// Clear the timer interrupt
 		TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
@@ -231,11 +191,12 @@ int main(void) {
 	unsigned char check;
 
 	uartInit();
+	GPIOInit();
+	ADCInit();
 	motorsInit();
 	servoInit();
 	ledsInit();
-	ADCInit();
-	GPIOInit();
+
 
 	//gpioInterruptInit();
 
@@ -269,11 +230,10 @@ int main(void) {
 
 	while (1) //let interrupt handler do the UART echo function
 	{
-		//UARTCharPut(UART7_BASE, 'a');
-
 		//Check for battery reset pushbutton
 		if(buttonCheck() == 1){
 			FlashWrite(RESET);
+			prevBat = 0;
 		}
 
 		//takes data from UART0 (the computer) and puts them into UART7 (transfer uart)

@@ -80,7 +80,7 @@ void write_accelerometer (uint8_t reg, uint8_t data) {
 	write_byte(data, RUN|STOPI2C);
 }
 
-int16_t to_degrees(uint8_t axis, int16_t value, volatile accelerometer* accel){
+int8_t to_degrees(uint8_t axis, int16_t value, volatile accelerometer* accel){
 
 	switch(axis){
 		case XAXIS:

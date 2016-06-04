@@ -1,35 +1,34 @@
 ******************************************************************************
                   TI ARM Linker PC v5.2.5                      
 ******************************************************************************
->> Linked Wed May 18 16:56:32 2016
+>> Linked Fri Jun 03 19:36:39 2016
 
 OUTPUT FILE NAME:   <UartForControls2.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 00005881
+ENTRY POINT SYMBOL: "_c_int00"  address: 00003331
 
 
 MEMORY CONFIGURATION
 
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
-  FLASH                 00000000   00040000  000063f6  00039c0a  R  X
-  SRAM                  20000000   00008000  00001813  000067ed  RW X
+  FLASH                 00000000   00040000  00003b66  0003c49a  R  X
+  SRAM                  20000000   00008000  00000c5f  000073a1  RW X
 
 
 SEGMENT ALLOCATION MAP
 
 run origin  load origin   length   init length attrs members
 ----------  ----------- ---------- ----------- ----- -------
-00000000    00000000    00006400   00006400    r-x
+00000000    00000000    00003b70   00003b70    r-x
   00000000    00000000    0000026c   0000026c    r-- .intvecs
-  0000026c    0000026c    00005cae   00005cae    r-x .text
-  00005f20    00005f20    000003ec   000003ec    r-- .const
-  00006310    00006310    000000f0   000000f0    r-- .cinit
-20000000    20000000    0000181a   00000000    rw-
+  0000026c    0000026c    0000358e   0000358e    r-x .text
+  00003800    00003800    000002e4   000002e4    r-- .const
+  00003ae8    00003ae8    00000088   00000088    r-- .cinit
+20000000    20000000    00000c66   00000000    rw-
   20000000    20000000    0000026c   00000000    rw- .vtable
   2000026c    2000026c    00000808   00000000    rw- .stack
-  20000a78    20000a78    00000808   00000000    rw- .sysmem
-  20001280    20001280    0000034d   00000000    rw- .data
-  200015d0    200015d0    0000024a   00000000    rw- .bss
+  20000a78    20000a78    00000169   00000000    rw- .data
+  20000be4    20000be4    00000082   00000000    rw- .bss
 
 
 SECTION ALLOCATION MAP
@@ -40,136 +39,100 @@ section   page    origin      length       input sections
 .intvecs   0    00000000    0000026c     
                   00000000    0000026c     tm4c123gh6pm_startup_ccs.obj (.intvecs)
 
-.text      0    0000026c    00005cae     
-                  0000026c    000010ba     rtsv7M4_T_le_v4SPD16_eabi.lib : _printfi.obj (.text)
-                  00001326    00000002     --HOLE-- [fill = 0]
-                  00001328    0000072a     main.obj (.text)
-                  00001a52    00000002     --HOLE-- [fill = 0]
-                  00001a54    00000650     motors.obj (.text)
-                  000020a4    000004fc     pressure.obj (.text)
-                  000025a0    000003dc     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.obj (.text)
-                  0000297c    000003c4     accelerometer.obj (.text)
-                  00002d40    0000030c     rtsv7M4_T_le_v4SPD16_eabi.lib : lowlev.obj (.text)
-                  0000304c    000002d4                                   : trgdrv.obj (.text)
-                  00003320    000002c0     ReadBattery.obj (.text)
-                  000035e0    0000025c     servoControl.obj (.text)
-                  0000383c    000001f4     rtsv7M4_T_le_v4SPD16_eabi.lib : ull_div_t2.obj (.text)
-                  00003a30    000001d0     uart.obj (.text)
-                  00003c00    000001c8     leds.obj (.text)
-                  00003dc8    000001c4     rtsv7M4_T_le_v4SPD16_eabi.lib : fopen.obj (.text)
-                  00003f8c    000001b6                                   : fd_add_t2.obj (.text)
-                  00004142    00000002     --HOLE-- [fill = 0]
-                  00004144    0000018c                                   : xatan.obj (.text)
-                  000042d0    0000015c     i2c.obj (.text)
-                  0000442c    00000148     rtsv7M4_T_le_v4SPD16_eabi.lib : sqrt.obj (.text)
-                  00004574    00000136                                   : fd_div_t2.obj (.text)
-                  000046aa    00000002     --HOLE-- [fill = 0]
-                  000046ac    00000134                                   : fputs.obj (.text)
-                  000047e0    00000132     driverlib.lib : gpio.obj (.text:GPIOPadConfigSet)
-                  00004912    00000002     --HOLE-- [fill = 0]
-                  00004914    0000011c     rtsv7M4_T_le_v4SPD16_eabi.lib : asin.obj (.text)
-                  00004a30    00000110     driverlib.lib : sysctl.obj (.text:SysCtlClockGet)
-                  00004b40    00000110     rtsv7M4_T_le_v4SPD16_eabi.lib : xdscale.obj (.text)
-                  00004c50    000000fc                                   : fd_mul_t2.obj (.text)
-                  00004d4c    000000dc                                   : setvbuf.obj (.text)
-                  00004e28    000000c8                                   : fflush.obj (.text)
-                  00004ef0    000000be                                   : xdnorm.obj (.text)
-                  00004fae    000000ac                                   : _io_perm.obj (.text)
-                  0000505a    0000009c                                   : memcpy_t2.obj (.text)
-                  000050f6    00000002     --HOLE-- [fill = 0]
-                  000050f8    00000098                                   : fclose.obj (.text)
-                  00005190    00000098                                   : fputc.obj (.text)
-                  00005228    00000086                                   : fd_cmp_t2.obj (.text:__aeabi_cdcmple)
-                  000052ae    00000086                                   : fd_cmp_t2.obj (.text:__aeabi_cdrcmple)
-                  00005334    00000084     Timer.obj (.text)
-                  000053b8    0000007a     rtsv7M4_T_le_v4SPD16_eabi.lib : memset_t2.obj (.text)
-                  00005432    00000002     --HOLE-- [fill = 0]
-                  00005434    00000070                                   : printf.obj (.text)
-                  000054a4    0000006c                                   : autoinit.obj (.text)
-                  00005510    0000006a                                   : copy_decompress_rle.obj (.text)
-                  0000557a    00000002     --HOLE-- [fill = 0]
-                  0000557c    00000068     driverlib.lib : flash.obj (.text:FlashProgram)
-                  000055e4    00000068                   : interrupt.obj (.text:IntEnable)
-                  0000564c    00000068     rtsv7M4_T_le_v4SPD16_eabi.lib : trgmsg.obj (.text)
-                  000056b4    00000066                                   : xdunscal.obj (.text)
-                  0000571a    00000002     --HOLE-- [fill = 0]
-                  0000571c    00000064                                   : fseek.obj (.text)
-                  00005780    00000056     driverlib.lib : gpio.obj (.text:GPIOIntTypeSet)
-                  000057d6    00000056     rtsv7M4_T_le_v4SPD16_eabi.lib : ltoa.obj (.text)
-                  0000582c    00000052                                   : ldexp.obj (.text)
-                  0000587e    00000002     --HOLE-- [fill = 0]
-                  00005880    00000050                                   : boot.obj (.text)
-                  000058d0    0000004c                                   : atoi.obj (.text)
-                  0000591c    0000004c                                   : cpy_tbl.obj (.text)
-                  00005968    00000048                                   : fd_toi_t2.obj (.text)
-                  000059b0    00000044                                   : exit.obj (.text)
-                  000059f4    00000044                                   : fd_tou_t2.obj (.text)
-                  00005a38    00000040     driverlib.lib : gpio.obj (.text:_GPIOIntNumberGet)
-                  00005a78    00000040     rtsv7M4_T_le_v4SPD16_eabi.lib : signal.obj (.text)
-                  00005ab8    00000038                                   : fs_tod_t2.obj (.text)
-                  00005af0    00000034     driverlib.lib : interrupt.obj (.text:IntRegister)
-                  00005b24    00000034                   : sysctl.obj (.text:SysCtlPeripheralEnable)
-                  00005b58    00000034     rtsv7M4_T_le_v4SPD16_eabi.lib : feraiseexcept.obj (.text)
-                  00005b8c    00000030     driverlib.lib : flash.obj (.text:FlashErase)
-                  00005bbc    00000030     rtsv7M4_T_le_v4SPD16_eabi.lib : strncpy.obj (.text)
-                  00005bec    00000030                                   : xdclass.obj (.text)
-                  00005c1c    00000030                                   : xferaise.obj (.text)
-                  00005c4c    0000002e     driverlib.lib : adc.obj (.text:ADCIntStatus)
-                  00005c7a    0000002e     rtsv7M4_T_le_v4SPD16_eabi.lib : i_tofd_t2.obj (.text)
-                  00005ca8    0000002e                                   : raise.obj (.text)
-                  00005cd6    0000002a     driverlib.lib : gpio.obj (.text:GPIODirModeSet)
-                  00005d00    0000002a     rtsv7M4_T_le_v4SPD16_eabi.lib : frexp.obj (.text)
-                  00005d2a    00000022     driverlib.lib : pwm.obj (.text:PWMGenConfigure)
-                  00005d4c    00000020     rtsv7M4_T_le_v4SPD16_eabi.lib : memchr.obj (.text)
-                  00005d6c    0000001c                                   : memccpy.obj (.text)
-                  00005d88    00000018     driverlib.lib : gpio.obj (.text:GPIOIntRegister)
-                  00005da0    00000018                   : gpio.obj (.text:GPIOPinTypeGPIOOutput)
-                  00005db8    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : args_main.obj (.text)
-                  00005dd0    00000018                                   : ll_mul_t2.obj (.text)
-                  00005de8    00000018                                   : strcmp.obj (.text)
-                  00005e00    00000016                                   : strchr.obj (.text)
-                  00005e16    00000002     --HOLE-- [fill = 0]
-                  00005e18    00000014                                   : _lock.obj (.text)
-                  00005e2c    00000014                                   : strcpy.obj (.text)
-                  00005e40    00000014                                   : strlen.obj (.text)
-                  00005e54    00000012     driverlib.lib : gpio.obj (.text:GPIOPinTypeGPIOInput)
-                  00005e66    00000010                   : pwm.obj (.text:PWMGenPeriodSet)
-                  00005e76    0000000e                   : uart.obj (.text:UARTCharGetNonBlocking)
-                  00005e84    0000000e                   : uart.obj (.text:UARTCharPutNonBlocking)
-                  00005e92    0000000e                   : uart.obj (.text:UARTCharsAvail)
-                  00005ea0    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.obj (.text:decompress:none)
-                  00005eae    0000000c     driverlib.lib : gpio.obj (.text:GPIOIntEnable)
-                  00005eba    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_zero_init.obj (.text:decompress:ZI)
-                  00005ec6    0000000c     tm4c123gh6pm_startup_ccs.obj (.text)
-                  00005ed2    0000000a     driverlib.lib : uart.obj (.text:UARTCharGet)
-                  00005edc    0000000a                   : uart.obj (.text:UARTCharPut)
-                  00005ee6    0000000a                   : uart.obj (.text:UARTIntStatus)
-                  00005ef0    00000006                   : gpio.obj (.text:GPIOIntClear)
-                  00005ef6    00000006                   : gpio.obj (.text:GPIOPinRead)
-                  00005efc    00000006                   : gpio.obj (.text:GPIOPinWrite)
-                  00005f02    00000006                   : sysctl.obj (.text:SysCtlDelay)
-                  00005f08    00000006     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_rle.obj (.text:decompress:rle24)
-                  00005f0e    00000004     driverlib.lib : timer.obj (.text:TimerIntClear)
-                  00005f12    00000004                   : uart.obj (.text:UARTIntClear)
-                  00005f16    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.obj (.text)
+.text      0    0000026c    0000358e     
+                  0000026c    000006b2     main.obj (.text)
+                  0000091e    00000002     --HOLE-- [fill = 0]
+                  00000920    00000650     motors.obj (.text)
+                  00000f70    000004fc     pressure.obj (.text)
+                  0000146c    000003c4     accelerometer.obj (.text)
+                  00001830    000002b8     ReadBattery.obj (.text)
+                  00001ae8    0000025c     servoControl.obj (.text)
+                  00001d44    000001d0     uart.obj (.text)
+                  00001f14    000001c8     leds.obj (.text)
+                  000020dc    000001b6     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_add_t2.obj (.text)
+                  00002292    00000002     --HOLE-- [fill = 0]
+                  00002294    0000018c                                   : xatan.obj (.text)
+                  00002420    0000015c     i2c.obj (.text)
+                  0000257c    00000148     rtsv7M4_T_le_v4SPD16_eabi.lib : sqrt.obj (.text)
+                  000026c4    00000136                                   : fd_div_t2.obj (.text)
+                  000027fa    00000132     driverlib.lib : gpio.obj (.text:GPIOPadConfigSet)
+                  0000292c    0000011c     rtsv7M4_T_le_v4SPD16_eabi.lib : asin.obj (.text)
+                  00002a48    00000110     driverlib.lib : sysctl.obj (.text:SysCtlClockGet)
+                  00002b58    00000110     rtsv7M4_T_le_v4SPD16_eabi.lib : xdscale.obj (.text)
+                  00002c68    000000fc                                   : fd_mul_t2.obj (.text)
+                  00002d64    000000be                                   : xdnorm.obj (.text)
+                  00002e22    0000009c                                   : memcpy_t2.obj (.text)
+                  00002ebe    00000086                                   : fd_cmp_t2.obj (.text:__aeabi_cdcmple)
+                  00002f44    00000086                                   : fd_cmp_t2.obj (.text:__aeabi_cdrcmple)
+                  00002fca    00000002     --HOLE-- [fill = 0]
+                  00002fcc    00000084     Timer.obj (.text)
+                  00003050    0000007a     rtsv7M4_T_le_v4SPD16_eabi.lib : memset_t2.obj (.text)
+                  000030ca    00000002     --HOLE-- [fill = 0]
+                  000030cc    0000006c                                   : autoinit.obj (.text)
+                  00003138    0000006a                                   : copy_decompress_rle.obj (.text)
+                  000031a2    00000002     --HOLE-- [fill = 0]
+                  000031a4    00000068     driverlib.lib : flash.obj (.text:FlashProgram)
+                  0000320c    00000068                   : interrupt.obj (.text:IntEnable)
+                  00003274    00000066     rtsv7M4_T_le_v4SPD16_eabi.lib : xdunscal.obj (.text)
+                  000032da    00000056     driverlib.lib : gpio.obj (.text:GPIOIntTypeSet)
+                  00003330    00000050     rtsv7M4_T_le_v4SPD16_eabi.lib : boot.obj (.text)
+                  00003380    0000004c                                   : cpy_tbl.obj (.text)
+                  000033cc    00000048                                   : fd_toi_t2.obj (.text)
+                  00003414    00000044                                   : exit.obj (.text)
+                  00003458    00000040     driverlib.lib : gpio.obj (.text:_GPIOIntNumberGet)
+                  00003498    00000040     rtsv7M4_T_le_v4SPD16_eabi.lib : signal.obj (.text)
+                  000034d8    00000034     driverlib.lib : interrupt.obj (.text:IntRegister)
+                  0000350c    00000034                   : sysctl.obj (.text:SysCtlPeripheralEnable)
+                  00003540    00000034     rtsv7M4_T_le_v4SPD16_eabi.lib : feraiseexcept.obj (.text)
+                  00003574    00000030     driverlib.lib : flash.obj (.text:FlashErase)
+                  000035a4    00000030     rtsv7M4_T_le_v4SPD16_eabi.lib : xferaise.obj (.text)
+                  000035d4    0000002e     driverlib.lib : adc.obj (.text:ADCIntStatus)
+                  00003602    0000002e     rtsv7M4_T_le_v4SPD16_eabi.lib : i_tofd_t2.obj (.text)
+                  00003630    0000002e                                   : raise.obj (.text)
+                  0000365e    0000002a     driverlib.lib : gpio.obj (.text:GPIODirModeSet)
+                  00003688    00000022                   : pwm.obj (.text:PWMGenConfigure)
+                  000036aa    00000018                   : gpio.obj (.text:GPIOIntRegister)
+                  000036c2    00000018                   : gpio.obj (.text:GPIOPinTypeGPIOOutput)
+                  000036da    00000002     --HOLE-- [fill = 0]
+                  000036dc    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : args_main.obj (.text)
+                  000036f4    00000018                                   : ll_mul_t2.obj (.text)
+                  0000370c    00000014                                   : _lock.obj (.text)
+                  00003720    00000014                                   : strlen.obj (.text)
+                  00003734    00000012     driverlib.lib : gpio.obj (.text:GPIOPinTypeGPIOInput)
+                  00003746    00000010                   : pwm.obj (.text:PWMGenPeriodSet)
+                  00003756    0000000e                   : uart.obj (.text:UARTCharGetNonBlocking)
+                  00003764    0000000e                   : uart.obj (.text:UARTCharPutNonBlocking)
+                  00003772    0000000e                   : uart.obj (.text:UARTCharsAvail)
+                  00003780    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.obj (.text:decompress:none)
+                  0000378e    0000000c     driverlib.lib : gpio.obj (.text:GPIOIntEnable)
+                  0000379a    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_zero_init.obj (.text:decompress:ZI)
+                  000037a6    0000000c     tm4c123gh6pm_startup_ccs.obj (.text)
+                  000037b2    0000000a     driverlib.lib : uart.obj (.text:UARTCharGet)
+                  000037bc    0000000a                   : uart.obj (.text:UARTCharPut)
+                  000037c6    0000000a                   : uart.obj (.text:UARTIntStatus)
+                  000037d0    00000006                   : gpio.obj (.text:GPIOIntClear)
+                  000037d6    00000006                   : gpio.obj (.text:GPIOPinRead)
+                  000037dc    00000006                   : gpio.obj (.text:GPIOPinWrite)
+                  000037e2    00000006                   : sysctl.obj (.text:SysCtlDelay)
+                  000037e8    00000006     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_rle.obj (.text:decompress:rle24)
+                  000037ee    00000004     driverlib.lib : timer.obj (.text:TimerIntClear)
+                  000037f2    00000004                   : uart.obj (.text:UARTIntClear)
+                  000037f6    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.obj (.text)
 
-.const     0    00005f20    000003ec     
-                  00005f20    00000101     rtsv7M4_T_le_v4SPD16_eabi.lib : ctype.obj (.const:.string:_ctypes_)
-                  00006021    00000003     --HOLE-- [fill = 0]
-                  00006024    000000c0     driverlib.lib : gpio.obj (.const:g_ppui32GPIOIntMapBlizzard)
-                  000060e4    000000c0                   : gpio.obj (.const:g_ppui32GPIOIntMapSnowflake)
-                  000061a4    00000004     --HOLE-- [fill = 0]
-                  000061a8    00000088     rtsv7M4_T_le_v4SPD16_eabi.lib : xatan.obj (.const)
-                  00006230    00000070     driverlib.lib : interrupt.obj (.const)
-                  000062a0    0000006c                   : sysctl.obj (.const:g_pui32Xtals)
+.const     0    00003800    000002e4     
+                  00003800    000000c0     driverlib.lib : gpio.obj (.const:g_ppui32GPIOIntMapBlizzard)
+                  000038c0    000000c0                   : gpio.obj (.const:g_ppui32GPIOIntMapSnowflake)
+                  00003980    00000088     rtsv7M4_T_le_v4SPD16_eabi.lib : xatan.obj (.const)
+                  00003a08    00000070     driverlib.lib : interrupt.obj (.const)
+                  00003a78    0000006c                   : sysctl.obj (.const:g_pui32Xtals)
 
-.cinit     0    00006310    000000f0     
-                  00006310    000000ba     (.cinit..data.load) [load image, compression = rle]
-                  000063ca    00000002     --HOLE-- [fill = 0]
-                  000063cc    0000000c     (__TI_handler_table)
-                  000063d8    00000008     (.cinit..bss.load) [load image, compression = zero_init]
-                  000063e0    00000008     (.cinit..vtable.load) [load image, compression = zero_init]
-                  000063e8    00000018     (__TI_cinit_table)
+.cinit     0    00003ae8    00000088     
+                  00003ae8    00000051     (.cinit..data.load) [load image, compression = rle]
+                  00003b39    00000003     --HOLE-- [fill = 0]
+                  00003b3c    0000000c     (__TI_handler_table)
+                  00003b48    00000008     (.cinit..bss.load) [load image, compression = zero_init]
+                  00003b50    00000008     (.cinit..vtable.load) [load image, compression = zero_init]
+                  00003b58    00000018     (__TI_cinit_table)
 
 .init_array 
 *          0    00000000    00000000     UNINITIALIZED
@@ -180,63 +143,51 @@ section   page    origin      length       input sections
 .stack     0    2000026c    00000808     UNINITIALIZED
                   2000026c    00000808     --HOLE--
 
-.sysmem    0    20000a78    00000808     UNINITIALIZED
-                  20000a78    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : memory.obj (.sysmem)
-                  20000a80    00000800     --HOLE--
+.data      0    20000a78    00000169     UNINITIALIZED
+                  20000a78    000000b0     rtsv7M4_T_le_v4SPD16_eabi.lib : signal.obj (.data:sigtable)
+                  20000b28    00000080                                   : xvalues.obj (.data)
+                  20000ba8    00000018     main.obj (.data)
+                  20000bc0    00000008     rtsv7M4_T_le_v4SPD16_eabi.lib : _lock.obj (.data)
+                  20000bc8    00000008                                   : exit.obj (.data)
+                  20000bd0    00000008                                   : feraiseexcept.obj (.data)
+                  20000bd8    00000004                                   : errno.obj (.data)
+                  20000bdc    00000004                                   : stkdepth_vars.obj (.data)
+                  20000be0    00000001     ReadBattery.obj (.data)
 
-.data      0    20001280    0000034d     UNINITIALIZED
-                  20001280    000000f0     rtsv7M4_T_le_v4SPD16_eabi.lib : defs.obj (.data:_ftable)
-                  20001370    000000d0                                   : lowlev.obj (.data)
-                  20001440    000000b0                                   : signal.obj (.data:sigtable)
-                  200014f0    00000080                                   : xvalues.obj (.data)
-                  20001570    0000001c     main.obj (.data)
-                  2000158c    00000010     rtsv7M4_T_le_v4SPD16_eabi.lib : defs.obj (.data)
-                  2000159c    0000000c                                   : memory.obj (.data)
-                  200015a8    00000008                                   : _lock.obj (.data)
-                  200015b0    00000008                                   : exit.obj (.data)
-                  200015b8    00000008                                   : feraiseexcept.obj (.data)
-                  200015c0    00000004                                   : errno.obj (.data)
-                  200015c4    00000004                                   : fopen.obj (.data)
-                  200015c8    00000004                                   : stkdepth_vars.obj (.data)
-                  200015cc    00000001     ReadBattery.obj (.data)
+.bss       0    20000be4    00000082     UNINITIALIZED
+                  20000be4    00000028     main.obj (.bss:data)
+                  20000c0c    00000020     (.common:p)
+                  20000c2c    00000010     (.common:ui32ADC0Value)
+                  20000c3c    0000000c     (.common:accel)
+                  20000c48    00000004     (.common:brightness)
+                  20000c4c    00000004     (.common:ui32Load)
+                  20000c50    00000004     (.common:ui32OldAvg)
+                  20000c54    00000004     (.common:ui32PWMClock)
+                  20000c58    00000004     (.common:ui32TempAvg)
+                  20000c5c    00000002     (.common:lightlevel)
+                  20000c5e    00000002     (.common:ui8Adjust)
+                  20000c60    00000002     (.common:ui8PulseAdjust_1)
+                  20000c62    00000002     (.common:ui8PulseAdjust_2)
+                  20000c64    00000002     (.common:ui8PulseAdjust_3)
 
 .TI.persistent 
-*          0    20001280    00000000     UNINITIALIZED
-
-.bss       0    200015d0    0000024a     UNINITIALIZED
-                  200015d0    00000120     rtsv7M4_T_le_v4SPD16_eabi.lib : trgmsg.obj (.bss:__CIOBUF_)
-                  200016f0    000000a0                                   : defs.obj (.bss:__TI_tmpnams)
-                  20001790    00000028     main.obj (.bss:data)
-                  200017b8    00000020     (.common:p)
-                  200017d8    00000010     (.common:ui32ADC0Value)
-                  200017e8    0000000c     (.common:accel)
-                  200017f4    00000008     (.common:parmbuf)
-                  200017fc    00000004     (.common:brightness)
-                  20001800    00000004     (.common:ui32Load)
-                  20001804    00000004     (.common:ui32OldAvg)
-                  20001808    00000004     (.common:ui32PWMClock)
-                  2000180c    00000004     (.common:ui32TempAvg)
-                  20001810    00000002     (.common:lightlevel)
-                  20001812    00000002     (.common:ui8Adjust)
-                  20001814    00000002     (.common:ui8PulseAdjust_1)
-                  20001816    00000002     (.common:ui8PulseAdjust_2)
-                  20001818    00000002     (.common:ui8PulseAdjust_3)
+*          0    20000a78    00000000     UNINITIALIZED
 
 .TI.noinit 
-*          0    200015d0    00000000     UNINITIALIZED
+*          0    20000be4    00000000     UNINITIALIZED
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 000063e8 records: 3, size/record: 8, table size: 24
-	.data: load addr=00006310, load size=000000ba bytes, run addr=20001280, run size=0000034d bytes, compression=rle
-	.bss: load addr=000063d8, load size=00000008 bytes, run addr=200015d0, run size=0000024a bytes, compression=zero_init
-	.vtable: load addr=000063e0, load size=00000008 bytes, run addr=20000000, run size=0000026c bytes, compression=zero_init
+__TI_cinit_table @ 00003b58 records: 3, size/record: 8, table size: 24
+	.data: load addr=00003ae8, load size=00000051 bytes, run addr=20000a78, run size=00000169 bytes, compression=rle
+	.bss: load addr=00003b48, load size=00000008 bytes, run addr=20000be4, run size=00000082 bytes, compression=zero_init
+	.vtable: load addr=00003b50, load size=00000008 bytes, run addr=20000000, run size=0000026c bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 000063cc records: 3, size/record: 4, table size: 12
+__TI_handler_table @ 00003b3c records: 3, size/record: 4, table size: 12
 	index: 0, handler: __TI_zero_init
 	index: 1, handler: __TI_decompress_rle24
 	index: 2, handler: __TI_decompress_none
@@ -246,243 +197,172 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 address   name                    
 -------   ----                    
-00003321  ADC0IntHandler          
-000033b9  ADCInit                 
-00005c4d  ADCIntStatus            
-000059b1  C$$EXIT                 
-0000567b  C$$IO$$                 
-00005b8d  FlashErase              
-0000557d  FlashProgram            
-000034cd  FlashRead               
-000034e9  FlashReset              
-000034ab  FlashWrite              
-00005cd7  GPIODirModeSet          
-00003367  GPIOInit                
-00005ef1  GPIOIntClear            
-00005eaf  GPIOIntEnable           
-00005d89  GPIOIntRegister         
-00005781  GPIOIntTypeSet          
-000047e1  GPIOPadConfigSet        
-00005ef7  GPIOPinRead             
-00005e55  GPIOPinTypeGPIOInput    
-00005da1  GPIOPinTypeGPIOOutput   
-00005efd  GPIOPinWrite            
-000032d9  HOSTclock               
-000032a1  HOSTclose               
-00003263  HOSTgetenv              
-00003207  HOSTlseek               
-000031b5  HOSTopen                
-00003169  HOSTread                
-0000310b  HOSTrename              
-000030d1  HOSTtime                
-00003099  HOSTunlink              
-0000304d  HOSTwrite               
-000055e5  IntEnable               
-00005af1  IntRegister             
-00005d2b  PWMGenConfigure         
-00005e67  PWMGenPeriodSet         
-000015a9  PortAIntHandler         
-00003b71  PutString               
-00003b9d  PutStringNonBlocking    
-00003473  ReadADC                 
-00005ec7  ResetISR                
+00001831  ADC0IntHandler          
+000018c9  ADCInit                 
+000035d5  ADCIntStatus            
+00003415  C$$EXIT                 
+00003575  FlashErase              
+000031a5  FlashProgram            
+000019dd  FlashRead               
+000019f9  FlashReset              
+000019bb  FlashWrite              
+0000365f  GPIODirModeSet          
+00001877  GPIOInit                
+000037d1  GPIOIntClear            
+0000378f  GPIOIntEnable           
+000036ab  GPIOIntRegister         
+000032db  GPIOIntTypeSet          
+000027fb  GPIOPadConfigSet        
+000037d7  GPIOPinRead             
+00003735  GPIOPinTypeGPIOInput    
+000036c3  GPIOPinTypeGPIOOutput   
+000037dd  GPIOPinWrite            
+0000320d  IntEnable               
+000034d9  IntRegister             
+00003689  PWMGenConfigure         
+00003747  PWMGenPeriodSet         
+00000485  PortAIntHandler         
+00001e85  PutString               
+00001eb1  PutStringNonBlocking    
+00001983  ReadADC                 
+000037a7  ResetISR                
 UNDEFED   SHT$$INIT_ARRAY$$Base   
 UNDEFED   SHT$$INIT_ARRAY$$Limit  
-00001a15  SetBitCount             
-00004a31  SysCtlClockGet          
-00005f03  SysCtlDelay             
-00005b25  SysCtlPeripheralEnable  
-00001357  Timer0IntHandler        
-00005f0f  TimerIntClear           
-000014e3  UART0IntHandler         
-00001531  UART7IntHandler         
-00005ed3  UARTCharGet             
-00005e77  UARTCharGetNonBlocking  
-00005edd  UARTCharPut             
-00005e85  UARTCharPutNonBlocking  
-00005e93  UARTCharsAvail          
-00005f13  UARTIntClear            
-00005ee7  UARTIntStatus           
-00004145  _Atan                   
-00005bed  _Dclass                 
-200014f0  _Denorm                 
-00004ef1  _Dnorm                  
-00004b41  _Dscale                 
-000056b5  _Dunscale               
-20001500  _Eps                    
-200015c0  _Errno                  
-200015b8  _Fenv                   
-00005c1d  _Feraise                
-20001510  _Hugeval                
-20001520  _Inf                    
-20001530  _Nan                    
-20001550  _Rteps                  
-20001540  _Snan                   
-200015bc  _Tls_setup__Fenv        
-20001560  _Xbig                   
-20001568  _Zero                   
-200015d0  __CIOBUF_               
+000008e1  SetBitCount             
+00002a49  SysCtlClockGet          
+000037e3  SysCtlDelay             
+0000350d  SysCtlPeripheralEnable  
+0000029b  Timer0IntHandler        
+000037ef  TimerIntClear           
+000003bf  UART0IntHandler         
+0000040d  UART7IntHandler         
+000037b3  UARTCharGet             
+00003757  UARTCharGetNonBlocking  
+000037bd  UARTCharPut             
+00003765  UARTCharPutNonBlocking  
+00003773  UARTCharsAvail          
+000037f3  UARTIntClear            
+000037c7  UARTIntStatus           
+00002295  _Atan                   
+20000b28  _Denorm                 
+00002d65  _Dnorm                  
+00002b59  _Dscale                 
+00003275  _Dunscale               
+20000b38  _Eps                    
+20000bd8  _Errno                  
+20000bd0  _Fenv                   
+000035a5  _Feraise                
+20000b48  _Hugeval                
+20000b58  _Inf                    
+20000b68  _Nan                    
+20000b88  _Rteps                  
+20000b78  _Snan                   
+20000bd4  _Tls_setup__Fenv        
+20000b98  _Xbig                   
+20000ba0  _Zero                   
 20000a74  __STACK_END             
 00000808  __STACK_SIZE            
 2000046c  __STACK_TOP             
-00000808  __SYSMEM_SIZE           
-000063e8  __TI_CINIT_Base         
-00006400  __TI_CINIT_Limit        
-000063cc  __TI_Handler_Table_Base 
-000063d8  __TI_Handler_Table_Limit
-000054a5  __TI_auto_init          
-00003e91  __TI_cleanup            
-200015b0  __TI_cleanup_ptr        
-000050f9  __TI_closefile          
-00005ea1  __TI_decompress_none    
-00005f09  __TI_decompress_rle24   
-00004e29  __TI_doflush            
-200015b4  __TI_dtors_ptr          
-2000158c  __TI_ft_end             
-00001021  __TI_printfi            
-00005011  __TI_rd_ok              
-0000567f  __TI_readmsg            
+00003b58  __TI_CINIT_Base         
+00003b70  __TI_CINIT_Limit        
+00003b3c  __TI_Handler_Table_Base 
+00003b48  __TI_Handler_Table_Limit
+000030cd  __TI_auto_init          
+20000bc8  __TI_cleanup_ptr        
+00003781  __TI_decompress_none    
+000037e9  __TI_decompress_rle24   
+20000bcc  __TI_dtors_ptr          
 00000000  __TI_static_base__      
-200016f0  __TI_tmpnams            
-0000564d  __TI_writemsg           
-00004faf  __TI_wrt_ok             
-00005ebb  __TI_zero_init          
-00005229  __aeabi_cdcmpeq         
-00005229  __aeabi_cdcmple         
-000052af  __aeabi_cdrcmple        
-00005969  __aeabi_d2iz            
-000059f5  __aeabi_d2uiz           
-00003f97  __aeabi_dadd            
-00004575  __aeabi_ddiv            
-00004c51  __aeabi_dmul            
-00003f8d  __aeabi_dsub            
-00005ab9  __aeabi_f2d             
-00005c7b  __aeabi_i2d             
-00005dd1  __aeabi_lmul            
-000053b9  __aeabi_memclr          
-000053b9  __aeabi_memclr4         
-000053b9  __aeabi_memclr8         
-0000505b  __aeabi_memcpy          
-0000505b  __aeabi_memcpy4         
-0000505b  __aeabi_memcpy8         
-000053bb  __aeabi_memset          
-000053bb  __aeabi_memset4         
-000053bb  __aeabi_memset8         
-20001598  __aeabi_stderr          
-20001590  __aeabi_stdin           
-20001594  __aeabi_stdout          
-0000383d  __aeabi_uldivmod        
+0000379b  __TI_zero_init          
+00002ebf  __aeabi_cdcmpeq         
+00002ebf  __aeabi_cdcmple         
+00002f45  __aeabi_cdrcmple        
+000033cd  __aeabi_d2iz            
+000020e7  __aeabi_dadd            
+000026c5  __aeabi_ddiv            
+00002c69  __aeabi_dmul            
+000020dd  __aeabi_dsub            
+00003603  __aeabi_i2d             
+000036f5  __aeabi_lmul            
+00003051  __aeabi_memclr          
+00003051  __aeabi_memclr4         
+00003051  __aeabi_memclr8         
+00002e23  __aeabi_memcpy          
+00002e23  __aeabi_memcpy4         
+00002e23  __aeabi_memcpy8         
+00003053  __aeabi_memset          
+00003053  __aeabi_memset4         
+00003053  __aeabi_memset8         
 ffffffff  __binit__               
 ffffffff  __c_args__              
 2000026c  __stack                 
-00005db9  _args_main              
-00005881  _c_int00                
-00005f20  _ctypes_                
-20001280  _ftable                 
-200015a8  _lock                   
-00005e27  _nop                    
-00005e1f  _register_lock          
-00005e19  _register_unlock        
-20000a78  _sys_memory             
-00005f17  _system_pre_init        
-200015ac  _unlock                 
-000059b5  abort                   
-200017e8  accel                   
-0000297d  accelerometer_data_get  
-00002fa1  add_device              
-00004915  asin                    
-000058d1  atoi                    
+000036dd  _args_main              
+00003331  _c_int00                
+20000bc0  _lock                   
+0000371b  _nop                    
+00003713  _register_lock          
+0000370d  _register_unlock        
+000037f7  _system_pre_init        
+20000bc4  _unlock                 
+00003419  abort                   
+20000c3c  accel                   
+0000146d  accelerometer_data_get  
+0000292d  asin                    
 ffffffff  binit                   
-200017fc  brightness              
-00003557  buttonCheck             
-00002275  calculatePress          
-00002949  calloc                  
-00002f51  close                   
-00003503  closeGate               
-00003511  convertBat              
-0000591d  copy_in                 
-000024ed  crc4                    
-000059bd  exit                    
-0000515f  fclose                  
-00005b59  feraiseexcept           
-00004e75  fflush                  
-00003ee7  fopen                   
-00005191  fputc                   
-000046ad  fputs                   
-00002697  free                    
-00003ebd  freopen                 
-00005d01  frexp                   
-0000571d  fseek                   
+20000c48  brightness              
+00001a65  buttonCheck             
+00001141  calculatePress          
+00001a13  closeGate               
+00001a21  convertBat              
+00003381  copy_in                 
+000013b9  crc4                    
+00003421  exit                    
+00003541  feraiseexcept           
 20000000  g_pfnRAMVectors         
 00000000  g_pfnVectors            
-00001329  gpioInterruptInit       
-00002a09  initialize_accelerometer
-000042f9  initialize_i2c          
-0000582d  ldexp                   
-00003c75  ledsBright              
-00003c01  ledsInit                
-00003d69  ledsMax                 
-00003d35  ledsOff                 
-20001810  lightlevel              
-00002f2d  lseek                   
-000057d7  ltoa                    
-00001619  main                    
-200015c8  main_func_sp            
-0000262f  malloc                  
-00002865  memalign                
-00005d6d  memccpy                 
-00005d4d  memchr                  
-0000505b  memcpy                  
-000053c1  memset                  
-000025a1  minit                   
-00001e75  motorStop               
-00001a55  motorsInit              
-00001c35  motorsSetPulseWidth     
-00001f3f  motorsVariable          
-00002e7f  open                    
-000034f5  openGate                
-200017b8  p                       
-000020a5  pressure_init           
-000021c9  pressure_read           
-0000543d  printf                  
-00005191  putc                    
-00005215  putchar                 
-000047b9  puts                    
-00005ca9  raise                   
-00002e5b  read                    
-00004373  read_byte               
-00002759  realloc                 
-00002dd1  remove                  
-00002e33  remove_device           
-00002df5  rename                  
-000035e1  servoInit               
-000037c7  servoSetCenter          
-00003733  servoSetMax             
-0000377d  servoSetMin             
-0000369b  servoSetPulseWidth      
-000042d1  set_rw                  
-0000434b  set_slave_address       
-00004d4d  setvbuf                 
-00005a79  signal                  
-0000442d  sqrt                    
-00005e01  strchr                  
-00005de9  strcmp                  
-00005e2d  strcpy                  
-00005e41  strlen                  
-00005bbd  strncpy                 
-00005335  timerInit               
-00002a63  to_degrees              
-00003a31  uartInit                
-20001800  ui32Load                
-20001808  ui32PWMClock            
-20001812  ui8Adjust               
-20001814  ui8PulseAdjust_1        
-20001816  ui8PulseAdjust_2        
-20001818  ui8PulseAdjust_3        
-00002dd1  unlink                  
-00002d41  write                   
-00002a43  write_accelerometer     
-000043b3  write_byte              
+0000026d  gpioInterruptInit       
+000014f9  initialize_accelerometer
+00002449  initialize_i2c          
+00001f89  ledsBright              
+00001f15  ledsInit                
+0000207d  ledsMax                 
+00002049  ledsOff                 
+20000c5c  lightlevel              
+000004e1  main                    
+20000bdc  main_func_sp            
+00002e23  memcpy                  
+00003059  memset                  
+00000d41  motorStop               
+00000921  motorsInit              
+00000b01  motorsSetPulseWidth     
+00000e0b  motorsVariable          
+00001a05  openGate                
+20000c0c  p                       
+00000f71  pressure_init           
+00001095  pressure_read           
+00003631  raise                   
+000024c3  read_byte               
+00001ae9  servoInit               
+00001ccf  servoSetCenter          
+00001c3b  servoSetMax             
+00001c85  servoSetMin             
+00001ba3  servoSetPulseWidth      
+00002421  set_rw                  
+0000249b  set_slave_address       
+00003499  signal                  
+0000257d  sqrt                    
+00003721  strlen                  
+00002fcd  timerInit               
+00001553  to_degrees              
+00001d45  uartInit                
+20000c4c  ui32Load                
+20000c54  ui32PWMClock            
+20000c5e  ui8Adjust               
+20000c60  ui8PulseAdjust_1        
+20000c62  ui8PulseAdjust_2        
+20000c64  ui8PulseAdjust_3        
+00001533  write_accelerometer     
+00002503  write_byte              
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -491,240 +371,169 @@ address   name
 -------   ----                    
 00000000  __TI_static_base__      
 00000000  g_pfnVectors            
+0000026d  gpioInterruptInit       
+0000029b  Timer0IntHandler        
+000003bf  UART0IntHandler         
+0000040d  UART7IntHandler         
+00000485  PortAIntHandler         
+000004e1  main                    
 00000808  __STACK_SIZE            
-00000808  __SYSMEM_SIZE           
-00001021  __TI_printfi            
-00001329  gpioInterruptInit       
-00001357  Timer0IntHandler        
-000014e3  UART0IntHandler         
-00001531  UART7IntHandler         
-000015a9  PortAIntHandler         
-00001619  main                    
-00001a15  SetBitCount             
-00001a55  motorsInit              
-00001c35  motorsSetPulseWidth     
-00001e75  motorStop               
-00001f3f  motorsVariable          
-000020a5  pressure_init           
-000021c9  pressure_read           
-00002275  calculatePress          
-000024ed  crc4                    
-000025a1  minit                   
-0000262f  malloc                  
-00002697  free                    
-00002759  realloc                 
-00002865  memalign                
-00002949  calloc                  
-0000297d  accelerometer_data_get  
-00002a09  initialize_accelerometer
-00002a43  write_accelerometer     
-00002a63  to_degrees              
-00002d41  write                   
-00002dd1  remove                  
-00002dd1  unlink                  
-00002df5  rename                  
-00002e33  remove_device           
-00002e5b  read                    
-00002e7f  open                    
-00002f2d  lseek                   
-00002f51  close                   
-00002fa1  add_device              
-0000304d  HOSTwrite               
-00003099  HOSTunlink              
-000030d1  HOSTtime                
-0000310b  HOSTrename              
-00003169  HOSTread                
-000031b5  HOSTopen                
-00003207  HOSTlseek               
-00003263  HOSTgetenv              
-000032a1  HOSTclose               
-000032d9  HOSTclock               
-00003321  ADC0IntHandler          
-00003367  GPIOInit                
-000033b9  ADCInit                 
-00003473  ReadADC                 
-000034ab  FlashWrite              
-000034cd  FlashRead               
-000034e9  FlashReset              
-000034f5  openGate                
-00003503  closeGate               
-00003511  convertBat              
-00003557  buttonCheck             
-000035e1  servoInit               
-0000369b  servoSetPulseWidth      
-00003733  servoSetMax             
-0000377d  servoSetMin             
-000037c7  servoSetCenter          
-0000383d  __aeabi_uldivmod        
-00003a31  uartInit                
-00003b71  PutString               
-00003b9d  PutStringNonBlocking    
-00003c01  ledsInit                
-00003c75  ledsBright              
-00003d35  ledsOff                 
-00003d69  ledsMax                 
-00003e91  __TI_cleanup            
-00003ebd  freopen                 
-00003ee7  fopen                   
-00003f8d  __aeabi_dsub            
-00003f97  __aeabi_dadd            
-00004145  _Atan                   
-000042d1  set_rw                  
-000042f9  initialize_i2c          
-0000434b  set_slave_address       
-00004373  read_byte               
-000043b3  write_byte              
-0000442d  sqrt                    
-00004575  __aeabi_ddiv            
-000046ad  fputs                   
-000047b9  puts                    
-000047e1  GPIOPadConfigSet        
-00004915  asin                    
-00004a31  SysCtlClockGet          
-00004b41  _Dscale                 
-00004c51  __aeabi_dmul            
-00004d4d  setvbuf                 
-00004e29  __TI_doflush            
-00004e75  fflush                  
-00004ef1  _Dnorm                  
-00004faf  __TI_wrt_ok             
-00005011  __TI_rd_ok              
-0000505b  __aeabi_memcpy          
-0000505b  __aeabi_memcpy4         
-0000505b  __aeabi_memcpy8         
-0000505b  memcpy                  
-000050f9  __TI_closefile          
-0000515f  fclose                  
-00005191  fputc                   
-00005191  putc                    
-00005215  putchar                 
-00005229  __aeabi_cdcmpeq         
-00005229  __aeabi_cdcmple         
-000052af  __aeabi_cdrcmple        
-00005335  timerInit               
-000053b9  __aeabi_memclr          
-000053b9  __aeabi_memclr4         
-000053b9  __aeabi_memclr8         
-000053bb  __aeabi_memset          
-000053bb  __aeabi_memset4         
-000053bb  __aeabi_memset8         
-000053c1  memset                  
-0000543d  printf                  
-000054a5  __TI_auto_init          
-0000557d  FlashProgram            
-000055e5  IntEnable               
-0000564d  __TI_writemsg           
-0000567b  C$$IO$$                 
-0000567f  __TI_readmsg            
-000056b5  _Dunscale               
-0000571d  fseek                   
-00005781  GPIOIntTypeSet          
-000057d7  ltoa                    
-0000582d  ldexp                   
-00005881  _c_int00                
-000058d1  atoi                    
-0000591d  copy_in                 
-00005969  __aeabi_d2iz            
-000059b1  C$$EXIT                 
-000059b5  abort                   
-000059bd  exit                    
-000059f5  __aeabi_d2uiz           
-00005a79  signal                  
-00005ab9  __aeabi_f2d             
-00005af1  IntRegister             
-00005b25  SysCtlPeripheralEnable  
-00005b59  feraiseexcept           
-00005b8d  FlashErase              
-00005bbd  strncpy                 
-00005bed  _Dclass                 
-00005c1d  _Feraise                
-00005c4d  ADCIntStatus            
-00005c7b  __aeabi_i2d             
-00005ca9  raise                   
-00005cd7  GPIODirModeSet          
-00005d01  frexp                   
-00005d2b  PWMGenConfigure         
-00005d4d  memchr                  
-00005d6d  memccpy                 
-00005d89  GPIOIntRegister         
-00005da1  GPIOPinTypeGPIOOutput   
-00005db9  _args_main              
-00005dd1  __aeabi_lmul            
-00005de9  strcmp                  
-00005e01  strchr                  
-00005e19  _register_unlock        
-00005e1f  _register_lock          
-00005e27  _nop                    
-00005e2d  strcpy                  
-00005e41  strlen                  
-00005e55  GPIOPinTypeGPIOInput    
-00005e67  PWMGenPeriodSet         
-00005e77  UARTCharGetNonBlocking  
-00005e85  UARTCharPutNonBlocking  
-00005e93  UARTCharsAvail          
-00005ea1  __TI_decompress_none    
-00005eaf  GPIOIntEnable           
-00005ebb  __TI_zero_init          
-00005ec7  ResetISR                
-00005ed3  UARTCharGet             
-00005edd  UARTCharPut             
-00005ee7  UARTIntStatus           
-00005ef1  GPIOIntClear            
-00005ef7  GPIOPinRead             
-00005efd  GPIOPinWrite            
-00005f03  SysCtlDelay             
-00005f09  __TI_decompress_rle24   
-00005f0f  TimerIntClear           
-00005f13  UARTIntClear            
-00005f17  _system_pre_init        
-00005f20  _ctypes_                
-000063cc  __TI_Handler_Table_Base 
-000063d8  __TI_Handler_Table_Limit
-000063e8  __TI_CINIT_Base         
-00006400  __TI_CINIT_Limit        
+000008e1  SetBitCount             
+00000921  motorsInit              
+00000b01  motorsSetPulseWidth     
+00000d41  motorStop               
+00000e0b  motorsVariable          
+00000f71  pressure_init           
+00001095  pressure_read           
+00001141  calculatePress          
+000013b9  crc4                    
+0000146d  accelerometer_data_get  
+000014f9  initialize_accelerometer
+00001533  write_accelerometer     
+00001553  to_degrees              
+00001831  ADC0IntHandler          
+00001877  GPIOInit                
+000018c9  ADCInit                 
+00001983  ReadADC                 
+000019bb  FlashWrite              
+000019dd  FlashRead               
+000019f9  FlashReset              
+00001a05  openGate                
+00001a13  closeGate               
+00001a21  convertBat              
+00001a65  buttonCheck             
+00001ae9  servoInit               
+00001ba3  servoSetPulseWidth      
+00001c3b  servoSetMax             
+00001c85  servoSetMin             
+00001ccf  servoSetCenter          
+00001d45  uartInit                
+00001e85  PutString               
+00001eb1  PutStringNonBlocking    
+00001f15  ledsInit                
+00001f89  ledsBright              
+00002049  ledsOff                 
+0000207d  ledsMax                 
+000020dd  __aeabi_dsub            
+000020e7  __aeabi_dadd            
+00002295  _Atan                   
+00002421  set_rw                  
+00002449  initialize_i2c          
+0000249b  set_slave_address       
+000024c3  read_byte               
+00002503  write_byte              
+0000257d  sqrt                    
+000026c5  __aeabi_ddiv            
+000027fb  GPIOPadConfigSet        
+0000292d  asin                    
+00002a49  SysCtlClockGet          
+00002b59  _Dscale                 
+00002c69  __aeabi_dmul            
+00002d65  _Dnorm                  
+00002e23  __aeabi_memcpy          
+00002e23  __aeabi_memcpy4         
+00002e23  __aeabi_memcpy8         
+00002e23  memcpy                  
+00002ebf  __aeabi_cdcmpeq         
+00002ebf  __aeabi_cdcmple         
+00002f45  __aeabi_cdrcmple        
+00002fcd  timerInit               
+00003051  __aeabi_memclr          
+00003051  __aeabi_memclr4         
+00003051  __aeabi_memclr8         
+00003053  __aeabi_memset          
+00003053  __aeabi_memset4         
+00003053  __aeabi_memset8         
+00003059  memset                  
+000030cd  __TI_auto_init          
+000031a5  FlashProgram            
+0000320d  IntEnable               
+00003275  _Dunscale               
+000032db  GPIOIntTypeSet          
+00003331  _c_int00                
+00003381  copy_in                 
+000033cd  __aeabi_d2iz            
+00003415  C$$EXIT                 
+00003419  abort                   
+00003421  exit                    
+00003499  signal                  
+000034d9  IntRegister             
+0000350d  SysCtlPeripheralEnable  
+00003541  feraiseexcept           
+00003575  FlashErase              
+000035a5  _Feraise                
+000035d5  ADCIntStatus            
+00003603  __aeabi_i2d             
+00003631  raise                   
+0000365f  GPIODirModeSet          
+00003689  PWMGenConfigure         
+000036ab  GPIOIntRegister         
+000036c3  GPIOPinTypeGPIOOutput   
+000036dd  _args_main              
+000036f5  __aeabi_lmul            
+0000370d  _register_unlock        
+00003713  _register_lock          
+0000371b  _nop                    
+00003721  strlen                  
+00003735  GPIOPinTypeGPIOInput    
+00003747  PWMGenPeriodSet         
+00003757  UARTCharGetNonBlocking  
+00003765  UARTCharPutNonBlocking  
+00003773  UARTCharsAvail          
+00003781  __TI_decompress_none    
+0000378f  GPIOIntEnable           
+0000379b  __TI_zero_init          
+000037a7  ResetISR                
+000037b3  UARTCharGet             
+000037bd  UARTCharPut             
+000037c7  UARTIntStatus           
+000037d1  GPIOIntClear            
+000037d7  GPIOPinRead             
+000037dd  GPIOPinWrite            
+000037e3  SysCtlDelay             
+000037e9  __TI_decompress_rle24   
+000037ef  TimerIntClear           
+000037f3  UARTIntClear            
+000037f7  _system_pre_init        
+00003b3c  __TI_Handler_Table_Base 
+00003b48  __TI_Handler_Table_Limit
+00003b58  __TI_CINIT_Base         
+00003b70  __TI_CINIT_Limit        
 20000000  g_pfnRAMVectors         
 2000026c  __stack                 
 2000046c  __STACK_TOP             
 20000a74  __STACK_END             
-20000a78  _sys_memory             
-20001280  _ftable                 
-200014f0  _Denorm                 
-20001500  _Eps                    
-20001510  _Hugeval                
-20001520  _Inf                    
-20001530  _Nan                    
-20001540  _Snan                   
-20001550  _Rteps                  
-20001560  _Xbig                   
-20001568  _Zero                   
-2000158c  __TI_ft_end             
-20001590  __aeabi_stdin           
-20001594  __aeabi_stdout          
-20001598  __aeabi_stderr          
-200015a8  _lock                   
-200015ac  _unlock                 
-200015b0  __TI_cleanup_ptr        
-200015b4  __TI_dtors_ptr          
-200015b8  _Fenv                   
-200015bc  _Tls_setup__Fenv        
-200015c0  _Errno                  
-200015c8  main_func_sp            
-200015d0  __CIOBUF_               
-200016f0  __TI_tmpnams            
-200017b8  p                       
-200017e8  accel                   
-200017fc  brightness              
-20001800  ui32Load                
-20001808  ui32PWMClock            
-20001810  lightlevel              
-20001812  ui8Adjust               
-20001814  ui8PulseAdjust_1        
-20001816  ui8PulseAdjust_2        
-20001818  ui8PulseAdjust_3        
+20000b28  _Denorm                 
+20000b38  _Eps                    
+20000b48  _Hugeval                
+20000b58  _Inf                    
+20000b68  _Nan                    
+20000b78  _Snan                   
+20000b88  _Rteps                  
+20000b98  _Xbig                   
+20000ba0  _Zero                   
+20000bc0  _lock                   
+20000bc4  _unlock                 
+20000bc8  __TI_cleanup_ptr        
+20000bcc  __TI_dtors_ptr          
+20000bd0  _Fenv                   
+20000bd4  _Tls_setup__Fenv        
+20000bd8  _Errno                  
+20000bdc  main_func_sp            
+20000c0c  p                       
+20000c3c  accel                   
+20000c48  brightness              
+20000c4c  ui32Load                
+20000c54  ui32PWMClock            
+20000c5c  lightlevel              
+20000c5e  ui8Adjust               
+20000c60  ui8PulseAdjust_1        
+20000c62  ui8PulseAdjust_2        
+20000c64  ui8PulseAdjust_3        
 ffffffff  __binit__               
 ffffffff  __c_args__              
 ffffffff  binit                   
 UNDEFED   SHT$$INIT_ARRAY$$Base   
 UNDEFED   SHT$$INIT_ARRAY$$Limit  
 
-[237 symbols]
+[166 symbols]

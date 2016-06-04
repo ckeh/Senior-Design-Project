@@ -135,11 +135,11 @@ int buttonCheck(){
 	static uint8_t ledVal = 2;
 
 	if(GPIOPinRead(GPIO_PORTF_BASE, GPIO_PIN_4) == 0x00){
-		GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3, ledVal);
+		GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_3, ledVal);
 		return 1;
 	}
 	else {
-		GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3, 0);
+		GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_3, 0);
 		return 0;
 	}
 }

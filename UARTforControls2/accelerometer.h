@@ -54,6 +54,6 @@ void write_accelerometer (uint8_t reg, uint8_t data);
  * Description -
  * Return - none
  */
-int16_t to_degrees(uint8_t axis, int16_t value, volatile accelerometer* accel);
+int8_t to_degrees(uint8_t axis, int16_t value, volatile accelerometer* accel);
 
 #endif /* UARTFORCONTROLS2_ACCELEROMETER_H_ */
