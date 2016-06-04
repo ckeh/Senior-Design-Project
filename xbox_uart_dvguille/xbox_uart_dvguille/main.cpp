@@ -70,7 +70,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	auto graph = make_shared<Graphics>();
 	auto graph3d = make_shared <Graphics3D>();
 
-	SetTimer(NULL, 0, 75, (TIMERPROC)&f); //sets timer to N ms
+	SetTimer(NULL, 0, 50, (TIMERPROC)&f); //sets timer to N ms
 
 	gpad.Connect("COM5", 115200);
 
@@ -125,16 +125,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			int temp = gpad.DataAvailable();
 
 			if (temp >= (PACKET_SIZE / 8) + 1) {
-				xdata = 0;
-				ydata = 0;
-				sydata = 0;
-				zdata = 0;
-				pressure = 0;
-				battery = 0;
-				dataprint[256] = { '\0' };
+				//xdata = 0;
+				//ydata = 0;
+				//sydata = 0;
+				//zdata = 0;
+				//pressure = 0;
+				//battery = 0;
+				//dataprint[256] = { '\0' };
 
 				ReadFile(gpad._port, headerr, 1, &bytes, NULL);
 				if (headerr[0] == 'f') {
+					xdata = 0;
+					ydata = 0;
+					sydata = 0;
+					zdata = 0;
+					pressure = 0;
+					battery = 0;
+					dataprint[256] = { '\0' };
 					ReadFile(gpad._port, &buf, PACKET_SIZE / 8, &bytes, NULL);
 
 					for (int i = 0; i < PACKET_SIZE / 8; i++) {
@@ -181,7 +188,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 				if (pressure <= 1000 && pressure >= 980) basePressure = pressure;
 				float depth = 0;
 				depth = (pressure-basePressure) * 0.0334552565551f;
-				sprintf(dataprint, "press = %d mbar, depth = %f ft\nx = %d, y = %d\nBattery = %d %", pressure, depth, xtmp, (int)sydata, battery);
+				sprintf(dataprint, "press = %d mbar, depth = %f ft\nx = %d, y = %d\nBattery = %d %", pressure, depth, xtmp, ydata, battery);
 
 				headerr[0] = '\0';
 
