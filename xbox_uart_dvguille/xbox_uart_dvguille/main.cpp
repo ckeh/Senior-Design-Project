@@ -70,7 +70,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	auto graph = make_shared<Graphics>();
 	auto graph3d = make_shared <Graphics3D>();
 
-	SetTimer(NULL, 0, 200, (TIMERPROC)&f); //sets timer to N ms
+	SetTimer(NULL, 0, 50, (TIMERPROC)&f); //sets timer to N ms
 
 	gpad.Connect("COM5", 115200);
 
