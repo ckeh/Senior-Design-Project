@@ -59,7 +59,10 @@ void CALLBACK f(HWND hwnd, UINT uMsg, UINT timerId, DWORD dwTime)
 	WriteFile((gpad._port), &header, sizeof(unsigned char), &gpad.bytes_written, NULL);
 	WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
 }
-
+void CALLBACK d(HWND hwnd, UINT uMsg, UINT timerId, DWORD dwTime)
+{
+	SetTimer(NULL, 0, 50, (TIMERPROC)&f); //sets timer to N m
+}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, int nCmdShow) {
 	int count = 0;
@@ -71,6 +74,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	auto graph3d = make_shared <Graphics3D>();
 
 	SetTimer(NULL, 0, 50, (TIMERPROC)&f); //sets timer to N ms
+	SetTimer(NULL, 0, 200, (TIMERPROC)&d); //sets timer to N ms
 
 	gpad.Connect("COM5", 115200);
 
@@ -135,6 +139,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 
 				ReadFile(gpad._port, headerr, 1, &bytes, NULL);
 				if (headerr[0] == 'f') {
+					SetTimer(NULL, 0, 200, (TIMERPROC)&d); //sets timer to N ms
+
 					xdata = 0;
 					ydata = 0;
 					sydata = 0;
