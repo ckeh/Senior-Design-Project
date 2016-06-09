@@ -29,6 +29,7 @@ volatile accelerometer accel;
 volatile pressure p;
 
 static volatile uint32_t prevBat = 0;
+static volatile uint8_t timerflag = 0;
 
 
 /*
@@ -50,7 +51,19 @@ void gpioInterruptInit(){
 
 //For the USB UART connection to get controls from the pc
 #ifdef TIMER
+void Timer1IntHandler() {
+	if(!timerflag){
+		//servoSetCenter();
+		motorStop(MOTOR_1);
+		motorStop(MOTOR_2);
+		motorStop(MOTOR_Z);
+	} else {
+		timerflag = 0;
+	}
+	TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
 
+
+}
 void Timer0IntHandler() {
 	static int8_t xtmp = 0;
 	static int8_t ytmp = 0;
@@ -206,6 +219,7 @@ int main(void) {
 	if(check != crc4(p.c)) exit(1);
 	initialize_accelerometer();
 	timerInit();
+	timerInit2();
 	SysCtlDelay(SysCtlClockGet() / (1000 * 3)); //delay ~1 msec
 
 	ROM_IntMasterEnable(); //enable processor interrupts
@@ -235,11 +249,12 @@ int main(void) {
 			FlashWrite(RESET);
 			prevBat = 0;
 		}
-
+		//SysCtlDelay(900000);
 		//takes data from UART0 (the computer) and puts them into UART7 (transfer uart)
 		if (count > 4) {
 			count--;
 			localdata = data[i];
+			//printf("data: %02x\n\r",localdata);
 
 			//HEADER
 			if (localdata == 0xAA) {
@@ -294,7 +309,8 @@ int main(void) {
 			}
 			//if header is detected that means we start looking for packet
 			if (headerFlag) {
-
+				timerflag = 1;
+				//printf("f: %02x, s: %02x, t: %02x, f: %02x\n\r",first, second, third, fourth);
 				/*-------------------------------------------------------------------
 				 * first byte of packet
 				 *
@@ -432,6 +448,7 @@ int main(void) {
 
 				headerFlag = 0;
 			} else {
+				timerflag=0;
 				i++;
 				if (i > BUFF_SIZE-1) {
 					i = 0;

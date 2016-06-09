@@ -30,6 +30,7 @@ extern void UART7IntHandler(void);
 extern void ADC0IntHandler(void);
 #ifdef TIMER
 extern void Timer0IntHandler(void);
+extern void Timer1IntHandler(void);
 #endif
 
 //*****************************************************************************
@@ -93,8 +94,8 @@ IntDefaultHandler,
 #endif
 	//Timer0IntHandler,                      // Timer 0 subtimer A
     IntDefaultHandler,                      // Timer 0 subtimer B
-    IntDefaultHandler,                      // Timer 1 subtimer A
-    IntDefaultHandler,                      // Timer 1 subtimer B
+	Timer1IntHandler,                      // Timer 1 subtimer A
+	IntDefaultHandler,                      // Timer 1 subtimer B
     IntDefaultHandler,                      // Timer 2 subtimer A
     IntDefaultHandler,                      // Timer 2 subtimer B
     IntDefaultHandler,                      // Analog Comparator 0

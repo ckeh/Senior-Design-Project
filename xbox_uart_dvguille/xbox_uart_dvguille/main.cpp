@@ -24,7 +24,20 @@ unsigned long prevControlsPacket = 0;
 XboxController gpad; //make it global
 unsigned char header = 0xAA; //to make global
 
+int timer = 0;
 
+							 //the timer set on line 75, want to sent controls in this isr
+void CALLBACK f(HWND hwnd, UINT uMsg, UINT timerId, DWORD dwTime)
+{
+	timer = 1;
+	//WriteFile((gpad._port), &header, sizeof(unsigned char), &gpad.bytes_written, NULL);
+	//WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
+}
+void CALLBACK d(HWND hwnd, UINT uMsg, UINT timerId, DWORD dwTime)
+{
+	KillTimer(NULL,0);
+	SetTimer(NULL, 0, 50, (TIMERPROC)&f); //sets timer to N m
+}
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 	switch (uMsg) {
@@ -43,7 +56,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		break;
 
 	case WM_RBUTTONDOWN:
-		angle++;
+		//KillTimer(NULL,0);
+		//SetTimer(NULL, 0, 50, (TIMERPROC)&f); //sets timer to N m
+
 		break;
 
 	default:
@@ -53,16 +68,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 }
 
 
-//the timer set on line 75, want to sent controls in this isr
-void CALLBACK f(HWND hwnd, UINT uMsg, UINT timerId, DWORD dwTime)
-{
-	WriteFile((gpad._port), &header, sizeof(unsigned char), &gpad.bytes_written, NULL);
-	WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
-}
-void CALLBACK d(HWND hwnd, UINT uMsg, UINT timerId, DWORD dwTime)
-{
-	SetTimer(NULL, 0, 50, (TIMERPROC)&f); //sets timer to N m
-}
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, int nCmdShow) {
 	int count = 0;
@@ -74,7 +80,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 	auto graph3d = make_shared <Graphics3D>();
 
 	SetTimer(NULL, 0, 50, (TIMERPROC)&f); //sets timer to N ms
-	SetTimer(NULL, 0, 200, (TIMERPROC)&d); //sets timer to N ms
+	//SetTimer(NULL, 1, 500, (TIMERPROC)&d); //sets timer to N ms
 
 	gpad.Connect("COM5", 115200);
 
@@ -139,7 +145,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 
 				ReadFile(gpad._port, headerr, 1, &bytes, NULL);
 				if (headerr[0] == 'f') {
-					SetTimer(NULL, 0, 200, (TIMERPROC)&d); //sets timer to N ms
+					//SetTimer(NULL, 0, 50, (TIMERPROC)&f); //sets timer to N ms
+					//KillTimer(NULL, 1);
+					//SetTimer(NULL, 1, 500, (TIMERPROC)&d); //sets timer to N ms
 
 					xdata = 0;
 					ydata = 0;
@@ -211,14 +219,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 			graph->DrawMotorBars(rBrush);
 			graph->FillMotorBars(lBrush, gpad);
 
-			if ((gpad.buttons & 0x40)) {
-				if (lightflag) {
-					opacity += .2;
-					lightflag = 0;
-				}
-			} else {
-				lightflag = 1;
-			}
+
 
 			sBrush->SetColor(ColorF(ColorF::Black));
 			//graph->CircleGraphics();
@@ -264,15 +265,29 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR pCmdLine, i
 				graph->DrawText(L"Camera Up", L"Times New Roman", 14.f, RectF(125, 250, 600, 500), ColorF(ColorF::Black));
 
 			}
-			else
+			else {
 				////DPAD DOWN
 				if (gpad.buttons & 0x4) {
 					graph->DrawText(L"Camera Down", L"Times New Roman", 14.f, RectF(125, 250, 600, 500), ColorF(ColorF::Black));
 
 				}
-
+			}
 			graph->EndDraw();
 			delete[] wcstring;
+			if (timer == 1) {
+				if ((gpad.buttons & 0x40)) {
+					if (lightflag) {
+						opacity += .2;
+						lightflag = 0;
+					}
+				}
+				else {
+					lightflag = 1;
+				}
+				WriteFile((gpad._port), &header, sizeof(unsigned char), &gpad.bytes_written, NULL);
+				WriteFile((gpad._port), &(gpad.total_packet), 4, &gpad.bytes_written, NULL);
+				timer = 0;
+			}
 		}
 	}
 
